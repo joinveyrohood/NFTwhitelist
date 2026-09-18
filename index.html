@@ -1,1084 +1,1415 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
->
-
-<meta
-  name="description"
-  content="VeyroHood — Complete missions, verify your wallet, unlock OG or WL access, and mint."
->
-
-<meta name="theme-color" content="#07080c">
-
-<title>VeyroHood — NFT Community</title>
-
-<style>
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  min-height: 100vh;
-  background: #07080c;
-  color: #f5f7fa;
-
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  overflow-x: hidden;
-}
-
-button,
-a {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* BACKGROUND */
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background:
-    radial-gradient(
-      circle at 15% 15%,
-      rgba(180, 255, 50, 0.10),
-      transparent 30%
-    ),
-
-    radial-gradient(
-      circle at 85% 30%,
-      rgba(0, 220, 255, 0.08),
-      transparent 30%
-    ),
-
-    linear-gradient(
-      rgba(255,255,255,0.025) 1px,
-      transparent 1px
-    ),
-
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,0.025) 1px,
-      transparent 1px
-    );
-
-  background-size:
-    auto,
-    auto,
-    50px 50px,
-    50px 50px;
-
-  pointer-events: none;
-  z-index: -2;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background:
-    radial-gradient(
-      circle at center,
-      transparent 20%,
-      rgba(0,0,0,0.65) 100%
-    );
-
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* NAVBAR */
-
-.navbar {
-  width: min(1180px, calc(100% - 32px));
-  margin: auto;
-
-  height: 78px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  position: relative;
-  z-index: 20;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-
-  font-size: 14px;
-  font-weight: 900;
-
-  letter-spacing: 0.16em;
-}
-
-.logo-box {
-  width: 38px;
-  height: 38px;
-
-  display: grid;
-  place-items: center;
-
-  border-radius: 11px;
-
-  background: #b7ff3c;
-  color: #08090c;
-
-  font-size: 19px;
-  font-weight: 1000;
-
-  box-shadow:
-    0 0 25px rgba(183,255,60,0.22);
-}
-
-.connect-btn {
-  min-height: 44px;
-
-  padding: 0 18px;
-
-  border: 0;
-  border-radius: 12px;
-
-  background: #b7ff3c;
-  color: #07080c;
-
-  font-weight: 900;
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.connect-btn:hover {
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 8px 30px rgba(183,255,60,0.20);
-}
-
-/* HERO */
-
-.hero {
-  width: min(1180px, calc(100% - 32px));
-  margin: auto;
-
-  min-height: calc(100vh - 78px);
-
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-
-  align-items: center;
-
-  gap: 70px;
-
-  padding:
-    50px 0
-    90px;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  margin-bottom: 18px;
-
-  color: #b7ff3c;
-
-  font-size: 11px;
-  font-weight: 900;
-
-  letter-spacing: 0.18em;
-}
-
-.status-dot {
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: #b7ff3c;
-
-  box-shadow:
-    0 0 15px #b7ff3c;
-
-  animation: pulse 1.7s infinite;
-}
-
-@keyframes pulse {
-
-  0%,100% {
-    opacity: 0.35;
-    transform: scale(0.8);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-}
-
-.hero-title {
-  max-width: 760px;
-
-  font-size: clamp(
-    50px,
-    7vw,
-    86px
-  );
-
-  line-height: 0.94;
-
-  letter-spacing: -0.065em;
-
-  font-weight: 950;
-}
-
-.hero-title span {
-  color: #b7ff3c;
-}
-
-.hero-description {
-  max-width: 610px;
-
-  margin-top: 25px;
-
-  color: #9ba3b2;
-
-  font-size: 17px;
-
-  line-height: 1.7;
-}
-
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 12px;
-
-  margin-top: 32px;
-}
-
-.primary-btn,
-.secondary-btn {
-  min-height: 54px;
-
-  padding: 0 22px;
-
-  border-radius: 13px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  font-weight: 900;
-
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.primary-btn {
-  border: 0;
-
-  background: #b7ff3c;
-  color: #07080c;
-}
-
-.secondary-btn {
-  border: 1px solid #292e39;
-
-  background: rgba(255,255,255,0.025);
-
-  color: #fff;
-}
-
-.primary-btn:hover,
-.secondary-btn:hover {
-  transform: translateY(-2px);
-}
-
-.secondary-btn:hover {
-  border-color: #4b5362;
-  background: rgba(255,255,255,0.05);
-}
-
-.security-line {
-  margin-top: 18px;
-
-  color: #737b8a;
-
-  font-size: 12px;
-}
-
-/* NFT */
-
-.nft-area {
-  position: relative;
-
-  width: min(460px, 100%);
-
-  margin: auto;
-}
-
-.glow {
-  position: absolute;
-
-  width: 230px;
-  height: 230px;
-
-  border-radius: 50%;
-
-  filter: blur(70px);
-
-  opacity: 0.28;
-
-  pointer-events: none;
-}
-
-.glow-one {
-  top: -50px;
-  right: -30px;
-
-  background: #b7ff3c;
-}
-
-.glow-two {
-  bottom: -40px;
-  left: -30px;
-
-  background: #27d9ff;
-}
-
-.nft-card {
-  position: relative;
-
-  aspect-ratio: 1 / 1;
-
-  padding: 14px;
-
-  border-radius: 31px;
-
-  border: 1px solid #2a303c;
-
-  background:
-    linear-gradient(
-      145deg,
-      #171a22,
-      #0c0e13
-    );
-
-  box-shadow:
-    0 40px 100px rgba(0,0,0,0.65);
-
-  transform: rotate(2deg);
-
-  animation:
-    floating 5s ease-in-out infinite;
-}
-
-@keyframes floating {
-
-  0%,100% {
-    transform: translateY(0) rotate(2deg);
-  }
-
-  50% {
-    transform: translateY(-12px) rotate(1deg);
-  }
-
-}
-
-.nft-inner {
-  height: 100%;
-
-  border-radius: 23px;
-
-  border: 1px solid #303744;
-
-  overflow: hidden;
-
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
-
-  background:
-    radial-gradient(
-      circle at 50% 35%,
-      rgba(183,255,60,0.17),
-      transparent 35%
-    ),
-
-    linear-gradient(
-      160deg,
-      #151922,
-      #090b10
-    );
-}
-
-.character {
-  width: 72%;
-
-  aspect-ratio: 1 / 1;
-
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(183,255,60,0.15),
-      transparent 62%
-    );
-
-  animation:
-    characterFloat 3.5s ease-in-out infinite;
-}
-
-@keyframes characterFloat {
-
-  0%,100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-
-}
-
-.character-mark {
-  font-size: clamp(
-    60px,
-    10vw,
-    105px
-  );
-
-  font-weight: 1000;
-
-  letter-spacing: -0.08em;
-
-  color: #b7ff3c;
-
-  text-shadow:
-    0 0 30px rgba(183,255,60,0.25);
-}
-
-.character-name {
-  margin-top: 8px;
-
-  color: #fff;
-
-  font-size: 14px;
-
-  font-weight: 900;
-
-  letter-spacing: 0.25em;
-}
-
-.scan-line {
-  position: absolute;
-
-  left: 0;
-  right: 0;
-
-  height: 1px;
-
-  background: #b7ff3c;
-
-  box-shadow:
-    0 0 18px #b7ff3c;
-
-  opacity: 0.7;
-
-  animation:
-    scan 3.5s ease-in-out infinite;
-}
-
-@keyframes scan {
-
-  0%,100% {
-    top: 20%;
-    opacity: 0;
-  }
-
-  40% {
-    opacity: 0.8;
-  }
-
-  70% {
-    top: 80%;
-    opacity: 0;
-  }
-
-}
-
-.nft-info {
-  display: flex;
-  justify-content: space-between;
-
-  margin-top: 16px;
-
-  color: #818998;
-
-  font-size: 12px;
-}
-
-.live {
-  color: #b7ff3c;
-  font-weight: 900;
-}
-
-/* STATS */
-
-.stats {
-  width: min(1180px, calc(100% - 32px));
-  margin: 0 auto 90px;
-
-  display: grid;
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  overflow: hidden;
-
-  border: 1px solid #242a35;
-
-  border-radius: 20px;
-
-  background: rgba(16,18,25,0.82);
-
-  backdrop-filter: blur(15px);
-}
-
-.stat {
-  padding: 25px;
-
-  border-right: 1px solid #242a35;
-}
-
-.stat:last-child {
-  border-right: 0;
-}
-
-.stat-number {
-  display: block;
-
-  font-size: 29px;
-
-  font-weight: 950;
-}
-
-.stat-label {
-  display: block;
-
-  margin-top: 5px;
-
-  color: #7f8795;
-
-  font-size: 12px;
-}
-
-/* SECTION */
-
-.section {
-  width: min(1180px, calc(100% - 32px));
-
-  margin: 0 auto;
-
-  padding-bottom: 100px;
-}
-
-.section-label {
-  color: #b7ff3c;
-
-  font-size: 11px;
-
-  font-weight: 900;
-
-  letter-spacing: 0.18em;
-}
-
-.section-title {
-  margin-top: 10px;
-
-  font-size: clamp(
-    34px,
-    5vw,
-    48px
-  );
-
-  line-height: 1;
-
-  letter-spacing: -0.05em;
-}
-
-.steps {
-  display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  gap: 14px;
-
-  margin-top: 32px;
-}
-
-.step {
-  padding: 25px;
-
-  min-height: 210px;
-
-  border: 1px solid #242a35;
-
-  border-radius: 20px;
-
-  background: #101219;
-}
-
-.step-number {
-  color: #b7ff3c;
-
-  font-size: 12px;
-
-  font-weight: 900;
-}
-
-.step h3 {
-  margin-top: 35px;
-
-  font-size: 19px;
-}
-
-.step p {
-  margin-top: 10px;
-
-  color: #858d9c;
-
-  font-size: 13px;
-
-  line-height: 1.65;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>VeyroHood — NFT Whitelist</title>
+  <meta
+    name="description"
+    content="VeyroHood NFT Whitelist — Complete missions, verify your wallet and secure your place."
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 50% -10%, #222 0%, #0b0b0d 42%, #050506 100%);
+      color: #f5f5f5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    /* NAVBAR */
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(18px);
+      background: rgba(5, 5, 6, 0.78);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-inner {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
+    .logo span {
+      color: #aaa;
+    }
+
+    .connect-btn {
+      border: 1px solid rgba(255,255,255,0.2);
+      background: #fff;
+      color: #050505;
+      padding: 11px 17px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .connect-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255,255,255,0.12);
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 90px 0 70px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.13);
+      background: rgba(255,255,255,0.04);
+      color: #bbb;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 8vw, 82px);
+      line-height: 0.95;
+      letter-spacing: -4px;
+      font-weight: 950;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 span {
+      color: #aaa;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: #9c9ca2;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    /* NFT CARD */
+
+    .art-wrap {
+      margin: 55px auto 50px;
+      width: min(390px, 90vw);
+    }
+
+    .art-card {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 28px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, #18181b, #080809);
+      border: 1px solid rgba(255,255,255,0.13);
+      box-shadow:
+        0 30px 90px rgba(0,0,0,0.7),
+        inset 0 0 50px rgba(255,255,255,0.025);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .art-card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.12), transparent 45%);
+      animation: rotateGlow 8s linear infinite;
+    }
+
+    .art-placeholder {
+      position: absolute;
+      inset: 20px;
+      border-radius: 20px;
+      border: 1px dashed rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background:
+        radial-gradient(circle at 50% 35%, #29292d, #0b0b0d 68%);
+    }
+
+    .art-placeholder .v {
+      font-size: 125px;
+      line-height: 1;
+      font-weight: 950;
+      color: #f4f4f4;
+      text-shadow: 0 15px 45px rgba(255,255,255,0.12);
+    }
+
+    .art-placeholder small {
+      margin-top: 15px;
+      color: #777;
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+
+    @keyframes float {
+      0%,100% {
+        transform: translateY(0) rotateX(0deg);
+      }
+
+      50% {
+        transform: translateY(-12px) rotateX(2deg);
+      }
+    }
+
+    @keyframes rotateGlow {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* CTA */
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      padding: 14px 21px;
+      border-radius: 12px;
+      font-weight: 800;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .primary-btn {
+      background: #fff;
+      color: #050505;
+    }
+
+    .secondary-btn {
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #ddd;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .primary-btn:hover,
+    .secondary-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 25px 0 100px;
+    }
+
+    .stat {
+      padding: 25px 15px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 17px;
+      background: rgba(255,255,255,0.035);
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 27px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .stat-label {
+      color: #777;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* SECTION */
+
+    section {
+      padding: 75px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title h2 {
+      font-size: 38px;
+      margin-bottom: 10px;
+      letter-spacing: -1.5px;
+    }
+
+    .section-title p {
+      color: #777;
+    }
+
+    /* STEPS */
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .step {
+      padding: 28px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+
+    .step h3 {
+      margin-bottom: 9px;
+      font-size: 19px;
+    }
+
+    .step p {
+      color: #85858a;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* MISSIONS */
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .mission {
+      padding: 23px;
+      border-radius: 17px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.035);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      transition: 0.2s;
+    }
+
+    .mission:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .mission-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .mission-icon {
+      width: 43px;
+      height: 43px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.07);
+      font-weight: 900;
+    }
+
+    .mission h3 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .mission p {
+      color: #777;
+      font-size: 12px;
+    }
+
+    .mission-arrow {
+      color: #777;
+      font-size: 20px;
+    }
+
+    /* ALLOCATION */
+
+    .allocation {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .allocation-card {
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.035);
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .allocation-card h3 {
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .allocation-card p {
+      color: #85858a;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .progress {
+      margin-top: 22px;
+      height: 8px;
+      background: #1b1b1e;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: #fff;
+      border-radius: inherit;
+    }
+
+    /* REFERRAL */
+
+    .referral-box {
+      text-align: center;
+      padding: 38px 25px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.07), transparent 55%),
+        rgba(255,255,255,0.035);
+    }
+
+    .referral-box h3 {
+      font-size: 27px;
+      margin-bottom: 12px;
+    }
+
+    .referral-box p {
+      max-width: 620px;
+      margin: auto;
+      color: #85858a;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .referral-stats {
+      margin: 28px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 700px;
+      gap: 10px;
+    }
+
+    .ref-stat {
+      padding: 18px;
+      border-radius: 13px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .ref-stat strong {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 5px;
+    }
+
+    .ref-stat span {
+      color: #777;
+      font-size: 11px;
+    }
+
+    /* RULE */
+
+    .rule-box {
+      margin-top: 50px;
+      padding: 25px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 17px;
+      background: rgba(255,255,255,0.025);
+    }
+
+    .rule-box h3 {
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .rule-box p {
+      color: #777;
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 60px;
+      padding: 35px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: #666;
+      font-size: 12px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 750px) {
+
+      .hero {
+        padding-top: 65px;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 55px;
+      }
+
+      .steps,
+      .mission-grid,
+      .allocation {
+        grid-template-columns: 1fr;
+      }
+
+      .referral-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .nav-inner {
+        height: 65px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .connect-btn {
+        padding: 9px 12px;
+        font-size: 12px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="navbar">
+  <!-- NAVBAR -->
 
-  <a href="index.html" class="logo">
+  <nav>
+    <div class="container nav-inner">
 
-    <span class="logo-box">
-      V
-    </span>
-
-    <span>
-      VEYROHOOD
-    </span>
-
-  </a>
-
-  <button
-    id="connectWallet"
-    class="connect-btn"
-    type="button"
-  >
-    Connect Wallet
-  </button>
-
-</header>
-
-<main>
-
-<section class="hero">
-
-  <div>
-
-    <div class="eyebrow">
-      <span class="status-dot"></span>
-      10,000 NFT SUPPLY
-    </div>
-
-    <h1 class="hero-title">
-      Earn your place.<br>
-      <span>Mint your hood.</span>
-    </h1>
-
-    <p class="hero-description">
-      Complete the VeyroHood missions, submit your verification,
-      and unlock your verified OG or WL status.
-      One wallet can mint one NFT.
-    </p>
-
-    <div class="hero-actions">
-
-      <a
-        href="missions.html"
-        class="primary-btn"
-      >
-        Start Missions
+      <a href="index.html" class="logo">
+        VEYRO<span>HOOD</span>
       </a>
 
-      <a
-        href="#how-it-works"
-        class="secondary-btn"
+      <button
+        id="connectWallet"
+        class="connect-btn"
       >
-        How It Works
-      </a>
+        Connect Wallet
+      </button>
 
     </div>
+  </nav>
 
-    <div class="security-line">
-      🔒 Missions alone do not grant OG/WL.
-      Verification is mandatory.
-    </div>
 
-  </div>
+  <!-- HERO -->
 
-  <div class="nft-area">
+  <main>
 
-    <div class="glow glow-one"></div>
-    <div class="glow glow-two"></div>
+    <section class="hero">
 
-    <div class="nft-card">
+      <div class="container">
 
-      <div class="nft-inner">
+        <div class="badge">
+          VEYROHOOD NFT WHITELIST
+        </div>
 
-        <div class="character">
+        <h1>
+          Earn your place.<br>
+          <span>Mint your hood.</span>
+        </h1>
 
-          <div class="character-mark">
-            V
-          </div>
+        <p>
+          Complete the VeyroHood missions, submit your verification,
+          and secure your place in the whitelist.
+        </p>
 
-          <div class="character-name">
-            VEYROHOOD
+
+        <!-- NFT ART -->
+
+        <div class="art-wrap">
+
+          <div class="art-card">
+
+            <div class="art-placeholder">
+
+              <!--
+                YOUR REAL VEYROHOOD IMAGE WILL GO HERE.
+
+                Example later:
+
+                <img
+                  src="your-image.png"
+                  alt="VeyroHood NFT"
+                  style="width:100%;height:100%;object-fit:cover;"
+                >
+              -->
+
+              <div class="v">V</div>
+
+              <small>
+                VEYROHOOD
+              </small>
+
+            </div>
+
           </div>
 
         </div>
 
-        <div class="scan-line"></div>
+
+        <!-- BUTTONS -->
+
+        <div class="hero-actions">
+
+          <a
+            href="missions.html"
+            class="primary-btn"
+          >
+            Start Missions →
+          </a>
+
+          <a
+            href="verify.html"
+            class="secondary-btn"
+          >
+            Verify Wallet
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section style="padding-top:0;">
+
+      <div class="container">
+
+        <div class="stats">
+
+          <div class="stat">
+            <div
+              class="stat-number"
+              id="totalJoined"
+            >
+              0
+            </div>
+
+            <div class="stat-label">
+              Total Joined
+            </div>
+          </div>
+
+
+          <div class="stat">
+            <div
+              class="stat-number"
+              id="verifiedCount"
+            >
+              0
+            </div>
+
+            <div class="stat-label">
+              Verified
+            </div>
+          </div>
+
+
+          <div class="stat">
+            <div
+              class="stat-number"
+              id="ogCount"
+            >
+              0 / 1,000
+            </div>
+
+            <div class="stat-label">
+              OG Allocation
+            </div>
+          </div>
+
+
+          <div class="stat">
+            <div
+              class="stat-number"
+              id="fcfsCount"
+            >
+              0 / 9,000
+            </div>
+
+            <div class="stat-label">
+              FCFS Allocation
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="section-title">
+
+          <h2>
+            How It Works
+          </h2>
+
+          <p>
+            Three simple steps to join VeyroHood.
+          </p>
+
+        </div>
+
+
+        <div class="steps">
+
+          <div class="step">
+
+            <div class="step-number">
+              1
+            </div>
+
+            <h3>
+              Complete Missions
+            </h3>
+
+            <p>
+              Follow VeyroHood on X, join the Discord,
+              quote the pinned post and reply to it.
+            </p>
+
+          </div>
+
+
+          <div class="step">
+
+            <div class="step-number">
+              2
+            </div>
+
+            <h3>
+              Submit Verification
+            </h3>
+
+            <p>
+              Submit your X username, Discord username,
+              quote link, reply link and connected wallet.
+            </p>
+
+          </div>
+
+
+          <div class="step">
+
+            <div class="step-number">
+              3
+            </div>
+
+            <h3>
+              Secure Your Allocation
+            </h3>
+
+            <p>
+              Successfully verified participants can proceed
+              according to the VeyroHood whitelist allocation rules.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MISSIONS -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="section-title">
+
+          <h2>
+            VeyroHood Missions
+          </h2>
+
+          <p>
+            Complete all four missions before verification.
+          </p>
+
+        </div>
+
+
+        <div class="mission-grid">
+
+
+          <a
+            href="https://x.com/VeyroHood"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mission"
+          >
+
+            <div class="mission-left">
+
+              <div class="mission-icon">
+                X
+              </div>
+
+              <div>
+                <h3>
+                  Follow VeyroHood
+                </h3>
+
+                <p>
+                  Follow on X
+                </p>
+              </div>
+
+            </div>
+
+            <div class="mission-arrow">
+              →
+            </div>
+
+          </a>
+
+
+          <a
+            href="https://discord.gg/6CYd3ewU5"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mission"
+          >
+
+            <div class="mission-left">
+
+              <div class="mission-icon">
+                D
+              </div>
+
+              <div>
+                <h3>
+                  Join Discord
+                </h3>
+
+                <p>
+                  Join the VeyroHood community
+                </p>
+              </div>
+
+            </div>
+
+            <div class="mission-arrow">
+              →
+            </div>
+
+          </a>
+
+
+          <a
+            href="https://x.com/VeyroHood/status/2095434542094115048"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mission"
+          >
+
+            <div class="mission-left">
+
+              <div class="mission-icon">
+                Q
+              </div>
+
+              <div>
+                <h3>
+                  Quote Pinned Post
+                </h3>
+
+                <p>
+                  Quote the official pinned post
+                </p>
+              </div>
+
+            </div>
+
+            <div class="mission-arrow">
+              →
+            </div>
+
+          </a>
+
+
+          <a
+            href="https://x.com/VeyroHood/status/2095434542094115048"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mission"
+          >
+
+            <div class="mission-left">
+
+              <div class="mission-icon">
+                R
+              </div>
+
+              <div>
+                <h3>
+                  Reply to Pinned Post
+                </h3>
+
+                <p>
+                  Reply to the official pinned post
+                </p>
+              </div>
+
+            </div>
+
+            <div class="mission-arrow">
+              →
+            </div>
+
+          </a>
+
+
+        </div>
+
+
+        <div style="text-align:center;margin-top:30px;">
+
+          <a
+            href="missions.html"
+            class="secondary-btn"
+          >
+            Open Mission Page →
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ALLOCATION -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="section-title">
+
+          <h2>
+            Whitelist Allocation
+          </h2>
+
+          <p>
+            VeyroHood has two allocation stages.
+          </p>
+
+        </div>
+
+
+        <div class="allocation">
+
+
+          <div class="allocation-card">
+
+            <h3>
+              OG — First 1,000
+            </h3>
+
+            <p>
+              The first 1,000 successfully verified participants
+              receive OG status and can mint their allocated NFT
+              using the same wallet used for verification.
+            </p>
+
+            <div class="progress">
+              <span id="ogProgress"></span>
+            </div>
+
+          </div>
+
+
+          <div class="allocation-card">
+
+            <h3>
+              FCFS — Remaining 9,000
+            </h3>
+
+            <p>
+              After the OG allocation, the remaining 9,000 NFTs
+              are available through the FCFS allocation for
+              eligible participants.
+            </p>
+
+            <div class="progress">
+              <span id="fcfsProgress"></span>
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- REFERRAL -->
+
+    <section>
+
+      <div class="container">
+
+        <div class="section-title">
+
+          <h2>
+            VeyroHood Referral
+          </h2>
+
+          <p>
+            Invite verified participants and earn referral rewards.
+          </p>
+
+        </div>
+
+
+        <div class="referral-box">
+
+          <h3>
+            Earn 20% Referral Rewards
+          </h3>
+
+          <p>
+            After successful verification, your personal referral
+            link can be used to invite others. Referral rewards
+            and withdrawals will be handled by the backend.
+          </p>
+
+
+          <div class="referral-stats">
+
+            <div class="ref-stat">
+
+              <strong id="referralsCount">
+                0
+              </strong>
+
+              <span>
+                Referrals
+              </span>
+
+            </div>
+
+
+            <div class="ref-stat">
+
+              <strong id="referralEarned">
+                $0.00
+              </strong>
+
+              <span>
+                Earned
+              </span>
+
+            </div>
+
+
+            <div class="ref-stat">
+
+              <strong>
+                $2.00
+              </strong>
+
+              <span>
+                Minimum Withdrawal
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- VERIFY CTA -->
+
+    <section>
+
+      <div class="container">
+
+        <div
+          class="referral-box"
+          style="padding:45px 25px;"
+        >
+
+          <h3>
+            Ready to Secure Your Place?
+          </h3>
+
+          <p style="margin-bottom:25px;">
+            Connect your wallet and continue to the
+            VeyroHood verification page.
+          </p>
+
+          <a
+            href="verify.html"
+            class="primary-btn"
+          >
+            Continue to Verification →
+          </a>
+
+        </div>
+
+
+        <div class="rule-box">
+
+          <h3>
+            Important
+          </h3>
+
+          <p>
+            Completing missions does not automatically mean that
+            your wallet is verified or that you are guaranteed an NFT.
+            Eligibility, verification, allocation and blockchain
+            payment status are determined by the VeyroHood backend.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="container footer-inner">
+
+      <div>
+        © 2026 VeyroHood. All rights reserved.
+      </div>
+
+      <div class="footer-links">
+
+        <a
+          href="https://x.com/VeyroHood"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          X
+        </a>
+
+        <a
+          href="https://discord.gg/6CYd3ewU5"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Discord
+        </a>
+
+        <a href="missions.html">
+          Missions
+        </a>
+
+        <a href="verify.html">
+          Verify
+        </a>
 
       </div>
 
     </div>
 
-    <div class="nft-info">
+  </footer>
 
-      <span>
-        VeyroHood #0001
-      </span>
 
-      <span class="live">
-        ● LIVE
-      </span>
+  <!-- WALLET SCRIPT -->
 
-    </div>
+  <script>
 
-  </div>
+    const connectWallet =
+      document.getElementById("connectWallet");
 
-</section>
+    let connectedWallet = null;
 
-<section class="stats">
 
-  <div class="stat">
+    connectWallet.addEventListener(
+      "click",
+      async () => {
 
-    <span
-      id="totalJoined"
-      class="stat-number"
-    >
-      —
-    </span>
+        if (!window.ethereum) {
 
-    <span class="stat-label">
-      Total Joined
-    </span>
+          alert(
+            "No EVM wallet detected. Please open VeyroHood using MetaMask, Rabby, OKX Wallet or another compatible wallet."
+          );
 
-  </div>
-
-  <div class="stat">
-
-    <span
-      id="totalVerified"
-      class="stat-number"
-    >
-      —
-    </span>
-
-    <span class="stat-label">
-      Total Verified
-    </span>
-
-  </div>
-
-  <div class="stat">
-
-    <span
-      id="ogRemaining"
-      class="stat-number"
-    >
-      1,000
-    </span>
-
-    <span class="stat-label">
-      OG Slots
-    </span>
-
-  </div>
-
-  <div class="stat">
-
-    <span
-      id="fcfsRemaining"
-      class="stat-number"
-    >
-      9,000
-    </span>
-
-    <span class="stat-label">
-      FCFS NFTs
-    </span>
-
-  </div>
-
-</section>
-
-<section
-  id="how-it-works"
-  class="section"
->
-
-  <div class="section-label">
-    HOW IT WORKS
-  </div>
-
-  <h2 class="section-title">
-    Verified access only.
-  </h2>
-
-  <div class="steps">
-
-    <article class="step">
-
-      <div class="step-number">
-        01
-      </div>
-
-      <h3>
-        Connect Wallet
-      </h3>
-
-      <p>
-        Connect the wallet you intend to use
-        for verification and NFT minting.
-      </p>
-
-    </article>
-
-    <article class="step">
-
-      <div class="step-number">
-        02
-      </div>
-
-      <h3>
-        Complete Missions
-      </h3>
-
-      <p>
-        Follow X, join Discord, quote the
-        pinned post and reply to it.
-      </p>
-
-    </article>
-
-    <article class="step">
-
-      <div class="step-number">
-        03
-      </div>
-
-      <h3>
-        Verify
-      </h3>
-
-      <p>
-        Submit your usernames and proof links.
-        Missions alone never create OG/WL status.
-      </p>
-
-    </article>
-
-    <article class="step">
-
-      <div class="step-number">
-        04
-      </div>
-
-      <h3>
-        Mint
-      </h3>
-
-      <p>
-        First 1,000 verified wallets are OG.
-        Later verified users enter FCFS.
-      </p>
-
-    </article>
-
-  </div>
-
-</section>
-
-<section class="rule-box">
-
-  <div>
-
-    <h2>
-      1 Wallet = 1 NFT
-    </h2>
-
-    <p>
-      Total supply is exactly 10,000.
-      The first 1,000 successfully verified wallets
-      receive OG status. After OG is full, later
-      verified users are WL/FCFS eligible.
-      The first 9,000 successful eligible mints
-      receive the remaining NFTs.
-    </p>
-
-  </div>
-
-  <a
-    href="missions.html"
-    class="primary-btn"
-  >
-    Start Now
-  </a>
-
-</section>
-
-</main>
-
-<footer>
-
-  <span>
-    © 2026 VeyroHood
-  </span>
-
-  <div class="footer-links">
-
-    <a
-      href="https://x.com/VeyroHood"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      X
-    </a>
-
-    <a
-      href="https://discord.gg/6CYd3ewU5"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Discord
-    </a>
-
-  </div>
-
-</footer><script>
-
-const connectWallet =
-  document.getElementById("connectWallet");
-
-if (connectWallet) {
-
-  connectWallet.addEventListener(
-    "click",
-    async function () {
-
-      if (!window.ethereum) {
-
-        alert(
-          "Please install MetaMask, Rabby, OKX Wallet, or another EVM wallet."
-        );
-
-        return;
-      }
-
-      try {
-
-        const accounts =
-          await window.ethereum.request({
-            method: "eth_requestAccounts"
-          });
-
-        if (!accounts || !accounts.length) {
           return;
         }
 
-        const wallet = accounts[0];
 
-        connectWallet.textContent =
-          wallet.slice(0, 6) +
-          "..." +
-          wallet.slice(-4);
+        try {
 
-      } catch (error) {
+          const accounts =
+            await window.ethereum.request({
+              method: "eth_requestAccounts"
+            });
 
-        console.error(
-          "Wallet connection error:",
-          error
-        );
+
+          if (
+            !accounts ||
+            !accounts.length
+          ) {
+            return;
+          }
+
+
+          connectedWallet =
+            accounts[0];
+
+
+          connectWallet.textContent =
+            connectedWallet.slice(0, 6) +
+            "..." +
+            connectedWallet.slice(-4);
+
+        }
+
+        catch (error) {
+
+          console.error(error);
+
+        }
 
       }
+    );
+
+
+    if (window.ethereum) {
+
+      window.ethereum.on(
+        "accountsChanged",
+        (accounts) => {
+
+          if (
+            !accounts ||
+            !accounts.length
+          ) {
+
+            connectedWallet = null;
+
+            connectWallet.textContent =
+              "Connect Wallet";
+
+            return;
+
+          }
+
+
+          connectedWallet =
+            accounts[0];
+
+
+          connectWallet.textContent =
+            connectedWallet.slice(0, 6) +
+            "..." +
+            connectedWallet.slice(-4);
+
+        }
+      );
 
     }
-  );
 
-}
 
-</script>
+    /*
+      CURRENTLY STATIC STATS
+
+      এগুলো পরে Cloudflare Worker + D1
+      backend-এর সাথে live করা হবে।
+    */
+
+    const totalJoined =
+      document.getElementById("totalJoined");
+
+    const verifiedCount =
+      document.getElementById("verifiedCount");
+
+    const ogCount =
+      document.getElementById("ogCount");
+
+    const fcfsCount =
+      document.getElementById("fcfsCount");
+
+    const ogProgress =
+      document.getElementById("ogProgress");
+
+    const fcfsProgress =
+      document.getElementById("fcfsProgress");
+
+    const referralsCount =
+      document.getElementById("referralsCount");
+
+    const referralEarned =
+      document.getElementById("referralEarned");
+
+
+    const VERIFIED = 0;
+    const OG = 0;
+    const FCFS = 0;
+
+
+    totalJoined.textContent =
+      VERIFIED;
+
+    verifiedCount.textContent =
+      VERIFIED;
+
+    ogCount.textContent =
+      OG + " / 1,000";
+
+    fcfsCount.textContent =
+      FCFS + " / 9,000";
+
+
+    ogProgress.style.width =
+      Math.min(
+        (OG / 1000) * 100,
+        100
+      ) + "%";
+
+
+    fcfsProgress.style.width =
+      Math.min(
+        (FCFS / 9000) * 100,
+        100
+      ) + "%";
+
+
+    referralsCount.textContent =
+      "0";
+
+    referralEarned.textContent =
+      "$0.00";
+
+  </script>
 
 </body>
 </html>
