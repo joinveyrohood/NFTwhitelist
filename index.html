@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
+
+<meta
+  name="description"
+  content="VeyroHood — Complete missions, verify your wallet, unlock OG or WL access, and mint."
+>
+
+<meta name="theme-color" content="#07080c">
+
+<title>VeyroHood — NFT Community</title>
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #07080c;
+  color: #f5f7fa;
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  overflow-x: hidden;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* BACKGROUND */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(180, 255, 50, 0.10),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at 85% 30%,
+      rgba(0, 220, 255, 0.08),
+      transparent 30%
+    ),
+
+    linear-gradient(
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    auto,
+    auto,
+    50px 50px,
+    50px 50px;
+
+  pointer-events: none;
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 20%,
+      rgba(0,0,0,0.65) 100%
+    );
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* NAVBAR */
+
+.navbar {
+  width: min(1180px, calc(100% - 32px));
+  margin: auto;
+
+  height: 78px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+  z-index: 20;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  font-size: 14px;
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
+}
+
+.logo-box {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #b7ff3c;
+  color: #08090c;
+
+  font-size: 19px;
+  font-weight: 1000;
+
+  box-shadow:
+    0 0 25px rgba(183,255,60,0.22);
+}
+
+.connect-btn {
+  min-height: 44px;
+
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: #b7ff3c;
+  color: #07080c;
+
+  font-weight: 900;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.connect-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 30px rgba(183,255,60,0.20);
+}
+
+/* HERO */
+
+.hero {
+  width: min(1180px, calc(100% - 32px));
+  margin: auto;
+
+  min-height: calc(100vh - 78px);
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+
+  align-items: center;
+
+  gap: 70px;
+
+  padding:
+    50px 0
+    90px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 18px;
+
+  color: #b7ff3c;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 0.18em;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #b7ff3c;
+
+  box-shadow:
+    0 0 15px #b7ff3c;
+
+  animation: pulse 1.7s infinite;
+}
+
+@keyframes pulse {
+
+  0%,100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+.hero-title {
+  max-width: 760px;
+
+  font-size: clamp(
+    50px,
+    7vw,
+    86px
+  );
+
+  line-height: 0.94;
+
+  letter-spacing: -0.065em;
+
+  font-weight: 950;
+}
+
+.hero-title span {
+  color: #b7ff3c;
+}
+
+.hero-description {
+  max-width: 610px;
+
+  margin-top: 25px;
+
+  color: #9ba3b2;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-top: 32px;
+}
+
+.primary-btn,
+.secondary-btn {
+  min-height: 54px;
+
+  padding: 0 22px;
+
+  border-radius: 13px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 900;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primary-btn {
+  border: 0;
+
+  background: #b7ff3c;
+  color: #07080c;
+}
+
+.secondary-btn {
+  border: 1px solid #292e39;
+
+  background: rgba(255,255,255,0.025);
+
+  color: #fff;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+  transform: translateY(-2px);
+}
+
+.secondary-btn:hover {
+  border-color: #4b5362;
+  background: rgba(255,255,255,0.05);
+}
+
+.security-line {
+  margin-top: 18px;
+
+  color: #737b8a;
+
+  font-size: 12px;
+}
+
+/* NFT */
+
+.nft-area {
+  position: relative;
+
+  width: min(460px, 100%);
+
+  margin: auto;
+}
+
+.glow {
+  position: absolute;
+
+  width: 230px;
+  height: 230px;
+
+  border-radius: 50%;
+
+  filter: blur(70px);
+
+  opacity: 0.28;
+
+  pointer-events: none;
+}
+
+.glow-one {
+  top: -50px;
+  right: -30px;
+
+  background: #b7ff3c;
+}
+
+.glow-two {
+  bottom: -40px;
+  left: -30px;
+
+  background: #27d9ff;
+}
+
+.nft-card {
+  position: relative;
+
+  aspect-ratio: 1 / 1;
+
+  padding: 14px;
+
+  border-radius: 31px;
+
+  border: 1px solid #2a303c;
+
+  background:
+    linear-gradient(
+      145deg,
+      #171a22,
+      #0c0e13
+    );
+
+  box-shadow:
+    0 40px 100px rgba(0,0,0,0.65);
+
+  transform: rotate(2deg);
+
+  animation:
+    floating 5s ease-in-out infinite;
+}
+
+@keyframes floating {
+
+  0%,100% {
+    transform: translateY(0) rotate(2deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+
+}
+
+.nft-inner {
+  height: 100%;
+
+  border-radius: 23px;
+
+  border: 1px solid #303744;
+
+  overflow: hidden;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(183,255,60,0.17),
+      transparent 35%
+    ),
+
+    linear-gradient(
+      160deg,
+      #151922,
+      #090b10
+    );
+}
+
+.character {
+  width: 72%;
+
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(183,255,60,0.15),
+      transparent 62%
+    );
+
+  animation:
+    characterFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes characterFloat {
+
+  0%,100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+}
+
+.character-mark {
+  font-size: clamp(
+    60px,
+    10vw,
+    105px
+  );
+
+  font-weight: 1000;
+
+  letter-spacing: -0.08em;
+
+  color: #b7ff3c;
+
+  text-shadow:
+    0 0 30px rgba(183,255,60,0.25);
+}
+
+.character-name {
+  margin-top: 8px;
+
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.25em;
+}
+
+.scan-line {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  height: 1px;
+
+  background: #b7ff3c;
+
+  box-shadow:
+    0 0 18px #b7ff3c;
+
+  opacity: 0.7;
+
+  animation:
+    scan 3.5s ease-in-out infinite;
+}
+
+@keyframes scan {
+
+  0%,100% {
+    top: 20%;
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0.8;
+  }
+
+  70% {
+    top: 80%;
+    opacity: 0;
+  }
+
+}
+
+.nft-info {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 16px;
+
+  color: #818998;
+
+  font-size: 12px;
+}
+
+.live {
+  color: #b7ff3c;
+  font-weight: 900;
+}
+
+/* STATS */
+
+.stats {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto 90px;
+
+  display: grid;
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  overflow: hidden;
+
+  border: 1px solid #242a35;
+
+  border-radius: 20px;
+
+  background: rgba(16,18,25,0.82);
+
+  backdrop-filter: blur(15px);
+}
+
+.stat {
+  padding: 25px;
+
+  border-right: 1px solid #242a35;
+}
+
+.stat:last-child {
+  border-right: 0;
+}
+
+.stat-number {
+  display: block;
+
+  font-size: 29px;
+
+  font-weight: 950;
+}
+
+.stat-label {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #7f8795;
+
+  font-size: 12px;
+}
+
+/* SECTION */
+
+.section {
+  width: min(1180px, calc(100% - 32px));
+
+  margin: 0 auto;
+
+  padding-bottom: 100px;
+}
+
+.section-label {
+  color: #b7ff3c;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.18em;
+}
+
+.section-title {
+  margin-top: 10px;
+
+  font-size: clamp(
+    34px,
+    5vw,
+    48px
+  );
+
+  line-height: 1;
+
+  letter-spacing: -0.05em;
+}
+
+.steps {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 14px;
+
+  margin-top: 32px;
+}
+
+.step {
+  padding: 25px;
+
+  min-height: 210px;
+
+  border: 1px solid #242a35;
+
+  border-radius: 20px;
+
+  background: #101219;
+}
+
+.step-number {
+  color: #b7ff3c;
+
+  font-size: 12px;
+
+  font-weight: 900;
+}
+
+.step h3 {
+  margin-top: 35px;
+
+  font-size: 19px;
+}
+
+.step p {
+  margin-top: 10px;
+
+  color: #858d9c;
+
+  font-size: 13px;
+
+  line-height: 1.65;
+  }
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+  <a href="index.html" class="logo">
+
+    <span class="logo-box">
+      V
+    </span>
+
+    <span>
+      VEYROHOOD
+    </span>
+
+  </a>
+
+  <button
+    id="connectWallet"
+    class="connect-btn"
+    type="button"
+  >
+    Connect Wallet
+  </button>
+
+</header>
+
+<main>
+
+<section class="hero">
+
+  <div>
+
+    <div class="eyebrow">
+      <span class="status-dot"></span>
+      10,000 NFT SUPPLY
+    </div>
+
+    <h1 class="hero-title">
+      Earn your place.<br>
+      <span>Mint your hood.</span>
+    </h1>
+
+    <p class="hero-description">
+      Complete the VeyroHood missions, submit your verification,
+      and unlock your verified OG or WL status.
+      One wallet can mint one NFT.
+    </p>
+
+    <div class="hero-actions">
+
+      <a
+        href="missions.html"
+        class="primary-btn"
+      >
+        Start Missions
+      </a>
+
+      <a
+        href="#how-it-works"
+        class="secondary-btn"
+      >
+        How It Works
+      </a>
+
+    </div>
+
+    <div class="security-line">
+      🔒 Missions alone do not grant OG/WL.
+      Verification is mandatory.
+    </div>
+
+  </div>
+
+  <div class="nft-area">
+
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
+
+    <div class="nft-card">
+
+      <div class="nft-inner">
+
+        <div class="character">
+
+          <div class="character-mark">
+            V
+          </div>
+
+          <div class="character-name">
+            VEYROHOOD
+          </div>
+
+        </div>
+
+        <div class="scan-line"></div>
+
+      </div>
+
+    </div>
+
+    <div class="nft-info">
+
+      <span>
+        VeyroHood #0001
+      </span>
+
+      <span class="live">
+        ● LIVE
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="stats">
+
+  <div class="stat">
+
+    <span
+      id="totalJoined"
+      class="stat-number"
+    >
+      —
+    </span>
+
+    <span class="stat-label">
+      Total Joined
+    </span>
+
+  </div>
+
+  <div class="stat">
+
+    <span
+      id="totalVerified"
+      class="stat-number"
+    >
+      —
+    </span>
+
+    <span class="stat-label">
+      Total Verified
+    </span>
+
+  </div>
+
+  <div class="stat">
+
+    <span
+      id="ogRemaining"
+      class="stat-number"
+    >
+      1,000
+    </span>
+
+    <span class="stat-label">
+      OG Slots
+    </span>
+
+  </div>
+
+  <div class="stat">
+
+    <span
+      id="fcfsRemaining"
+      class="stat-number"
+    >
+      9,000
+    </span>
+
+    <span class="stat-label">
+      FCFS NFTs
+    </span>
+
+  </div>
+
+</section>
+
+<section
+  id="how-it-works"
+  class="section"
+>
+
+  <div class="section-label">
+    HOW IT WORKS
+  </div>
+
+  <h2 class="section-title">
+    Verified access only.
+  </h2>
+
+  <div class="steps">
+
+    <article class="step">
+
+      <div class="step-number">
+        01
+      </div>
+
+      <h3>
+        Connect Wallet
+      </h3>
+
+      <p>
+        Connect the wallet you intend to use
+        for verification and NFT minting.
+      </p>
+
+    </article>
+
+    <article class="step">
+
+      <div class="step-number">
+        02
+      </div>
+
+      <h3>
+        Complete Missions
+      </h3>
+
+      <p>
+        Follow X, join Discord, quote the
+        pinned post and reply to it.
+      </p>
+
+    </article>
+
+    <article class="step">
+
+      <div class="step-number">
+        03
+      </div>
+
+      <h3>
+        Verify
+      </h3>
+
+      <p>
+        Submit your usernames and proof links.
+        Missions alone never create OG/WL status.
+      </p>
+
+    </article>
+
+    <article class="step">
+
+      <div class="step-number">
+        04
+      </div>
+
+      <h3>
+        Mint
+      </h3>
+
+      <p>
+        First 1,000 verified wallets are OG.
+        Later verified users enter FCFS.
+      </p>
+
+    </article>
+
+  </div>
+
+</section>
+
+<section class="rule-box">
+
+  <div>
+
+    <h2>
+      1 Wallet = 1 NFT
+    </h2>
+
+    <p>
+      Total supply is exactly 10,000.
+      The first 1,000 successfully verified wallets
+      receive OG status. After OG is full, later
+      verified users are WL/FCFS eligible.
+      The first 9,000 successful eligible mints
+      receive the remaining NFTs.
+    </p>
+
+  </div>
+
+  <a
+    href="missions.html"
+    class="primary-btn"
+  >
+    Start Now
+  </a>
+
+</section>
+
+</main>
+
+<footer>
+
+  <span>
+    © 2026 VeyroHood
+  </span>
+
+  <div class="footer-links">
+
+    <a
+      href="https://x.com/VeyroHood"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      X
+    </a>
+
+    <a
+      href="https://discord.gg/6CYd3ewU5"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Discord
+    </a>
+
+  </div>
+
+</footer><script>
+
+const connectWallet =
+  document.getElementById("connectWallet");
+
+if (connectWallet) {
+
+  connectWallet.addEventListener(
+    "click",
+    async function () {
+
+      if (!window.ethereum) {
+
+        alert(
+          "Please install MetaMask, Rabby, OKX Wallet, or another EVM wallet."
+        );
+
+        return;
+      }
+
+      try {
+
+        const accounts =
+          await window.ethereum.request({
+            method: "eth_requestAccounts"
+          });
+
+        if (!accounts || !accounts.length) {
+          return;
+        }
+
+        const wallet = accounts[0];
+
+        connectWallet.textContent =
+          wallet.slice(0, 6) +
+          "..." +
+          wallet.slice(-4);
+
+      } catch (error) {
+
+        console.error(
+          "Wallet connection error:",
+          error
+        );
+
+      }
+
+    }
+  );
+
+}
+
+</script>
+
+</body>
+</html>
