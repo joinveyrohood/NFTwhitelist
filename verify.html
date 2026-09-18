@@ -644,7 +644,7 @@ footer {
 
 <body>
 
-  <header class="navbar">
+<header class="navbar">
 
   <a href="index.html" class="logo">
     <span class="logo-box">V</span>
@@ -898,8 +898,24 @@ footer {
 
 <script>
 
+/* =========================
+   CLOUDFLARE WORKER
+========================= */
+
+const API_URL =
+  "https://veyrohood-verification.mdb885941.workers.dev";
+
+
+/* =========================
+   STATE
+========================= */
+
 let connectedWallet = null;
 
+
+/* =========================
+   ELEMENTS
+========================= */
 
 const connectWalletButton =
   document.getElementById("connectWallet");
@@ -907,19 +923,57 @@ const connectWalletButton =
 const walletAddress =
   document.getElementById("walletAddress");
 
+const submitButton =
+  document.getElementById("submitVerification");
+
+const formStatus =
+  document.getElementById("formStatus");
+
+const nextStep =
+  document.getElementById("nextStep");
+
+
+/* =========================
+   STATUS
+========================= */
 
 function showStatus(message, type) {
 
-  const status =
-    document.getElementById("formStatus");
+  formStatus.textContent = message;
 
-  status.textContent = message;
-
-  status.className =
+  formStatus.className =
     "form-status show " + type;
 
 }
 
+
+/* =========================
+   URL VALIDATION
+========================= */
+
+function isValidUrl(value) {
+
+  try {
+
+    const url = new URL(value);
+
+    return (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    );
+
+  } catch {
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================
+   CONNECT WALLET
+========================= */
 
 connectWalletButton.addEventListener(
   "click",
@@ -942,7 +996,10 @@ connectWalletButton.addEventListener(
           method: "eth_requestAccounts"
         });
 
-      if (!accounts || !accounts.length) {
+      if (
+        !accounts ||
+        !accounts.length
+      ) {
 
         showStatus(
           "Wallet connection was not completed.",
@@ -952,9 +1009,11 @@ connectWalletButton.addEventListener(
         return;
       }
 
-      connectedWallet = accounts[0];
+      connectedWallet =
+        accounts[0];
 
-      walletAddress.style.display = "block";
+      walletAddress.style.display =
+        "block";
 
       walletAddress.textContent =
         connectedWallet;
@@ -963,7 +1022,7 @@ connectWalletButton.addEventListener(
         "Wallet Connected ✓";
 
       showStatus(
-        "Wallet connected. Continue by submitting your mission details.",
+        "Wallet connected successfully.",
         "success"
       );
 
@@ -982,56 +1041,40 @@ connectWalletButton.addEventListener(
 );
 
 
-function isValidUrl(value) {
-
-  try {
-
-    const url = new URL(value);
-
-    return (
-      url.protocol === "https:" ||
-      url.protocol === "http:"
-    );
-
-  } catch {
-
-    return false;
-
-  }
-
-}
-
-
-const submitButton =
-  document.getElementById(
-    "submitVerification"
-  );
-
+/* =========================
+   SUBMIT VERIFICATION
+========================= */
 
 submitButton.addEventListener(
   "click",
   async () => {
 
     const xUsername =
-      document.getElementById(
-        "xUsername"
-      ).value.trim();
+      document
+        .getElementById("xUsername")
+        .value
+        .trim();
 
     const discordUsername =
-      document.getElementById(
-        "discordUsername"
-      ).value.trim();
+      document
+        .getElementById("discordUsername")
+        .value
+        .trim();
 
     const quoteLink =
-      document.getElementById(
-        "quoteLink"
-      ).value.trim();
+      document
+        .getElementById("quoteLink")
+        .value
+        .trim();
 
     const replyLink =
-      document.getElementById(
-        "replyLink"
-      ).value.trim();
+      document
+        .getElementById("replyLink")
+        .value
+        .trim();
 
+
+    /* WALLET */
 
     if (!connectedWallet) {
 
@@ -1044,6 +1087,8 @@ submitButton.addEventListener(
     }
 
 
+    /* X */
+
     if (!xUsername) {
 
       showStatus(
@@ -1054,6 +1099,8 @@ submitButton.addEventListener(
       return;
     }
 
+
+    /* DISCORD */
 
     if (!discordUsername) {
 
@@ -1066,6 +1113,8 @@ submitButton.addEventListener(
     }
 
 
+    /* QUOTE */
+
     if (!isValidUrl(quoteLink)) {
 
       showStatus(
@@ -1076,6 +1125,8 @@ submitButton.addEventListener(
       return;
     }
 
+
+    /* REPLY */
 
     if (!isValidUrl(replyLink)) {
 
@@ -1088,38 +1139,162 @@ submitButton.addEventListener(
     }
 
 
+    /* LOADING */
+
     submitButton.disabled = true;
 
     submitButton.textContent =
-      "Preparing Verification...";
-
-
-    await new Promise(
-      resolve =>
-        setTimeout(resolve, 700)
-    );
-
-
-    submitButton.disabled = false;
-
-    submitButton.textContent =
-      "Check & Continue →";
-
+      "Submitting Verification...";
 
     showStatus(
-      "Basic information is valid. Backend verification is not connected yet.",
+      "Sending your information to the verification server...",
       "success"
     );
 
 
-    document
-      .getElementById("nextStep")
-      .classList
-      .add("show");
+    try {
+
+      /* =========================
+         SEND DATA TO WORKER
+      ========================= */
+
+      const response =
+        await fetch(
+          API_URL + "/verify",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+
+              x_username:
+                xUsername,
+
+              discord_username:
+                discordUsername,
+
+              quote_link:
+                quoteLink,
+
+              reply_link:
+                replyLink,
+
+              wallet_address:
+                connectedWallet
+
+            })
+          }
+        );
+
+
+      /* =========================
+         READ SERVER RESPONSE
+      ========================= */
+
+      const result =
+        await response.json();
+
+
+      console.log(
+        "Verification response:",
+        result
+      );
+
+
+      /* =========================
+         SERVER ERROR
+      ========================= */
+
+      if (
+        !response.ok ||
+        !result.success
+      ) {
+
+        throw new Error(
+          result.error ||
+          "Verification submission failed."
+        );
+
+      }
+
+
+      /* =========================
+         SUCCESS
+      ========================= */
+
+      showStatus(
+        "Verification submitted successfully. Your information is now pending server-side verification.",
+        "success"
+      );
+
+
+      nextStep
+        .classList
+        .add("show");
+
+
+      /* =========================
+         VERIFICATION ID
+      ========================= */
+
+      const nextStepParagraph =
+        nextStep.querySelector("p");
+
+
+      if (nextStepParagraph) {
+
+        nextStepParagraph.textContent =
+          "Your verification request has been submitted successfully. Verification ID: #" +
+          result.id +
+          ". Payment and NFT eligibility will only become available after successful verification.";
+
+      }
+
+
+      /* =========================
+         DISABLE BUTTON
+      ========================= */
+
+      submitButton.disabled =
+        true;
+
+      submitButton.textContent =
+        "Verification Submitted ✓";
+
+
+    } catch (error) {
+
+      console.error(
+        "Verification error:",
+        error
+      );
+
+
+      showStatus(
+        "Could not submit verification. Please check your internet connection and try again.",
+        "error"
+      );
+
+
+      submitButton.disabled =
+        false;
+
+      submitButton.textContent =
+        "Check & Continue →";
+
+    }
 
   }
 );
 
+
+/* =========================
+   WALLET ACCOUNT CHANGE
+========================= */
 
 if (window.ethereum) {
 
@@ -1127,9 +1302,13 @@ if (window.ethereum) {
     "accountsChanged",
     (accounts) => {
 
-      if (!accounts || !accounts.length) {
+      if (
+        !accounts ||
+        !accounts.length
+      ) {
 
-        connectedWallet = null;
+        connectedWallet =
+          null;
 
         walletAddress.style.display =
           "none";
@@ -1137,19 +1316,35 @@ if (window.ethereum) {
         connectWalletButton.textContent =
           "Connect Wallet";
 
+        showStatus(
+          "Wallet disconnected.",
+          "error"
+        );
+
         return;
       }
 
-      connectedWallet = accounts[0];
+
+      connectedWallet =
+        accounts[0];
+
 
       walletAddress.style.display =
         "block";
 
+
       walletAddress.textContent =
         connectedWallet;
 
+
       connectWalletButton.textContent =
         "Wallet Connected ✓";
+
+
+      showStatus(
+        "Wallet account updated.",
+        "success"
+      );
 
     }
   );
