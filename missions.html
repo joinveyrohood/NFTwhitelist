@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
+
+<meta
+  name="description"
+  content="VeyroHood Missions — Complete all missions before verification."
+>
+
+<meta
+  name="theme-color"
+  content="#07080c"
+>
+
+<title>VeyroHood — Missions</title>
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+
+  background: #07080c;
+
+  color: #f5f7fa;
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  overflow-x: hidden;
+}
+
+button,
+a,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* BACKGROUND */
+
+body::before {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(183,255,60,0.10),
+      transparent 30%
+    ),
+
+    radial-gradient(
+      circle at 85% 30%,
+      rgba(0,220,255,0.08),
+      transparent 30%
+    ),
+
+    linear-gradient(
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,0.025) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    auto,
+    auto,
+    50px 50px,
+    50px 50px;
+
+  pointer-events: none;
+
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 20%,
+      rgba(0,0,0,0.65) 100%
+    );
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+/* NAVBAR */
+
+.navbar {
+
+  width:
+    min(1180px, calc(100% - 32px));
+
+  height: 78px;
+
+  margin: auto;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  position: relative;
+
+  z-index: 20;
+}
+
+.logo {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  font-size: 14px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
+}
+
+.logo-box {
+
+  width: 38px;
+
+  height: 38px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #b7ff3c;
+
+  color: #08090c;
+
+  font-size: 19px;
+
+  font-weight: 1000;
+
+  box-shadow:
+    0 0 25px rgba(183,255,60,0.22);
+}
+
+.back-btn {
+
+  min-height: 44px;
+
+  padding: 0 17px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid #292e39;
+
+  border-radius: 12px;
+
+  background:
+    rgba(255,255,255,0.025);
+
+  color: #fff;
+
+  font-weight: 800;
+
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+
+  transform:
+    translateY(-2px);
+
+  border-color:
+    #b7ff3c;
+
+  color:
+    #b7ff3c;
+}
+
+/* MAIN */
+
+.container {
+
+  width:
+    min(900px, calc(100% - 32px));
+
+  margin:
+    0 auto;
+
+  padding:
+    65px 0 100px;
+}
+
+.header {
+
+  text-align: center;
+
+  max-width: 720px;
+
+  margin:
+    0 auto 45px;
+}
+
+.eyebrow {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 17px;
+
+  color: #b7ff3c;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.18em;
+}
+
+.status-dot {
+
+  width: 7px;
+
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #b7ff3c;
+
+  box-shadow:
+    0 0 15px #b7ff3c;
+
+  animation:
+    pulse 1.7s infinite;
+}
+
+@keyframes pulse {
+
+  0%,100% {
+
+    opacity: 0.35;
+
+    transform:
+      scale(0.8);
+  }
+
+  50% {
+
+    opacity: 1;
+
+    transform:
+      scale(1);
+  }
+
+}
+
+h1 {
+
+  font-size:
+    clamp(43px, 8vw, 72px);
+
+  line-height:
+    0.95;
+
+  letter-spacing:
+    -0.06em;
+
+  font-weight:
+    950;
+}
+
+h1 span {
+
+  color:
+    #b7ff3c;
+}
+
+.header-description {
+
+  max-width:
+    650px;
+
+  margin:
+    22px auto 0;
+
+  color:
+    #8f97a6;
+
+  font-size:
+    15px;
+
+  line-height:
+    1.7;
+}
+
+/* MISSION LIST */
+
+.missions {
+
+  display:
+    grid;
+
+  gap:
+    15px;
+}
+
+.mission {
+
+  padding:
+    23px;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    52px 1fr auto;
+
+  align-items:
+    center;
+
+  gap:
+    18px;
+
+  border:
+    1px solid #252b36;
+
+  border-radius:
+    20px;
+
+  background:
+    rgba(16,18,25,0.88);
+
+  transition:
+    border-color .2s ease,
+    transform .2s ease;
+}
+
+.mission:hover {
+
+  border-color:
+    #3c4554;
+
+  transform:
+    translateY(-2px);
+}
+
+.mission-icon {
+
+  width:
+    52px;
+
+  height:
+    52px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  border-radius:
+    15px;
+
+  background:
+    rgba(183,255,60,0.08);
+
+  border:
+    1px solid rgba(183,255,60,0.18);
+
+  color:
+    #b7ff3c;
+
+  font-size:
+    21px;
+
+  font-weight:
+    950;
+}
+
+.mission-content h2 {
+
+  font-size:
+    18px;
+
+  font-weight:
+    900;
+}
+
+.mission-content p {
+
+  margin-top:
+    6px;
+
+  color:
+    #7f8795;
+
+  font-size:
+    13px;
+
+  line-height:
+    1.5;
+}
+
+.mission-action {
+
+  min-width:
+    125px;
+
+  min-height:
+    43px;
+
+  padding:
+    0 15px;
+
+  display:
+    inline-flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  border:
+    1px solid #333a47;
+
+  border-radius:
+    11px;
+
+  background:
+    rgba(255,255,255,0.025);
+
+  color:
+    #fff;
+
+  font-size:
+    13px;
+
+  font-weight:
+    900;
+
+  transition:
+    .2s ease;
+}
+
+.mission-action:hover {
+
+  border-color:
+    #b7ff3c;
+
+  color:
+    #b7ff3c;
+}
+.mission-action.done {
+  background: #b7ff3c;
+  border-color: #b7ff3c;
+  color: #07080c;
+}
+
+.notice {
+  margin-top: 22px;
+  padding: 18px 20px;
+
+  border: 1px solid #252b36;
+  border-radius: 16px;
+
+  background: rgba(255,255,255,0.025);
+
+  color: #8f97a6;
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.notice strong {
+  color: #fff;
+}
+
+.verify-box {
+  margin-top: 28px;
+  padding: 25px;
+
+  border: 1px solid #303743;
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(183,255,60,0.06),
+      rgba(255,255,255,0.02)
+    );
+
+  text-align: center;
+}
+
+.verify-box h2 {
+  font-size: 24px;
+}
+
+.verify-box p {
+  margin-top: 9px;
+
+  color: #858d9c;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.verify-btn {
+  margin-top: 20px;
+
+  min-height: 52px;
+
+  padding: 0 25px;
+
+  border: 0;
+  border-radius: 13px;
+
+  background: #b7ff3c;
+  color: #07080c;
+
+  font-weight: 950;
+
+  transition: .2s ease;
+}
+
+.verify-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 35px rgba(183,255,60,0.20);
+}
+
+footer {
+  width:
+    min(900px, calc(100% - 32px));
+
+  margin: auto;
+
+  padding:
+    30px 0 45px;
+
+  border-top:
+    1px solid #202530;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  color:
+    #6f7785;
+
+  font-size:
+    12px;
+}
+
+@media (max-width: 650px) {
+
+  .navbar {
+    height: 68px;
+  }
+
+  .logo span:last-child {
+    display: none;
+  }
+
+  .container {
+    padding-top: 45px;
+  }
+
+  .mission {
+    grid-template-columns: 45px 1fr;
+
+    padding: 18px;
+  }
+
+  .mission-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .mission-action {
+    grid-column: 2;
+
+    width: 100%;
+  }
+
+  footer {
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+  <a
+    href="index.html"
+    class="logo"
+  >
+
+    <span class="logo-box">
+      V
+    </span>
+
+    <span>
+      VEYROHOOD
+    </span>
+
+  </a>
+
+  <a
+    href="index.html"
+    class="back-btn"
+  >
+    ← Home
+  </a>
+
+</header>
+
+<main class="container">
+
+  <section class="header">
+
+    <div class="eyebrow">
+
+      <span class="status-dot"></span>
+
+      VeyroHood Missions
+
+    </div>
+
+    <h1>
+      Complete the
+      <span>missions.</span>
+    </h1>
+
+    <p class="header-description">
+
+      Complete all four community missions before
+      submitting verification. Your mission activity
+      will be checked by the verification system.
+
+    </p>
+
+  </section>
+
+  <section class="missions">
+
+    <!-- X FOLLOW -->
+
+    <article class="mission">
+
+      <div class="mission-icon">
+        X
+      </div>
+
+      <div class="mission-content">
+
+        <h2>
+          Follow VeyroHood on X
+        </h2>
+
+        <p>
+          Follow the official VeyroHood X account.
+        </p>
+
+      </div>
+
+      <a
+        class="mission-action"
+        href="https://x.com/VeyroHood"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Follow X
+      </a>
+
+    </article>
+
+
+    <!-- DISCORD -->
+
+    <article class="mission">
+
+      <div class="mission-icon">
+        D
+      </div>
+
+      <div class="mission-content">
+
+        <h2>
+          Join VeyroHood Discord
+        </h2>
+
+        <p>
+          Join the official VeyroHood Discord community.
+        </p>
+
+      </div>
+
+      <a
+        class="mission-action"
+        href="https://discord.gg/6CYd3ewU5"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Join Discord
+      </a>
+
+    </article>
+
+
+    <!-- QUOTE -->
+
+    <article class="mission">
+
+      <div class="mission-icon">
+        Q
+      </div>
+
+      <div class="mission-content">
+
+        <h2>
+          Quote the Pinned Post
+        </h2>
+
+        <p>
+          Quote the official VeyroHood pinned X post.
+        </p>
+
+      </div>
+
+      <a
+        class="mission-action"
+        href="https://x.com/VeyroHood/status/2095434542094115048"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Quote Post
+      </a>
+
+    </article>
+
+
+    <!-- REPLY -->
+
+    <article class="mission">
+
+      <div class="mission-icon">
+        R
+      </div>
+
+      <div class="mission-content">
+
+        <h2>
+          Reply to the Pinned Post
+        </h2>
+
+        <p>
+          Reply to the official VeyroHood pinned X post.
+        </p>
+
+      </div>
+
+      <a
+        class="mission-action"
+        href="https://x.com/VeyroHood/status/2095434542094115048"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Reply Post
+      </a>
+
+    </article>
+
+  </section>
+
+
+  <div class="notice">
+
+    <strong>Important:</strong>
+
+    Completing these missions alone does not grant
+    OG, WL, NFT eligibility, or a referral link.
+
+    You must complete the separate verification process
+    and successfully pass verification.
+
+  </div>
+
+
+  <section class="verify-box">
+
+    <h2>
+      Finished all missions?
+    </h2>
+
+    <p>
+      Continue to verification and submit your
+      X username, Discord username, Quote link,
+      and Reply link.
+    </p>
+
+    <a
+      href="verify.html"
+      class="verify-btn"
+    >
+      Continue to Verification →
+    </a>
+
+  </section>
+
+</main>
+
+<footer>
+
+  <span>
+    © 2026 VeyroHood
+  </span>
+
+  <span>
+    10,000 NFT Supply
+  </span>
+
+</footer>
+
+
+<script>
+
+/*
+  IMPORTANT:
+
+  This page only opens the official mission links.
+
+  It does NOT fake mission completion.
+
+  Actual verification will be handled
+  by the backend verification system.
+*/
+
+</script>
+
+</body>
+</html>
