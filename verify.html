@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
+
+<meta
+  name="description"
+  content="VeyroHood Verification — Verify your community missions."
+>
+
+<meta
+  name="theme-color"
+  content="#07080c"
+>
+
+<title>VeyroHood — Verification</title>
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #07080c;
+  color: #f5f7fa;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  overflow-x: hidden;
+}
+
+button,
+a,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* BACKGROUND */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(183,255,60,.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(80,120,255,.07),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      #07080c 0%,
+      #090b10 100%
+    );
+
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 40%,
+      rgba(0,0,0,.42) 100%
+    );
+
+  z-index: -1;
+}
+
+/* NAVBAR */
+
+.navbar {
+  width: min(900px, calc(100% - 32px));
+  height: 78px;
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: .16em;
+}
+
+.logo-box {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #b7ff3c;
+  color: #08090c;
+
+  font-size: 19px;
+  font-weight: 1000;
+
+  box-shadow:
+    0 0 25px rgba(183,255,60,.22);
+}
+
+.back-btn {
+  min-height: 44px;
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #292e39;
+  border-radius: 12px;
+
+  background: rgba(255,255,255,.025);
+  color: #fff;
+
+  font-weight: 800;
+
+  transition: .2s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  border-color: #b7ff3c;
+  color: #b7ff3c;
+}
+
+/* MAIN */
+
+.container {
+  width: min(720px, calc(100% - 32px));
+  margin: 0 auto;
+
+  padding: 58px 0 100px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-bottom: 17px;
+
+  color: #b7ff3c;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: .18em;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #b7ff3c;
+
+  box-shadow:
+    0 0 15px #b7ff3c;
+
+  animation: pulse 1.7s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: .35;
+    transform: scale(.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+h1 {
+  font-size: clamp(42px, 8vw, 66px);
+  line-height: .95;
+
+  letter-spacing: -.06em;
+  font-weight: 950;
+}
+
+h1 span {
+  color: #b7ff3c;
+}
+
+.header-description {
+  max-width: 620px;
+
+  margin: 20px auto 0;
+
+  color: #8f97a6;
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* CARD */
+
+.verify-card {
+  padding: 25px;
+
+  border: 1px solid #292f3a;
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(183,255,60,.055),
+      rgba(255,255,255,.018)
+    );
+
+  box-shadow:
+    0 20px 70px rgba(0,0,0,.25);
+}
+
+/* WALLET */
+
+.wallet-section {
+  padding-bottom: 24px;
+
+  border-bottom: 1px solid #252b35;
+}
+
+.wallet-section h2 {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.wallet-section p {
+  margin-top: 7px;
+
+  color: #858d9c;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.connect-wallet {
+  width: 100%;
+
+  min-height: 52px;
+
+  margin-top: 18px;
+
+  border: 0;
+  border-radius: 13px;
+
+  background: #b7ff3c;
+  color: #07080c;
+
+  font-weight: 950;
+
+  transition: .2s ease;
+}
+
+.connect-wallet:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 35px rgba(183,255,60,.20);
+}
+
+.wallet-address {
+  display: none;
+
+  margin-top: 13px;
+  padding: 12px 14px;
+
+  border: 1px solid #303743;
+  border-radius: 11px;
+
+  background: rgba(255,255,255,.025);
+
+  color: #b7ff3c;
+
+  font-family: monospace;
+  font-size: 12px;
+
+  word-break: break-all;
+}
+
+/* FORM */
+
+.form-section {
+  padding-top: 25px;
+}
+
+.form-section h2 {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.form-section > p {
+  margin-top: 7px;
+
+  color: #858d9c;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.form-group {
+  margin-top: 19px;
+}
+
+.form-group label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #dce1e8;
+
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.form-group input {
+  width: 100%;
+
+  min-height: 50px;
+
+  padding: 0 14px;
+
+  border: 1px solid #303743;
+  border-radius: 12px;
+
+  outline: none;
+
+  background: rgba(255,255,255,.025);
+  color: #fff;
+
+  font-size: 14px;
+
+  transition: .2s ease;
+}
+
+.form-group input::placeholder {
+  color: #5f6672;
+}
+
+.form-group input:focus {
+  border-color: #b7ff3c;
+
+  box-shadow:
+    0 0 0 3px rgba(183,255,60,.07);
+}
+
+.input-hint {
+  margin-top: 6px;
+
+  color: #646c79;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* SECURITY */
+
+.security-notice {
+  margin-top: 22px;
+
+  padding: 16px 17px;
+
+  border: 1px solid #252b36;
+  border-radius: 14px;
+
+  background: rgba(255,255,255,.02);
+
+  color: #858d9c;
+
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.security-notice strong {
+  color: #fff;
+}
+
+/* SUBMIT */
+
+.submit-section {
+  margin-top: 25px;
+}
+
+.submit-btn {
+  width: 100%;
+
+  min-height: 54px;
+
+  border: 0;
+  border-radius: 13px;
+
+  background: #b7ff3c;
+  color: #07080c;
+
+  font-size: 14px;
+  font-weight: 950;
+
+  transition: .2s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 35px rgba(183,255,60,.20);
+}
+
+.submit-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.form-status {
+  display: none;
+
+  margin-top: 15px;
+  padding: 14px 15px;
+
+  border: 1px solid #303743;
+  border-radius: 12px;
+
+  background: rgba(255,255,255,.025);
+
+  color: #9ca4b2;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.form-status.show {
+  display: block;
+}
+
+.form-status.error {
+  border-color: rgba(255,80,80,.35);
+  color: #ff8f8f;
+}
+
+.form-status.success {
+  border-color: rgba(183,255,60,.35);
+  color: #b7ff3c;
+}
+
+/* NEXT STEP */
+
+.next-step {
+  display: none;
+
+  margin-top: 18px;
+  padding: 18px;
+
+  border: 1px solid rgba(183,255,60,.25);
+  border-radius: 15px;
+
+  background: rgba(183,255,60,.045);
+
+  text-align: center;
+}
+
+.next-step.show {
+  display: block;
+}
+
+.next-step h3 {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.next-step p {
+  margin-top: 7px;
+
+  color: #858d9c;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* FEE */
+
+.fee-info {
+  margin-top: 25px;
+
+  padding: 18px;
+
+  border: 1px solid #252b36;
+  border-radius: 15px;
+
+  background: rgba(255,255,255,.018);
+}
+
+.fee-info-title {
+  color: #b7ff3c;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.fee-info h3 {
+  margin-top: 8px;
+
+  font-size: 21px;
+  font-weight: 950;
+}
+
+.fee-info p {
+  margin-top: 7px;
+
+  color: #858d9c;
+
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.fee-warning {
+  margin-top: 12px;
+
+  color: #c1c7d0;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.fee-warning strong {
+  color: #fff;
+}
+
+/* FOOTER */
+
+footer {
+  width: min(720px, calc(100% - 32px));
+
+  margin: auto;
+  padding: 30px 0 45px;
+
+  border-top: 1px solid #202530;
+
+  display: flex;
+  justify-content: space-between;
+
+  color: #6f7785;
+
+  font-size: 12px;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .navbar {
+    height: 68px;
+  }
+
+  .logo span:last-child {
+    display: none;
+  }
+
+  .container {
+    padding-top: 42px;
+  }
+
+  .verify-card {
+    padding: 19px;
+  }
+
+  footer {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+  <header class="navbar">
+
+  <a href="index.html" class="logo">
+    <span class="logo-box">V</span>
+    <span>VEYROHOOD</span>
+  </a>
+
+  <a href="missions.html" class="back-btn">
+    ← Missions
+  </a>
+
+</header>
+
+
+<main class="container">
+
+  <section class="header">
+
+    <div class="eyebrow">
+      <span class="status-dot"></span>
+      Secure Verification
+    </div>
+
+    <h1>
+      Verify your
+      <span>place.</span>
+    </h1>
+
+    <p class="header-description">
+      Connect the wallet you will use for the
+      VeyroHood NFT and submit your mission details.
+      Your activity will be checked by the verification
+      system before eligibility is granted.
+    </p>
+
+  </section>
+
+
+  <section class="verify-card">
+
+    <div class="wallet-section">
+
+      <h2>1. Connect Your Wallet</h2>
+
+      <p>
+        Use the same wallet you want to use for your
+        VeyroHood NFT eligibility.
+      </p>
+
+      <button
+        id="connectWallet"
+        class="connect-wallet"
+        type="button"
+      >
+        Connect Wallet
+      </button>
+
+      <div
+        id="walletAddress"
+        class="wallet-address"
+      ></div>
+
+    </div>
+
+
+    <div class="form-section">
+
+      <h2>2. Submit Mission Details</h2>
+
+      <p>
+        Enter the information used to complete the
+        four required community missions.
+      </p>
+
+
+      <div class="form-group">
+
+        <label for="xUsername">
+          X Username
+        </label>
+
+        <input
+          id="xUsername"
+          type="text"
+          placeholder="@yourusername"
+          autocomplete="off"
+        >
+
+        <div class="input-hint">
+          Enter your X username without the password.
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="discordUsername">
+          Discord Username
+        </label>
+
+        <input
+          id="discordUsername"
+          type="text"
+          placeholder="yourusername"
+          autocomplete="off"
+        >
+
+        <div class="input-hint">
+          Enter the Discord username used to join VeyroHood.
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="quoteLink">
+          Quote Link
+        </label>
+
+        <input
+          id="quoteLink"
+          type="url"
+          placeholder="https://x.com/..."
+          autocomplete="off"
+        >
+
+        <div class="input-hint">
+          Paste the link to your quote of the pinned post.
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="replyLink">
+          Reply Link
+        </label>
+
+        <input
+          id="replyLink"
+          type="url"
+          placeholder="https://x.com/..."
+          autocomplete="off"
+        >
+
+        <div class="input-hint">
+          Paste the link to your reply to the pinned post.
+        </div>
+
+      </div>
+
+
+      <div class="security-notice">
+
+        <strong>Important:</strong>
+
+        Completing the missions does not automatically
+        grant OG, WL, NFT eligibility, or a referral link.
+        The submitted information must pass server-side
+        verification first.
+
+      </div>
+
+
+      <div class="submit-section">
+
+        <button
+          id="submitVerification"
+          class="submit-btn"
+          type="button"
+        >
+          Check & Continue →
+        </button>
+
+        <div
+          id="formStatus"
+          class="form-status"
+        ></div>
+
+        <div
+          id="nextStep"
+          class="next-step"
+        >
+
+          <h3>
+            Verification Submitted
+          </h3>
+
+          <p>
+            Your information has been submitted for
+            server-side verification. Payment and
+            eligibility will only become available
+            after successful verification.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="fee-info">
+
+        <div class="fee-info-title">
+          Verification Fee
+        </div>
+
+        <h3>
+          $0.25 USD equivalent
+        </h3>
+
+        <p>
+          A separate verification fee will be required
+          only after the mission verification process
+          successfully passes.
+        </p>
+
+        <div class="fee-warning">
+
+          <strong>Important:</strong>
+
+          The $0.25 verification fee is separate from
+          blockchain network gas. You will also need to
+          pay the normal network gas required for the
+          transaction.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <span>
+    © 2026 VeyroHood
+  </span>
+
+  <span>
+    10,000 NFT Supply
+  </span>
+
+</footer>
+
+
+<script>
+
+let connectedWallet = null;
+
+
+const connectWalletButton =
+  document.getElementById("connectWallet");
+
+const walletAddress =
+  document.getElementById("walletAddress");
+
+
+function showStatus(message, type) {
+
+  const status =
+    document.getElementById("formStatus");
+
+  status.textContent = message;
+
+  status.className =
+    "form-status show " + type;
+
+}
+
+
+connectWalletButton.addEventListener(
+  "click",
+  async () => {
+
+    if (!window.ethereum) {
+
+      showStatus(
+        "No EVM wallet detected. Please open this website using MetaMask, Rabby, OKX, or another compatible wallet.",
+        "error"
+      );
+
+      return;
+    }
+
+    try {
+
+      const accounts =
+        await window.ethereum.request({
+          method: "eth_requestAccounts"
+        });
+
+      if (!accounts || !accounts.length) {
+
+        showStatus(
+          "Wallet connection was not completed.",
+          "error"
+        );
+
+        return;
+      }
+
+      connectedWallet = accounts[0];
+
+      walletAddress.style.display = "block";
+
+      walletAddress.textContent =
+        connectedWallet;
+
+      connectWalletButton.textContent =
+        "Wallet Connected ✓";
+
+      showStatus(
+        "Wallet connected. Continue by submitting your mission details.",
+        "success"
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      showStatus(
+        "Wallet connection was cancelled or failed.",
+        "error"
+      );
+
+    }
+
+  }
+);
+
+
+function isValidUrl(value) {
+
+  try {
+
+    const url = new URL(value);
+
+    return (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    );
+
+  } catch {
+
+    return false;
+
+  }
+
+}
+
+
+const submitButton =
+  document.getElementById(
+    "submitVerification"
+  );
+
+
+submitButton.addEventListener(
+  "click",
+  async () => {
+
+    const xUsername =
+      document.getElementById(
+        "xUsername"
+      ).value.trim();
+
+    const discordUsername =
+      document.getElementById(
+        "discordUsername"
+      ).value.trim();
+
+    const quoteLink =
+      document.getElementById(
+        "quoteLink"
+      ).value.trim();
+
+    const replyLink =
+      document.getElementById(
+        "replyLink"
+      ).value.trim();
+
+
+    if (!connectedWallet) {
+
+      showStatus(
+        "Please connect your wallet first.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!xUsername) {
+
+      showStatus(
+        "Please enter your X username.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!discordUsername) {
+
+      showStatus(
+        "Please enter your Discord username.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!isValidUrl(quoteLink)) {
+
+      showStatus(
+        "Please enter a valid Quote link.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (!isValidUrl(replyLink)) {
+
+      showStatus(
+        "Please enter a valid Reply link.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    submitButton.disabled = true;
+
+    submitButton.textContent =
+      "Preparing Verification...";
+
+
+    await new Promise(
+      resolve =>
+        setTimeout(resolve, 700)
+    );
+
+
+    submitButton.disabled = false;
+
+    submitButton.textContent =
+      "Check & Continue →";
+
+
+    showStatus(
+      "Basic information is valid. Backend verification is not connected yet.",
+      "success"
+    );
+
+
+    document
+      .getElementById("nextStep")
+      .classList
+      .add("show");
+
+  }
+);
+
+
+if (window.ethereum) {
+
+  window.ethereum.on(
+    "accountsChanged",
+    (accounts) => {
+
+      if (!accounts || !accounts.length) {
+
+        connectedWallet = null;
+
+        walletAddress.style.display =
+          "none";
+
+        connectWalletButton.textContent =
+          "Connect Wallet";
+
+        return;
+      }
+
+      connectedWallet = accounts[0];
+
+      walletAddress.style.display =
+        "block";
+
+      walletAddress.textContent =
+        connectedWallet;
+
+      connectWalletButton.textContent =
+        "Wallet Connected ✓";
+
+    }
+  );
+
+}
+
+</script>
+
+
+</body>
+</html>
