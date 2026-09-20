@@ -1,4 +1,4 @@
- name: Deploy VeyroHood Worker
+name: Deploy VeyroHood Worker
 
 on:
   push:
@@ -24,3 +24,4 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: backend
           command: deploy
+          
