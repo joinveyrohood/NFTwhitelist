@@ -1,0 +1,12 @@
+name = "veyrohood-api-v2"
+main = "worker.js"
+compatibility_date = "2026-09-20"
+
+[vars]
+FRONTEND_URL = "https://veyrohood.com"
+DISCORD_CLIENT_ID = "1550955229652975636"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "veyrohood-db"
+database_id = "9da108b5-5b86-4a13-982a-ce9bd52c6a1b"
