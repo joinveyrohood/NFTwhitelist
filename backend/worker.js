@@ -1,292 +1,137 @@
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
 
-    // =========================
-    // CORS
-    // =========================
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization"
-    };
-
-    // CORS preflight
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        status: 204,
-        headers: corsHeaders
-      });
-    }
-
-    // =========================
-    // HEALTH CHECK
-    // =========================
-    if (request.method === "GET" && url.pathname === "/") {
-      return jsonResponse(
-        {
-          success: true,
-          project: "VeyroHood",
-          service: "Verification Backend",
-          status: "online"
-        },
-        corsHeaders
-      );
-    }
-
-    // =========================
-    // API STATUS
-    // =========================
-    if (request.method === "GET" && url.pathname === "/api/status") {
-      return jsonResponse(
-        {
-          success: true,
-          verification: "ready",
-          database: "connected",
-          payment: "not_configured",
-          referrals: "not_configured"
-        },
-        corsHeaders
-      );
-    }
-
-    // =========================
-    // VERIFY SUBMISSION
-    // =========================
-    if (
-      request.method === "POST" &&
-      url.pathname === "/verify"
-    ) {
-      try {
-        const data = await request.json();
-
-        const x_username = String(
-          data.x_username || ""
-        ).trim();
-
-        const discord_username = String(
-          data.discord_username || ""
-        ).trim();
-
-        const quote_link = String(
-          data.quote_link || ""
-        ).trim();
-
-        const reply_link = String(
-          data.reply_link || ""
-        ).trim();
-
-        const wallet_address = String(
-          data.wallet_address || ""
-        ).trim();
-
-        const payment_tx =
-          data.payment_tx
-            ? String(data.payment_tx).trim()
-            : null;
-
-        const payment_amount =
-          data.payment_amount
-            ? String(data.payment_amount).trim()
-            : null;
-
-        // =========================
-        // REQUIRED FIELD CHECK
-        // =========================
-        if (
-          !x_username ||
-          !discord_username ||
-          !quote_link ||
-          !reply_link ||
-          !wallet_address
-        ) {
-          return jsonResponse(
-            {
-              success: false,
-              error: "Missing required fields."
-            },
-            corsHeaders,
-            400
-          );
-        }
-
-        // =========================
-        // WALLET VALIDATION
-        // =========================
-        if (
-          !/^0x[a-fA-F0-9]{40}$/.test(
-            wallet_address
-          )
-        ) {
-          return jsonResponse(
-            {
-              success: false,
-              error: "Invalid EVM wallet address."
-            },
-            corsHeaders,
-            400
-          );
-        }
-
-        // =========================
-        // URL VALIDATION
-        // =========================
-        if (
-          !isValidUrl(quote_link) ||
-          !isValidUrl(reply_link)
-        ) {
-          return jsonResponse(
-            {
-              success: false,
-              error: "Invalid quote or reply link."
-            },
-            corsHeaders,
-            400
-          );
-        }
-
-        // =========================
-        // CHECK DUPLICATE WALLET
-        // =========================
-        const existing =
-          await env.DB.prepare(
-            `
-            SELECT id, status
-            FROM verifications
-            WHERE LOWER(wallet_address) = LOWER(?)
-            LIMIT 1
-            `
-          )
-            .bind(wallet_address)
-            .first();
-
-        if (existing) {
-          return jsonResponse(
-            {
-              success: false,
-              error:
-                "This wallet has already submitted a verification request.",
-              id: existing.id,
-              status: existing.status
-            },
-            corsHeaders,
-            409
-          );
-        }
-
-        // =========================
-        // SAVE TO D1
-        // =========================
-        const result =
-          await env.DB.prepare(
-            `
-            INSERT INTO verifications
-            (
-              x_username,
-              discord_username,
-              quote_link,
-              reply_link,
-              wallet_address,
-              payment_tx,
-              payment_amount,
-              status
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')
-            `
-          )
-            .bind(
-              x_username,
-              discord_username,
-              quote_link,
-              reply_link,
-              wallet_address,
-              payment_tx,
-              payment_amount
-            )
-            .run();
-
-        // =========================
-        // SUCCESS
-        // =========================
-        return jsonResponse(
-          {
-            success: true,
-            message:
-              "Verification submitted successfully.",
-            id: result.meta.last_row_id,
-            status: "pending"
-          },
-          corsHeaders
-        );
-
-      } catch (error) {
-        console.error(
-          "Verification error:",
-          error
-        );
-
-        return jsonResponse(
-          {
-            success: false,
-            error:
-              "Server error while submitting verification."
-          },
-          corsHeaders,
-          500
-        );
-      }
-    }
-
-    // =========================
-    // NOT FOUND
-    // =========================
-    return jsonResponse(
-      {
-        success: false,
-        error: "Endpoint not found."
-      },
-      corsHeaders,
-      404
-    );
-  }
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "https://veyrohood.com",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Content-Type": "application/json; charset=utf-8",
 };
 
-
-// =========================
-// URL VALIDATOR
-// =========================
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: CORS_HEADERS,
+  });
+}
 
 function isValidUrl(value) {
   try {
     const url = new URL(value);
-
-    return (
-      url.protocol === "https:" ||
-      url.protocol === "http:"
-    );
+    return url.protocol === "https:";
   } catch {
     return false;
   }
 }
 
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
 
-// =========================
-// JSON RESPONSE
-// =========================
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
 
-function jsonResponse(
-  data,
-  corsHeaders,
-  status = 200
-) {
-  return new Response(
-    JSON.stringify(data, null, 2),
-    {
-      status,
-      headers: {
-        "Content-Type": "application/json",
-        ...corsHeaders
+    if (request.method === "GET" && path === "/") {
+      return json({
+        success: true,
+        name: "VeyroHood API",
+        version: "2.0.0",
+        message: "Backend online",
+      });
+    }
+
+    if (request.method === "GET" && path === "/api/health") {
+      try {
+        await env.DB.prepare("SELECT 1").first();
+        return json({ success: true, database: "connected" });
+      } catch {
+        return json({
+          success: false,
+          database: "error",
+          message: "D1 connection failed",
+        }, 500);
       }
     }
-  );
-}
+
+    if (request.method === "POST" && path === "/api/verify") {
+      let body;
+
+      try {
+        body = await request.json();
+      } catch {
+        return json({ success: false, error: "Invalid JSON body" }, 400);
+      }
+
+      const x_username = String(body.x_username || "").trim().replace(/^@/, "");
+      const discord_username = String(body.discord_username || "").trim();
+      const quote_link = String(body.quote_link || "").trim();
+      const reply_link = String(body.reply_link || "").trim();
+      const wallet_address = String(body.wallet_address || "").trim();
+
+      if (!x_username || !discord_username || !quote_link || !reply_link || !wallet_address) {
+        return json({ success: false, error: "All fields are required" }, 400);
+      }
+
+      if (x_username.length > 50 || discord_username.length > 100) {
+        return json({ success: false, error: "Username is too long" }, 400);
+      }
+
+      if (!isValidUrl(quote_link) || !isValidUrl(reply_link)) {
+        return json({ success: false, error: "Quote and reply links must be HTTPS URLs" }, 400);
+      }
+
+      if (!/^0x[a-fA-F0-9]{40}$/.test(wallet_address)) {
+        return json({ success: false, error: "Invalid EVM wallet address" }, 400);
+      }
+
+      try {
+        const existing = await env.DB.prepare(
+          "SELECT id FROM verifications WHERE lower(wallet_address) = lower(?) LIMIT 1"
+        ).bind(wallet_address).first();
+
+        if (existing) {
+          return json({
+            success: false,
+            error: "This wallet has already submitted an application",
+          }, 409);
+        }
+
+        const result = await env.DB.prepare(`
+          INSERT INTO verifications (
+            x_username,
+            discord_username,
+            quote_link,
+            reply_link,
+            wallet_address,
+            status,
+            payment_verified,
+            missions_verified,
+            eligibility_status,
+            created_at
+          ) VALUES (?, ?, ?, ?, ?, 'pending', 0, 0, 'pending', CURRENT_TIMESTAMP)
+        `).bind(
+          x_username,
+          discord_username,
+          quote_link,
+          reply_link,
+          wallet_address
+        ).run();
+
+        return json({
+          success: true,
+          message: "Application submitted. Payment is not verified.",
+          application_id: result.meta?.last_row_id ?? null,
+          status: "pending",
+          payment_verified: false,
+        }, 201);
+      } catch (error) {
+        return json({
+          success: false,
+          error: "Database error while saving application",
+        }, 500);
+      }
+    }
+
+    return json({ success: false, error: "Endpoint not found" }, 404);
+  },
+};
