@@ -1,907 +1,430 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
->
-
-<meta
-  name="description"
-  content="VeyroHood Missions — Complete all missions before verification."
->
-
-<meta
-  name="theme-color"
-  content="#07080c"
->
-
-<title>VeyroHood — Missions</title>
-
-<style>
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  min-height: 100vh;
-
-  background: #07080c;
-
-  color: #f5f7fa;
-
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
-  overflow-x: hidden;
-}
-
-button,
-a,
-input {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* BACKGROUND */
-
-body::before {
-  content: "";
-
-  position: fixed;
-
-  inset: 0;
-
-  background:
-    radial-gradient(
-      circle at 15% 15%,
-      rgba(183,255,60,0.10),
-      transparent 30%
-    ),
-
-    radial-gradient(
-      circle at 85% 30%,
-      rgba(0,220,255,0.08),
-      transparent 30%
-    ),
-
-    linear-gradient(
-      rgba(255,255,255,0.025) 1px,
-      transparent 1px
-    ),
-
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,0.025) 1px,
-      transparent 1px
-    );
-
-  background-size:
-    auto,
-    auto,
-    50px 50px,
-    50px 50px;
-
-  pointer-events: none;
-
-  z-index: -2;
-}
-
-body::after {
-  content: "";
-
-  position: fixed;
-
-  inset: 0;
-
-  background:
-    radial-gradient(
-      circle at center,
-      transparent 20%,
-      rgba(0,0,0,0.65) 100%
-    );
-
-  pointer-events: none;
-
-  z-index: -1;
-}
-
-/* NAVBAR */
-
-.navbar {
-
-  width:
-    min(1180px, calc(100% - 32px));
-
-  height: 78px;
-
-  margin: auto;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  position: relative;
-
-  z-index: 20;
-}
-
-.logo {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 11px;
-
-  font-size: 14px;
-
-  font-weight: 900;
-
-  letter-spacing: 0.16em;
-}
-
-.logo-box {
-
-  width: 38px;
-
-  height: 38px;
-
-  display: grid;
-
-  place-items: center;
-
-  border-radius: 11px;
-
-  background: #b7ff3c;
-
-  color: #08090c;
-
-  font-size: 19px;
-
-  font-weight: 1000;
-
-  box-shadow:
-    0 0 25px rgba(183,255,60,0.22);
-}
-
-.back-btn {
-
-  min-height: 44px;
-
-  padding: 0 17px;
-
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  border: 1px solid #292e39;
-
-  border-radius: 12px;
-
-  background:
-    rgba(255,255,255,0.025);
-
-  color: #fff;
-
-  font-weight: 800;
-
-  transition: 0.2s ease;
-}
-
-.back-btn:hover {
-
-  transform:
-    translateY(-2px);
-
-  border-color:
-    #b7ff3c;
-
-  color:
-    #b7ff3c;
-}
-
-/* MAIN */
-
-.container {
-
-  width:
-    min(900px, calc(100% - 32px));
-
-  margin:
-    0 auto;
-
-  padding:
-    65px 0 100px;
-}
-
-.header {
-
-  text-align: center;
-
-  max-width: 720px;
-
-  margin:
-    0 auto 45px;
-}
-
-.eyebrow {
-
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  margin-bottom: 17px;
-
-  color: #b7ff3c;
-
-  font-size: 11px;
-
-  font-weight: 900;
-
-  letter-spacing: 0.18em;
-}
-
-.status-dot {
-
-  width: 7px;
-
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: #b7ff3c;
-
-  box-shadow:
-    0 0 15px #b7ff3c;
-
-  animation:
-    pulse 1.7s infinite;
-}
-
-@keyframes pulse {
-
-  0%,100% {
-
-    opacity: 0.35;
-
-    transform:
-      scale(0.8);
-  }
-
-  50% {
-
-    opacity: 1;
-
-    transform:
-      scale(1);
-  }
-
-}
-
-h1 {
-
-  font-size:
-    clamp(43px, 8vw, 72px);
-
-  line-height:
-    0.95;
-
-  letter-spacing:
-    -0.06em;
-
-  font-weight:
-    950;
-}
-
-h1 span {
-
-  color:
-    #b7ff3c;
-}
-
-.header-description {
-
-  max-width:
-    650px;
-
-  margin:
-    22px auto 0;
-
-  color:
-    #8f97a6;
-
-  font-size:
-    15px;
-
-  line-height:
-    1.7;
-}
-
-/* MISSION LIST */
-
-.missions {
-
-  display:
-    grid;
-
-  gap:
-    15px;
-}
-
-.mission {
-
-  padding:
-    23px;
-
-  display:
-    grid;
-
-  grid-template-columns:
-    52px 1fr auto;
-
-  align-items:
-    center;
-
-  gap:
-    18px;
-
-  border:
-    1px solid #252b36;
-
-  border-radius:
-    20px;
-
-  background:
-    rgba(16,18,25,0.88);
-
-  transition:
-    border-color .2s ease,
-    transform .2s ease;
-}
-
-.mission:hover {
-
-  border-color:
-    #3c4554;
-
-  transform:
-    translateY(-2px);
-}
-
-.mission-icon {
-
-  width:
-    52px;
-
-  height:
-    52px;
-
-  display:
-    grid;
-
-  place-items:
-    center;
-
-  border-radius:
-    15px;
-
-  background:
-    rgba(183,255,60,0.08);
-
-  border:
-    1px solid rgba(183,255,60,0.18);
-
-  color:
-    #b7ff3c;
-
-  font-size:
-    21px;
-
-  font-weight:
-    950;
-}
-
-.mission-content h2 {
-
-  font-size:
-    18px;
-
-  font-weight:
-    900;
-}
-
-.mission-content p {
-
-  margin-top:
-    6px;
-
-  color:
-    #7f8795;
-
-  font-size:
-    13px;
-
-  line-height:
-    1.5;
-}
-
-.mission-action {
-
-  min-width:
-    125px;
-
-  min-height:
-    43px;
-
-  padding:
-    0 15px;
-
-  display:
-    inline-flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    center;
-
-  border:
-    1px solid #333a47;
-
-  border-radius:
-    11px;
-
-  background:
-    rgba(255,255,255,0.025);
-
-  color:
-    #fff;
-
-  font-size:
-    13px;
-
-  font-weight:
-    900;
-
-  transition:
-    .2s ease;
-}
-
-.mission-action:hover {
-
-  border-color:
-    #b7ff3c;
-
-  color:
-    #b7ff3c;
-}
-.mission-action.done {
-  background: #b7ff3c;
-  border-color: #b7ff3c;
-  color: #07080c;
-}
-
-.notice {
-  margin-top: 22px;
-  padding: 18px 20px;
-
-  border: 1px solid #252b36;
-  border-radius: 16px;
-
-  background: rgba(255,255,255,0.025);
-
-  color: #8f97a6;
-
-  font-size: 13px;
-  line-height: 1.65;
-}
-
-.notice strong {
-  color: #fff;
-}
-
-.verify-box {
-  margin-top: 28px;
-  padding: 25px;
-
-  border: 1px solid #303743;
-  border-radius: 20px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(183,255,60,0.06),
-      rgba(255,255,255,0.02)
-    );
-
-  text-align: center;
-}
-
-.verify-box h2 {
-  font-size: 24px;
-}
-
-.verify-box p {
-  margin-top: 9px;
-
-  color: #858d9c;
-
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.verify-btn {
-  margin-top: 20px;
-
-  min-height: 52px;
-
-  padding: 0 25px;
-
-  border: 0;
-  border-radius: 13px;
-
-  background: #b7ff3c;
-  color: #07080c;
-
-  font-weight: 950;
-
-  transition: .2s ease;
-}
-
-.verify-btn:hover {
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 10px 35px rgba(183,255,60,0.20);
-}
-
-footer {
-  width:
-    min(900px, calc(100% - 32px));
-
-  margin: auto;
-
-  padding:
-    30px 0 45px;
-
-  border-top:
-    1px solid #202530;
-
-  display:
-    flex;
-
-  justify-content:
-    space-between;
-
-  color:
-    #6f7785;
-
-  font-size:
-    12px;
-}
-
-@media (max-width: 650px) {
-
-  .navbar {
-    height: 68px;
-  }
-
-  .logo span:last-child {
-    display: none;
-  }
-
-  .container {
-    padding-top: 45px;
-  }
-
-  .mission {
-    grid-template-columns: 45px 1fr;
-
-    padding: 18px;
-  }
-
-  .mission-icon {
-    width: 45px;
-    height: 45px;
-  }
-
-  .mission-action {
-    grid-column: 2;
-
-    width: 100%;
-  }
-
-  footer {
-    flex-direction: column;
-
-    gap: 12px;
-  }
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b10">
+  <title>Missions — VeyroHood NFT Community</title>
+  <meta name="description" content="Complete VeyroHood community missions and submit your verification.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #080b10;
+      --panel: #111820;
+      --panel2: #17222b;
+      --green: #b7ff3c;
+      --cyan: #54f6ff;
+      --text: #edf5ee;
+      --muted: #94a5ad;
+      --border: #34434a;
+      --danger: #ff7777;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background:
+        radial-gradient(ellipse at 50% 0%, #18312a 0%, transparent 55%),
+        var(--bg);
+      color: var(--text);
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      min-height: 100vh;
+      line-height: 1.4;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(100% - 32px, 1050px);
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 2px solid var(--border);
+      background: #080b10eF;
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 12px 0;
+    }
+
+    .brand {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 13px;
+      color: var(--green);
+      line-height: 1.8;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 21px;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    .hero {
+      text-align: center;
+      padding: 58px 0 30px;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Press Start 2P', monospace;
+      line-height: 1.8;
+    }
+
+    h1 {
+      color: var(--green);
+      font-size: clamp(20px, 4vw, 34px);
+      text-shadow: 3px 3px #35551a;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: 15px auto 0;
+      font-size: 25px;
+    }
+
+    .panel {
+      background: linear-gradient(145deg, var(--panel), #0d131a);
+      border: 2px solid var(--border);
+      box-shadow: 5px 5px 0 #0008;
+      padding: 24px;
+      margin: 18px 0;
+    }
+
+    .section-title {
+      font-size: 15px;
+      color: var(--green);
+      margin-bottom: 18px;
+    }
+
+    .notice {
+      border: 1px solid #526334;
+      background: #b7ff3c0b;
+      color: #d9f9ad;
+      padding: 14px 16px;
+      margin: 20px 0;
+      font-size: 21px;
+    }
+
+    .mission {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .mission:last-child { border-bottom: 0; }
+
+    .mission h3 {
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .mission p {
+      color: var(--muted);
+      font-size: 21px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 9px;
+      border: 1px solid var(--border);
+      color: var(--cyan);
+      font-size: 17px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 11px 15px;
+      min-height: 44px;
+      background: var(--green);
+      color: #10150a;
+      border: 2px solid #e3ffad;
+      box-shadow: 3px 3px 0 #4e6c24;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      cursor: pointer;
+      transition: transform .12s ease;
+    }
+
+    .btn:hover { transform: translate(-1px, -1px); }
+    .btn.secondary {
+      background: var(--panel2);
+      color: var(--cyan);
+      border-color: #42636a;
+      box-shadow: 3px 3px 0 #13282c;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .progress-track {
+      height: 13px;
+      background: #05080b;
+      border: 1px solid var(--border);
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      transition: width .25s ease;
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 20px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .step {
+      border: 1px solid var(--border);
+      background: #0b1117;
+      padding: 15px;
+      color: var(--muted);
+    }
+
+    .step strong {
+      display: block;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 35px 0;
+      font-size: 18px;
+    }
+
+    @media (max-width: 650px) {
+      .mission { grid-template-columns: 1fr; }
+      .mission .btn { width: 100%; }
+      .steps { grid-template-columns: 1fr; }
+      .panel { padding: 17px; }
+      .brand { font-size: 11px; }
+      .nav { justify-content: center; text-align: center; }
+      .nav-links { justify-content: center; }
+    }
+  </style>
 </head>
 
 <body>
-
-<header class="navbar">
-
-  <a
-    href="index.html"
-    class="logo"
-  >
-
-    <span class="logo-box">
-      V
-    </span>
-
-    <span>
-      VEYROHOOD
-    </span>
-
-  </a>
-
-  <a
-    href="index.html"
-    class="back-btn"
-  >
-    ← Home
-  </a>
-
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html">VEYROHOOD</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="missions.html" aria-current="page">Missions</a>
+      <a href="verify.html">Verify</a>
+    </nav>
+  </div>
 </header>
 
-<main class="container">
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">◆ VEYROHOOD COMMUNITY QUEST ◆</div>
+    <h1>COMPLETE MISSIONS</h1>
+    <p>Complete the community tasks, submit your details, and proceed to verification.</p>
+  </section>
 
-  <section class="header">
-
-    <div class="eyebrow">
-
-      <span class="status-dot"></span>
-
-      VeyroHood Missions
-
+  <section class="panel">
+    <div class="section-title">YOUR MISSION PROGRESS</div>
+    <div class="progress-row">
+      <span>Checklist progress</span>
+      <span id="progressText">0 / 4</span>
     </div>
+    <div class="progress-track" role="progressbar"
+         aria-label="Mission checklist progress" aria-valuemin="0"
+         aria-valuemax="4" aria-valuenow="0" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="notice">
+      Checklist progress is saved only on this device. It is NOT proof of mission completion.
+      Final eligibility requires server-side review/verification.
+    </div>
+  </section>
 
-    <h1>
-      Complete the
-      <span>missions.</span>
-    </h1>
+  <section class="panel">
+    <div class="section-title">YOUR QUESTS — 04 MISSIONS</div>
 
-    <p class="header-description">
+    <article class="mission">
+      <div>
+        <h3>01 / FOLLOW ON X</h3>
+        <p>Follow the official VeyroHood X account.</p>
+        <span class="tag">COMMUNITY TASK</span>
+      </div>
+      <a class="btn secondary" href="https://x.com/VeyroHood"
+         target="_blank" rel="noopener noreferrer">OPEN X ↗</a>
+    </article>
 
-      Complete all four community missions before
-      submitting verification. Your mission activity
-      will be checked by the verification system.
+    <article class="mission">
+      <div>
+        <h3>02 / JOIN DISCORD</h3>
+        <p>Join the official VeyroHood Discord community.</p>
+        <span class="tag">COMMUNITY TASK</span>
+      </div>
+      <a class="btn secondary" href="https://discord.gg/6CYd3ewU5"
+         target="_blank" rel="noopener noreferrer">JOIN DISCORD ↗</a>
+    </article>
 
+    <article class="mission">
+      <div>
+        <h3>03 / QUOTE THE PINNED POST</h3>
+        <p>Quote the official pinned post on X.</p>
+        <span class="tag">X ENGAGEMENT</span>
+      </div>
+      <a class="btn secondary"
+         href="https://x.com/VeyroHood/status/2095434542094115048"
+         target="_blank" rel="noopener noreferrer">OPEN POST ↗</a>
+    </article>
+
+    <article class="mission">
+      <div>
+        <h3>04 / REPLY TO THE PINNED POST</h3>
+        <p>Reply to the official VeyroHood pinned post on X.</p>
+        <span class="tag">X ENGAGEMENT</span>
+      </div>
+      <a class="btn secondary"
+         href="https://x.com/VeyroHood/status/2095434542094115048"
+         target="_blank" rel="noopener noreferrer">OPEN POST ↗</a>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="section-title">CHECKLIST — ON THIS DEVICE</div>
+    <p style="color:var(--muted); margin-bottom:12px">
+      Tick a task after completing it. These checkboxes are reminders only;
+      they do not verify your X or Discord activity.
     </p>
 
+    <label style="display:block; margin:12px 0">
+      <input type="checkbox" class="missionCheck"> I followed VeyroHood on X
+    </label>
+    <label style="display:block; margin:12px 0">
+      <input type="checkbox" class="missionCheck"> I joined the VeyroHood Discord
+    </label>
+    <label style="display:block; margin:12px 0">
+      <input type="checkbox" class="missionCheck"> I quoted the pinned post
+    </label>
+    <label style="display:block; margin:12px 0">
+      <input type="checkbox" class="missionCheck"> I replied to the pinned post
+    </label>
+
+    <div class="actions">
+      <button class="btn secondary" id="resetBtn" type="button">RESET CHECKLIST</button>
+      <a class="btn" href="verify.html">CONTINUE TO VERIFY →</a>
+    </div>
   </section>
 
-  <section class="missions">
-
-    <!-- X FOLLOW -->
-
-    <article class="mission">
-
-      <div class="mission-icon">
-        X
-      </div>
-
-      <div class="mission-content">
-
-        <h2>
-          Follow VeyroHood on X
-        </h2>
-
-        <p>
-          Follow the official VeyroHood X account.
-        </p>
-
-      </div>
-
-      <a
-        class="mission-action"
-        href="https://x.com/VeyroHood"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Follow X
-      </a>
-
-    </article>
-
-
-    <!-- DISCORD -->
-
-    <article class="mission">
-
-      <div class="mission-icon">
-        D
-      </div>
-
-      <div class="mission-content">
-
-        <h2>
-          Join VeyroHood Discord
-        </h2>
-
-        <p>
-          Join the official VeyroHood Discord community.
-        </p>
-
-      </div>
-
-      <a
-        class="mission-action"
-        href="https://discord.gg/6CYd3ewU5"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Join Discord
-      </a>
-
-    </article>
-
-
-    <!-- QUOTE -->
-
-    <article class="mission">
-
-      <div class="mission-icon">
-        Q
-      </div>
-
-      <div class="mission-content">
-
-        <h2>
-          Quote the Pinned Post
-        </h2>
-
-        <p>
-          Quote the official VeyroHood pinned X post.
-        </p>
-
-      </div>
-
-      <a
-        class="mission-action"
-        href="https://x.com/VeyroHood/status/2095434542094115048"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Quote Post
-      </a>
-
-    </article>
-
-
-    <!-- REPLY -->
-
-    <article class="mission">
-
-      <div class="mission-icon">
-        R
-      </div>
-
-      <div class="mission-content">
-
-        <h2>
-          Reply to the Pinned Post
-        </h2>
-
-        <p>
-          Reply to the official VeyroHood pinned X post.
-        </p>
-
-      </div>
-
-      <a
-        class="mission-action"
-        href="https://x.com/VeyroHood/status/2095434542094115048"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Reply Post
-      </a>
-
-    </article>
-
+  <section class="panel">
+    <div class="section-title">HOW IT WORKS</div>
+    <div class="steps">
+      <div class="step"><strong>01. COMPLETE</strong>Finish the community missions.</div>
+      <div class="step"><strong>02. SUBMIT</strong>Submit your details on the verification page.</div>
+      <div class="step"><strong>03. REVIEW</strong>Server-side checks determine verification and eligibility.</div>
+    </div>
+    <div class="notice">
+      Completing missions alone does not guarantee OG, WL, or an NFT.
+      Verification and allocation rules apply.
+    </div>
   </section>
-
-
-  <div class="notice">
-
-    <strong>Important:</strong>
-
-    Completing these missions alone does not grant
-    OG, WL, NFT eligibility, or a referral link.
-
-    You must complete the separate verification process
-    and successfully pass verification.
-
-  </div>
-
-
-  <section class="verify-box">
-
-    <h2>
-      Finished all missions?
-    </h2>
-
-    <p>
-      Continue to verification and submit your
-      X username, Discord username, Quote link,
-      and Reply link.
-    </p>
-
-    <a
-      href="verify.html"
-      class="verify-btn"
-    >
-      Continue to Verification →
-    </a>
-
-  </section>
-
 </main>
 
-<footer>
-
-  <span>
-    © 2026 VeyroHood
-  </span>
-
-  <span>
-    10,000 NFT Supply
-  </span>
-
+<footer class="footer wrap">
+  VeyroHood NFT Community · Earn your place. Mint your hood.
 </footer>
 
-
 <script>
+  (() => {
+    const checks = [...document.querySelectorAll('.missionCheck')];
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const progressBar = document.getElementById('progressBar');
+    const storageKey = 'veyrohood_mission_checklist_v1';
 
-/*
-  IMPORTANT:
+    function updateProgress() {
+      const completed = checks.filter(c => c.checked).length;
+      progressText.textContent = `${completed} / ${checks.length}`;
+      progressFill.style.width = `${completed / checks.length * 100}%`;
+      progressBar.setAttribute('aria-valuenow', String(completed));
+    }
 
-  This page only opens the official mission links.
+    function save() {
+      try {
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify(checks.map(c => c.checked))
+        );
+      } catch (_) {}
+    }
 
-  It does NOT fake mission completion.
+    function load() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
+        if (Array.isArray(saved) && saved.length === checks.length) {
+          checks.forEach((c, i) => c.checked = saved[i] === true);
+        }
+      } catch (_) {}
+      updateProgress();
+    }
 
-  Actual verification will be handled
-  by the backend verification system.
-*/
+    checks.forEach(c => c.addEventListener('change', () => {
+      save();
+      updateProgress();
+    }));
 
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      checks.forEach(c => c.checked = false);
+      save();
+      updateProgress();
+    });
+
+    load();
+  })();
 </script>
-
 </body>
 </html>
