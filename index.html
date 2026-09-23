@@ -4,585 +4,1589 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VeyroHood — NFT Community</title>
+<title>VeyroHood — Pixel World</title>
+<meta name="theme-color" content="#100e24">
+<meta name="description" content="Enter the VeyroHood Pixel World. Complete missions, verify your wallet and earn your place.">
+
+<!-- Pixel fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Inter,Arial,sans-serif;
+:root {
+  --bg: #100e24;
+  --panel: #1b1936;
+  --panel2: #252247;
+  --green: #b7ff4a;
+  --pink: #ff5cba;
+  --blue: #64e7ff;
+  --yellow: #ffe66d;
+  --white: #fff9e8;
+  --muted: #aaa7c7;
+  --border: #514b83;
+  --shadow: #070612;
 }
 
-body{
-
-background:#050608;
-color:white;
-overflow-x:hidden;
-
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-
-/* BACKGROUND */
-
-body:before{
-
-content:"";
-position:fixed;
-width:600px;
-height:600px;
-background:#b7ff3c;
-filter:blur(180px);
-opacity:.12;
-top:-200px;
-left:-200px;
-z-index:-1;
-
+html {
+  scroll-behavior: smooth;
 }
 
-body:after{
-
-content:"";
-position:fixed;
-width:500px;
-height:500px;
-background:#00eaff;
-filter:blur(180px);
-opacity:.12;
-right:-150px;
-bottom:-150px;
-z-index:-1;
-
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'VT323', monospace;
+  font-size: 23px;
+  overflow-x: hidden;
 }
 
-
-
-/* NAVBAR */
-
-
-nav{
-
-height:80px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:0 8%;
-
+/* Pixel background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background-image:
+    linear-gradient(#ffffff08 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff08 1px, transparent 1px);
+  background-size: 16px 16px;
 }
 
-
-.logo{
-
-font-size:26px;
-font-weight:900;
-letter-spacing:3px;
-color:#b7ff3c;
-
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  opacity: .12;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    #000 4px
+  );
 }
 
-
-nav button{
-
-background:#b7ff3c;
-border:none;
-padding:14px 25px;
-border-radius:30px;
-font-weight:bold;
-cursor:pointer;
-
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-
-
-/* HERO */
-
-
-.hero{
-
-min-height:90vh;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-text-align:center;
-
+button {
+  font-family: 'Press Start 2P', monospace;
+  cursor: pointer;
 }
 
-
-.hero h1{
-
-font-size:80px;
-font-weight:1000;
-letter-spacing:8px;
-
-background:linear-gradient(
-90deg,
-#b7ff3c,
-#00eaff
-);
-
--webkit-background-clip:text;
-color:transparent;
-
+.pixel {
+  image-rendering: pixelated;
 }
 
-
-.hero p{
-
-margin-top:20px;
-font-size:20px;
-color:#aaa;
-
+/* Pixel frame */
+.pixel-frame {
+  border: 4px solid var(--white);
+  box-shadow:
+    0 0 0 4px var(--shadow),
+    8px 8px 0 var(--shadow);
+  position: relative;
 }
 
-
-
-/* CHARACTER */
-
-
-.character{
-
-margin-top:50px;
-position:relative;
-
+.pixel-frame::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 2px solid #ffffff17;
+  pointer-events: none;
 }
 
-
-.character img{
-
-width:330px;
-border-radius:30px;
-
-animation:float 4s infinite ease-in-out;
-
-box-shadow:
-
-0 0 60px #b7ff3c;
-
+/* Navbar */
+.navbar {
+  width: 100%;
+  padding: 22px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 4px solid #302b54;
+  background: #100e24ed;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
-
-@keyframes float{
-
-0%{
-transform:translateY(0);
+.logo {
+  font-family: 'Press Start 2P', monospace;
+  color: var(--green);
+  font-size: 16px;
+  line-height: 1.8;
+  text-shadow: 3px 3px 0 #455c19;
 }
 
-50%{
-transform:translateY(-25px);
+.logo span {
+  display: block;
+  color: var(--white);
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  letter-spacing: 4px;
 }
 
-100%{
-transform:translateY(0);
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
+.nav-link {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  transition: .2s;
 }
 
-
-
-
-/* STATS */
-
-
-.stats{
-
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
-padding:50px 8%;
-
+.nav-link:hover {
+  color: var(--green);
 }
 
-
-.box{
-
-background:#101217;
-border:1px solid #222;
-padding:30px;
-border-radius:25px;
-text-align:center;
-
+.pixel-btn {
+  background: var(--green);
+  color: #141326;
+  border: 0;
+  padding: 16px 18px;
+  font-size: 10px;
+  line-height: 1.8;
+  box-shadow: 0 6px 0 #52751d, 0 10px 0 var(--shadow);
+  transition: transform .12s, box-shadow .12s;
 }
 
-
-.box h2{
-
-color:#b7ff3c;
-font-size:35px;
-
+.pixel-btn:hover {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #52751d, 0 7px 0 var(--shadow);
 }
 
-
-
-
-/* SECTION */
-
-
-section{
-
-padding:70px 8%;
-
+.pixel-btn:active {
+  transform: translateY(6px);
+  box-shadow: 0 0 0 #52751d, 0 2px 0 var(--shadow);
 }
 
-
-.title{
-
-font-size:40px;
-margin-bottom:40px;
-
+.pixel-btn.pink {
+  background: var(--pink);
+  box-shadow: 0 6px 0 #8e2f67, 0 10px 0 var(--shadow);
 }
 
-
-
-
-/* MISSIONS */
-
-
-.missions{
-
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:20px;
-
+.pixel-btn.blue {
+  background: var(--blue);
+  box-shadow: 0 6px 0 #287d91, 0 10px 0 var(--shadow);
 }
 
-
-.mission{
-
-background:#101217;
-padding:25px;
-border-radius:20px;
-border:1px solid #222;
-
+.pixel-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
 }
 
-
-.mission span{
-
-color:#b7ff3c;
-
+/* Hero */
+.hero {
+  min-height: 660px;
+  padding: 75px 8% 90px;
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  align-items: center;
+  gap: 55px;
+  position: relative;
 }
 
-
-
-
-/* WALLET */
-
-
-.wallet{
-
-background:#101217;
-border-radius:30px;
-padding:40px;
-text-align:center;
-
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  background: var(--pink);
+  opacity: .10;
+  filter: blur(90px);
+  right: 10%;
+  top: 20%;
+  pointer-events: none;
 }
 
-
-.wallet button{
-
-margin-top:20px;
-padding:15px 35px;
-border-radius:30px;
-border:none;
-background:#b7ff3c;
-font-weight:bold;
-
+.eyebrow {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--blue);
+  border: 2px solid var(--blue);
+  padding: 12px;
+  margin-bottom: 28px;
+  line-height: 1.8;
+  background: #64e7ff0b;
 }
 
-
-
-/* REFERRAL */
-
-
-.referral{
-
-display:flex;
-gap:20px;
-
+.hero h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(25px, 4.4vw, 53px);
+  line-height: 1.65;
+  text-shadow: 5px 5px 0 #000;
 }
 
-
-.rank{
-
-flex:1;
-background:#101217;
-padding:25px;
-border-radius:20px;
-
+.hero h1 .green {
+  color: var(--green);
 }
 
-
-
-
-/* MOBILE */
-
-
-@media(max-width:700px){
-
-.hero h1{
-
-font-size:45px;
-
+.hero h1 .pink {
+  color: var(--pink);
 }
 
-
-.stats,
-.missions{
-
-grid-template-columns:1fr;
-
+.hero-desc {
+  margin-top: 25px;
+  max-width: 550px;
+  color: var(--muted);
+  font-size: 28px;
+  line-height: 1.2;
 }
 
-.character img{
-
-width:260px;
-
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 35px;
 }
 
+.hero-buttons a {
+  display: inline-block;
 }
 
+.hero-note {
+  margin-top: 35px;
+  color: #817da5;
+  font-size: 20px;
+}
 
+/* Pixel character scene */
+.scene {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  perspective: 900px;
+}
+
+.scene-glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  background: var(--green);
+  filter: blur(100px);
+  opacity: .18;
+}
+
+.pixel-platform {
+  position: absolute;
+  bottom: 25px;
+  width: 330px;
+  height: 45px;
+  background: #29264a;
+  border: 4px solid #5c5689;
+  box-shadow: 0 12px 0 #080715;
+  transform: perspective(180px) rotateX(20deg);
+}
+
+.pixel-platform::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--green) 0 12px,
+    transparent 12px 24px
+  );
+  opacity: .5;
+}
+
+.character-wrap {
+  width: min(100%, 340px);
+  aspect-ratio: 1 / 1;
+  position: relative;
+  z-index: 2;
+  animation: characterFloat 3.2s steps(6, end) infinite;
+  transform-style: preserve-3d;
+}
+
+.character-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(10px 10px 0 #0008);
+}
+
+.character-frame {
+  position: absolute;
+  inset: -14px;
+  border: 4px solid var(--green);
+  box-shadow: 0 0 0 4px #17142e, 0 0 28px #b7ff4a35;
+  pointer-events: none;
+}
+
+.character-frame::before,
+.character-frame::after {
+  content: "✦";
+  position: absolute;
+  color: var(--yellow);
+  font-size: 24px;
+  animation: twinkle 1.5s steps(2, end) infinite;
+}
+
+.character-frame::before {
+  top: -18px;
+  right: -18px;
+}
+
+.character-frame::after {
+  bottom: -18px;
+  left: -18px;
+}
+
+@keyframes characterFloat {
+  0%, 100% { transform: translateY(0) rotateY(-4deg); }
+  50% { transform: translateY(-14px) rotateY(4deg); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .2; }
+}
+
+.scene-label {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--yellow);
+  background: #201d3c;
+  border: 2px solid var(--yellow);
+  padding: 12px;
+  z-index: 3;
+}
+
+/* Marquee */
+.marquee {
+  overflow: hidden;
+  border-top: 3px solid var(--green);
+  border-bottom: 3px solid var(--green);
+  background: var(--green);
+  color: #151326;
+  padding: 13px 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: inline-block;
+  animation: marquee 24s linear infinite;
+}
+
+.marquee-track span {
+  padding-right: 45px;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Sections */
+.section {
+  padding: 80px 8%;
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 35px;
+}
+
+.section-kicker {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--pink);
+  margin-bottom: 18px;
+}
+
+.section-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(17px, 2.5vw, 27px);
+  line-height: 1.7;
+}
+
+.section-sub {
+  color: var(--muted);
+  font-size: 25px;
+  margin-top: 10px;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.stat-card {
+  background: var(--panel);
+  padding: 28px;
+  border: 3px solid var(--border);
+  box-shadow: 7px 7px 0 var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: var(--green);
+  opacity: .08;
+  right: -15px;
+  top: -15px;
+  transform: rotate(45deg);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  line-height: 1.8;
+}
+
+.stat-number {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(18px, 3vw, 32px);
+  color: var(--green);
+  margin-top: 20px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.stat-card:nth-child(2) .stat-number {
+  color: var(--pink);
+}
+
+.stat-card:nth-child(3) .stat-number {
+  color: var(--blue);
+}
+
+/* OG progress */
+.og-panel {
+  margin-top: 30px;
+  background: var(--panel);
+  border: 3px solid var(--border);
+  padding: 30px;
+  box-shadow: 7px 7px 0 var(--shadow);
+}
+
+.og-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.og-top h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--yellow);
+}
+
+.og-count {
+  font-family: 'Press Start 2P', monospace;
+  color: var(--green);
+  font-size: 12px;
+}
+
+.pixel-bar {
+  height: 30px;
+  padding: 4px;
+  background: #0c0b1b;
+  border: 3px solid #5b5680;
+  position: relative;
+}
+
+.pixel-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--green) 0 16px,
+    #82c82e 16px 20px
+  );
+  transition: width 1s steps(20, end);
+}
+
+.og-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 21px;
+  margin-top: 14px;
+}
+
+/* Mission cards */
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.mission-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  background: var(--panel);
+  border: 3px solid var(--border);
+  box-shadow: 6px 6px 0 var(--shadow);
+  transition: transform .15s, border-color .15s;
+}
+
+.mission-card:hover {
+  transform: translate(-3px, -3px);
+  border-color: var(--green);
+}
+
+.mission-icon {
+  min-width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  background: #2b274c;
+  border: 3px solid #5a5486;
+  color: var(--green);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 16px;
+}
+
+.mission-info {
+  flex: 1;
+}
+
+.mission-info h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.8;
+}
+
+.mission-info p {
+  color: var(--muted);
+  font-size: 21px;
+  margin-top: 6px;
+}
+
+.mission-arrow {
+  color: var(--yellow);
+  font-size: 28px;
+}
+
+/* Referral */
+.referral-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.referral-box {
+  background: var(--panel);
+  border: 3px solid var(--border);
+  padding: 28px;
+  box-shadow: 7px 7px 0 var(--shadow);
+}
+
+.referral-box h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--green);
+  margin-bottom: 20px;
+}
+
+.referral-box p {
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+.reward-number {
+  color: var(--yellow);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 25px;
+  margin: 20px 0;
+}
+
+.referral-input-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pixel-input {
+  width: 100%;
+  min-width: 0;
+  background: #0d0b1d;
+  border: 3px solid #514b83;
+  padding: 14px;
+  color: var(--white);
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  outline: none;
+}
+
+.pixel-input:focus {
+  border-color: var(--green);
+}
+
+.referral-input-row button {
+  flex-shrink: 0;
+}
+
+.mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 21px;
+}
+
+.mini-table th {
+  text-align: left;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--pink);
+  padding: 12px 6px;
+  border-bottom: 2px solid #514b83;
+}
+
+.mini-table td {
+  padding: 13px 6px;
+  border-bottom: 1px solid #39345e;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.mini-table td:first-child {
+  color: var(--yellow);
+}
+
+/* Wallet / CTA */
+.wallet-section {
+  padding: 30px 8% 90px;
+}
+
+.wallet-panel {
+  background:
+    linear-gradient(135deg, #252247, #17142f);
+  border: 4px solid var(--green);
+  padding: 45px;
+  text-align: center;
+  box-shadow: 9px 9px 0 var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-panel::before {
+  content: "010101010101010101010101010101";
+  position: absolute;
+  color: #ffffff08;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 35px;
+  left: -20px;
+  top: 20px;
+  width: 150%;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.wallet-panel h2 {
+  position: relative;
+  font-family: 'Press Start 2P', monospace;
+  color: var(--green);
+  font-size: clamp(17px, 3vw, 28px);
+  line-height: 1.8;
+}
+
+.wallet-panel p {
+  position: relative;
+  color: var(--muted);
+  font-size: 26px;
+  margin: 15px auto 25px;
+  max-width: 650px;
+}
+
+.wallet-status {
+  color: var(--yellow);
+  font-size: 23px;
+  margin-top: 20px;
+  overflow-wrap: anywhere;
+}
+
+.wallet-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.network-note {
+  font-size: 20px;
+  color: #8984ae;
+  margin-top: 18px;
+}
+
+/* Footer */
+footer {
+  border-top: 3px solid #302b54;
+  padding: 28px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 20px;
+}
+
+.footer-logo {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--green);
+}
+
+/* Modal */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #05040de8;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop.show {
+  display: flex;
+}
+
+.modal {
+  width: min(100%, 460px);
+  background: var(--panel);
+  border: 4px solid var(--green);
+  box-shadow: 10px 10px 0 #000;
+  padding: 28px;
+  position: relative;
+}
+
+.modal h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 15px;
+  color: var(--green);
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+.modal-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: var(--pink);
+  color: #100e24;
+  border: 0;
+  padding: 8px 10px;
+  font-size: 10px;
+}
+
+.wallet-option {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  text-align: left;
+  background: #252247;
+  color: var(--white);
+  border: 3px solid #514b83;
+  padding: 17px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.8;
+  transition: .2s;
+}
+
+.wallet-option:hover {
+  border-color: var(--green);
+  color: var(--green);
+  transform: translateX(3px);
+}
+
+.modal-note {
+  color: var(--muted);
+  font-size: 20px;
+  margin-top: 20px;
+  line-height: 1.2;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 25px;
+  transform: translate(-50%, 150px);
+  background: var(--green);
+  color: #100e24;
+  border: 3px solid #fff;
+  box-shadow: 5px 5px 0 #000;
+  padding: 15px 20px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.8;
+  z-index: 200;
+  transition: transform .25s steps(5, end);
+  width: max-content;
+  max-width: calc(100% - 30px);
+}
+
+.toast.show {
+  transform: translate(-50%, 0);
+}
+
+/* Responsive */
+@media(max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 55px;
+  }
+
+  .hero-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+
+  .scene {
+    min-height: 360px;
+  }
+
+  .character-wrap {
+    width: 270px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .referral-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width: 600px) {
+  body {
+    font-size: 20px;
+  }
+
+  .navbar {
+    padding: 18px 5%;
+  }
+
+  .logo {
+    font-size: 11px;
+  }
+
+  .nav-link {
+    display: none;
+  }
+
+  .nav-right .pixel-btn {
+    font-size: 8px;
+    padding: 12px;
+  }
+
+  .hero {
+    padding: 50px 6% 65px;
+    gap: 25px;
+  }
+
+  .hero h1 {
+    font-size: 25px;
+  }
+
+  .hero-desc {
+    font-size: 24px;
+  }
+
+  .section {
+    padding: 55px 6%;
+  }
+
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mission-card {
+    padding: 18px;
+  }
+
+  .mission-info h3 {
+    font-size: 9px;
+  }
+
+  .referral-input-row {
+    flex-direction: column;
+  }
+
+  .wallet-panel {
+    padding: 28px 18px;
+  }
+
+  .wallet-actions {
+    flex-direction: column;
+  }
+
+  .wallet-actions .pixel-btn {
+    width: 100%;
+  }
+
+  .og-panel {
+    padding: 20px;
+  }
+
+  .section-head {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  footer {
+    padding: 25px 6%;
+  }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
 </style>
-
 </head>
-
 
 <body>
 
+<!-- NAVBAR -->
+<header class="navbar">
+  <a href="#" class="logo">
+    VEYROHOOD
+    <span>PIXEL WORLD</span>
+  </a>
 
-<nav>
+  <div class="nav-right">
+    <a class="nav-link" href="#missions">MISSIONS</a>
+    <a class="nav-link" href="#referrals">REFERRALS</a>
+    <button class="pixel-btn" onclick="openWallet()">CONNECT</button>
+  </div>
+</header>
 
-<div class="logo">
-VEYROHOOD
+<!-- HERO -->
+<main>
+<section class="hero">
+
+  <div class="hero-content">
+    <div class="eyebrow">★ WEB3 PIXEL UNIVERSE ★</div>
+
+    <h1>
+      ENTER THE<br>
+      <span class="green">VEYRO</span><br>
+      <span class="pink">HOOD_</span>
+    </h1>
+
+    <p class="hero-desc">
+      A new pixel world awaits.
+      Complete your quests, verify your wallet
+      and earn your place in the Hood.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="missions.html">
+        <button class="pixel-btn">▶ START QUEST</button>
+      </a>
+
+      <a href="verify.html">
+        <button class="pixel-btn pink">VERIFY ACCESS</button>
+      </a>
+    </div>
+
+    <p class="hero-note">
+      [ 10,000 NFT SUPPLY ] — YOUR JOURNEY STARTS HERE
+    </p>
+  </div>
+
+  <!-- CHARACTER IMAGE -->
+  <div class="scene">
+    <div class="scene-glow"></div>
+    <div class="scene-label">LVL. 01 / OG?</div>
+
+    <div class="character-wrap">
+      <div class="character-frame"></div>
+      <img src="character.jpg" alt="VeyroHood Pixel Character">
+    </div>
+
+    <div class="pixel-platform"></div>
+  </div>
+
+</section>
+
+<!-- PIXEL MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>★ VEYROHOOD PIXEL WORLD ★ COMPLETE MISSIONS ★ VERIFY YOUR WALLET ★ 10,000 NFT SUPPLY ★</span>
+    <span>★ VEYROHOOD PIXEL WORLD ★ COMPLETE MISSIONS ★ VERIFY YOUR WALLET ★ 10,000 NFT SUPPLY ★</span>
+  </div>
 </div>
 
+<!-- LIVE STATS -->
+<section class="section" id="stats">
 
-<button>
-Connect Wallet
-</button>
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">// WORLD STATUS</div>
+      <h2 class="section-title">THE PIXEL<br>LEADERBOARD</h2>
+      <p class="section-sub">The Hood is growing. Check the stats.</p>
+    </div>
+    <div class="eyebrow">● LIVE DATA</div>
+  </div>
 
-</nav>
+  <div class="stats-grid">
 
+    <div class="stat-card">
+      <div class="stat-label">TOTAL JOINED</div>
+      <div class="stat-number" id="joined">---</div>
+    </div>
 
+    <div class="stat-card">
+      <div class="stat-label">OG MEMBERS</div>
+      <div class="stat-number" id="ogCount">0 / 1000</div>
+    </div>
 
-<div class="hero">
+    <div class="stat-card">
+      <div class="stat-label">NFT SUPPLY</div>
+      <div class="stat-number">10,000</div>
+    </div>
 
+  </div>
 
-<h1>
-VEYROHOOD
-</h1>
+  <div class="og-panel">
+    <div class="og-top">
+      <h3>🏆 OG ACCESS PROGRESS</h3>
+      <div class="og-count" id="ogPercent">0%</div>
+    </div>
 
+    <div class="pixel-bar">
+      <div class="pixel-bar-fill" id="ogBar"></div>
+    </div>
 
-<p>
-Earn your place. Mint your hood.
+    <div class="og-foot">
+      <span id="ogRemaining">1000 OG SPOTS REMAINING</span>
+      <span>FIRST 1,000 ELIGIBLE VERIFIED USERS</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- MISSIONS -->
+<section class="section" id="missions">
+
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">// QUEST BOARD</div>
+      <h2 class="section-title">CHOOSE YOUR<br>MISSION</h2>
+      <p class="section-sub">
+  Complete every quest to enter the VeyroHood.
 </p>
+</div>
+</div>
 
+<div class="mission-grid">
 
+  <a class="mission-card" href="https://x.com/VeyroHood" target="_blank" rel="noopener">
+    <div class="mission-icon">X</div>
+    <div class="mission-info">
+      <h3>FOLLOW ON X</h3>
+      <p>Follow @VeyroHood</p>
+    </div>
+    <div class="mission-arrow">↗</div>
+  </a>
 
-<div class="character">
+  <a class="mission-card" href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">
+    <div class="mission-icon">DC</div>
+    <div class="mission-info">
+      <h3>JOIN DISCORD</h3>
+      <p>Enter the VeyroHood community</p>
+    </div>
+    <div class="mission-arrow">↗</div>
+  </a>
 
-<img src="character.jpg">
+  <a class="mission-card" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">
+    <div class="mission-icon">QT</div>
+    <div class="mission-info">
+      <h3>QUOTE PINNED POST</h3>
+      <p>Quote the official pinned post</p>
+    </div>
+    <div class="mission-arrow">↗</div>
+  </a>
+
+  <a class="mission-card" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">
+    <div class="mission-icon">RP</div>
+    <div class="mission-info">
+      <h3>REPLY TO PINNED POST</h3>
+      <p>Reply to the official pinned post</p>
+    </div>
+    <div class="mission-arrow">↗</div>
+  </a>
 
 </div>
 
-
-
+<div style="text-align:center;margin-top:35px">
+  <a href="missions.html">
+    <button class="pixel-btn pink">▶ VIEW ALL QUESTS</button>
+  </a>
 </div>
-
-
-
-
-
-<div class="stats">
-
-
-<div class="box">
-
-<h2>
-10,000
-</h2>
-
-NFT Supply
-
-</div>
-
-
-<div class="box">
-
-<h2>
-0 / 1000
-</h2>
-
-OG Pass
-
-</div>
-
-
-
-<div class="box">
-
-<h2>
-0
-</h2>
-
-Verified Users
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-<section>
-
-
-<h2 class="title">
-Missions
-</h2>
-
-
-
-<div class="missions">
-
-
-<div class="mission">
-
-<span>01</span>
-
-Follow VeyroHood on X
-
-</div>
-
-
-<div class="mission">
-
-<span>02</span>
-
-Join Discord Community
-
-</div>
-
-
-<div class="mission">
-
-<span>03</span>
-
-Quote Pinned Post
-
-</div>
-
-
-<div class="mission">
-
-<span>04</span>
-
-Reply Pinned Post
-
-</div>
-
-
-</div>
-
 
 </section>
 
+<!-- REFERRAL SECTION -->
+<section class="section" id="referrals">
 
+  <div class="section-head">
+    <div>
+      <div class="section-kicker">// RECRUIT YOUR HOOD</div>
+      <h2 class="section-title">PIXEL<br>REFERRAL SYSTEM</h2>
+      <p class="section-sub">
+        Invite friends. Earn rewards when their verification is successful.
+      </p>
+    </div>
 
+    <div class="eyebrow">20% REWARD</div>
+  </div>
 
+  <div class="referral-layout">
 
+    <!-- REFERRAL INFO -->
+    <div class="referral-box">
 
-<section>
+      <h3>YOUR REFERRAL PORTAL</h3>
 
+      <p>
+        Get 20% of each eligible $0.30 verification
+        made through your referral link.
+      </p>
 
-<h2 class="title">
-Verify Access
-</h2>
+      <div class="reward-number">$0.06</div>
 
+      <p>
+        Earned per eligible referral. Minimum withdrawal: $2.
+        Once your available balance reaches $2, you can request
+        the full available amount.
+      </p>
 
-<div class="wallet">
+      <div class="referral-input-row">
+        <input
+          class="pixel-input"
+          id="referralLink"
+          type="text"
+          placeholder="Connect & verify to get your referral link"
+          readonly
+        >
 
+        <button class="pixel-btn" onclick="copyReferral()">
+          COPY
+        </button>
+      </div>
 
-<h2>
-0.30 ETH Verification
-</h2>
+      <p id="referralStatus" style="margin-top:15px;font-size:20px">
+        Verify your wallet to unlock your referral link.
+      </p>
 
+      <div style="margin-top:25px">
+        <div class="stat-label">AVAILABLE REWARD</div>
+        <div class="stat-number" id="referralBalance">$0.00</div>
+      </div>
 
-<p>
-Ethereum / Robinhood Chain
-</p>
+      <div style="margin-top:20px">
+        <div class="stat-label">SUCCESSFUL REFERRALS</div>
+        <div class="stat-number" id="referralCount">0</div>
+      </div>
 
+      <div style="margin-top:25px">
+        <button
+          class="pixel-btn pink"
+          id="withdrawBtn"
+          disabled
+          onclick="requestWithdrawal()"
+        >
+          WITHDRAW
+        </button>
+      </div>
 
-<button>
-Verify Wallet
-</button>
+      <p style="font-size:19px;margin-top:18px">
+        Withdrawal requires a verified balance and a secure,
+        server-approved payout process.
+      </p>
 
+    </div>
 
-</div>
+    <!-- REFERRAL LEADERBOARD -->
+    <div class="referral-box">
 
+      <h3>🏆 TOP PIXEL RECRUITERS</h3>
+
+      <p style="margin-bottom:20px">
+        Community referral leaderboard.
+      </p>
+
+      <div style="overflow-x:auto">
+        <table class="mini-table">
+          <thead>
+            <tr>
+              <th>RANK</th>
+              <th>WALLET</th>
+              <th>REFS</th>
+              <th>EARNED</th>
+            </tr>
+          </thead>
+
+          <tbody id="leaderboardBody">
+            <tr>
+              <td colspan="4" style="text-align:center">
+                Leaderboard data will appear here.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="font-size:19px;margin-top:20px">
+        Referral counts and earnings must be loaded from the
+        verified backend—not browser-generated data.
+      </p>
+
+    </div>
+
+  </div>
 
 </section>
 
+<!-- WALLET CTA -->
+<section class="wallet-section" id="wallet">
 
+  <div class="wallet-panel pixel-frame">
 
+    <h2>READY TO<br>ENTER THE HOOD?</h2>
 
+    <p>
+      Connect your EVM wallet, complete every mission
+      and verify your application.
+    </p>
 
+    <div class="wallet-actions">
 
-<section>
+      <button class="pixel-btn" onclick="openWallet()">
+        CONNECT WALLET
+      </button>
 
+      <a href="verify.html">
+        <button class="pixel-btn pink">
+          VERIFY APPLICATION
+        </button>
+      </a>
 
-<h2 class="title">
-Referral Leaderboard
-</h2>
+    </div>
 
+    <div class="wallet-status" id="walletStatus">
+      [ WALLET NOT CONNECTED ]
+    </div>
 
-<div class="referral">
+    <div class="network-note">
+      Supported networks: Ethereum Mainnet & Robinhood Chain
+    </div>
 
-
-<div class="rank">
-
-#1 User
-
-<br>
-
-0 Referrals
-
-<br>
-
-$0 Earned
-
-</div>
-
-
-
-<div class="rank">
-
-#2 User
-
-<br>
-
-0 Referrals
-
-<br>
-
-$0 Earned
-
-</div>
-
-
-</div>
-
+  </div>
 
 </section>
 
+</main>
 
+<!-- FOOTER -->
+<footer>
 
+  <div>
+    <div class="footer-logo">VEYROHOOD</div>
+    <div style="margin-top:8px">
+      © 2026 VeyroHood Pixel World
+    </div>
+  </div>
 
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+    <a href="https://x.com/VeyroHood" target="_blank" rel="noopener">X / TWITTER</a>
+    <a href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">DISCORD</a>
+    <a href="missions.html">MISSIONS</a>
+  </div>
+
+</footer>
+
+<!-- WALLET MODAL -->
+<div class="modal-backdrop" id="walletModal" onclick="backdropClose(event)">
+
+  <div class="modal">
+
+    <button class="modal-close" onclick="closeWallet()">X</button>
+
+    <h2>CONNECT<br>YOUR WALLET</h2>
+
+    <p class="modal-note">
+      Choose a wallet installed in your browser.
+    </p>
+
+    <button class="wallet-option" onclick="connectWallet()">
+      ◈ INJECTED EVM WALLET
+    </button>
+
+    <button class="wallet-option" onclick="openWalletHelp()">
+      ◈ OKX WALLET
+    </button>
+
+    <button class="wallet-option" onclick="openWalletHelp()">
+      ◈ METAMASK
+    </button>
+
+    <button class="wallet-option" onclick="openWalletHelp()">
+      ◈ RABBY WALLET
+    </button>
+
+    <p class="modal-note">
+      MetaMask, OKX and Rabby may be detected through
+      their injected EVM provider. Wallet availability
+      depends on your browser.
+    </p>
+
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">PIXEL WORLD</div>
+
+<script>
+/* =====================================
+   VEYROHOOD PIXEL WORLD
+   Frontend interaction only
+===================================== */
+
+const API_URL = "https://veyrohood-api-v2.mdb885941.workers.dev";
+
+let connectedWallet = null;
+let toastTimer = null;
+
+/* WALLET MODAL */
+
+function openWallet() {
+  document.getElementById("walletModal").classList.add("show");
+}
+
+function closeWallet() {
+  document.getElementById("walletModal").classList.remove("show");
+}
+
+function backdropClose(event) {
+  if (event.target.id === "walletModal") {
+    closeWallet();
+  }
+}
+
+/* TOAST MESSAGE */
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2600);
+}
+
+/* WALLET CONNECT */
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    showToast("NO EVM WALLET FOUND");
+
+    document.getElementById("walletStatus").textContent =
+      "[ NO EVM WALLET DETECTED ]";
+
+    return;
+  }
+
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts"
+    });
+
+    if (!accounts || !accounts.length) {
+      showToast("WALLET NOT CONNECTED");
+      return;
+    }
+
+    connectedWallet = accounts[0];
+
+    document.getElementById("walletStatus").textContent =
+      "[ CONNECTED: " +
+      connectedWallet.slice(0, 6) +
+      "..." +
+      connectedWallet.slice(-4) +
+      " ]";
+
+    closeWallet();
+    showToast("WALLET CONNECTED");
+
+    // Referral link is not generated here.
+    // Backend should issue it after successful verification.
+
+  } catch (error) {
+    console.error(error);
+    showToast("WALLET CONNECTION CANCELLED");
+  }
+}
+
+/* WALLET HELP */
+
+function openWalletHelp() {
+  showToast("INSTALL OR ENABLE YOUR WALLET");
+}
+
+/* COPY REFERRAL LINK */
+
+async function copyReferral() {
+  const input = document.getElementById("referralLink");
+
+  if (!input.value) {
+    showToast("VERIFY TO UNLOCK REFERRAL");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(input.value);
+    showToast("REFERRAL LINK COPIED");
+  } catch (error) {
+    input.select();
+    document.execCommand("copy");
+    showToast("REFERRAL LINK COPIED");
+  }
+}
+
+/* WITHDRAW */
+
+function requestWithdrawal() {
+  showToast("WITHDRAWAL REQUIRES BACKEND");
+}
+
+/* OG PROGRESS DISPLAY
+   These values must come from the backend.
+   Do not treat these defaults as live stats.
+*/
+
+function updateOGProgress(ogCount, joinedCount) {
+  const safeOG = Math.min(1000, Math.max(0, Number(ogCount) || 0));
+  const safeJoined = Math.max(0, Number(joinedCount) || 0);
+
+  const percent = (safeOG / 1000) * 100;
+
+  document.getElementById("joined").textContent =
+    safeJoined.toLocaleString();
+
+  document.getElementById("ogCount").textContent =
+    safeOG.toLocaleString() + " / 1000";
+
+  document.getElementById("ogPercent").textContent =
+    percent.toFixed(1) + "%";
+
+  document.getElementById("ogBar").style.width =
+    percent + "%";
+
+  document.getElementById("ogRemaining").textContent =
+    (1000 - safeOG).toLocaleString() + " OG SPOTS REMAINING";
+}
+
+/* INITIAL PLACEHOLDER STATE */
+
+updateOGProgress(0, 0);
+
+/* WALLET CHANGE LISTENER */
+
+if (window.ethereum) {
+  window.ethereum.on("accountsChanged", function(accounts) {
+    if (!accounts || !accounts.length) {
+      connectedWallet = null;
+
+      document.getElementById("walletStatus").textContent =
+        "[ WALLET NOT CONNECTED ]";
+
+      return;
+    }
+
+    connectedWallet = accounts[0];
+
+    document.getElementById("walletStatus").textContent =
+      "[ CONNECTED: " +
+      connectedWallet.slice(0, 6) +
+      "..." +
+      connectedWallet.slice(-4) +
+      " ]";
+  });
+}
+
+/* SMOOTH SECTION NAVIGATION */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener("click", function(event) {
+    const target = document.querySelector(this.getAttribute("href"));
+
+    if (target) {
+      event.preventDefault();
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+});
+</script>
 
 </body>
 </html>
