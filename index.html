@@ -555,3 +555,259 @@ VeyroHood © 2026
 </body>
 
 </html>
+
+<!-- WALLET SYSTEM -->
+
+<section class="section">
+
+<h2 class="title">
+Wallet Verification
+</h2>
+
+
+<div class="card wallet">
+
+
+<h3 id="walletStatus">
+Wallet Not Connected
+</h3>
+
+
+<br>
+
+
+<button class="connect" onclick="openWallet()">
+Connect Wallet
+</button>
+
+
+<div id="walletOptions" style="display:none;margin-top:30px;">
+
+
+<button class="card" onclick="connectMetaMask()">
+🦊 MetaMask
+</button>
+
+
+<button class="card" onclick="connectRabby()">
+🐰 Rabby Wallet
+</button>
+
+
+<button class="card" onclick="connectOKX()">
+⚫ OKX Wallet
+</button>
+
+
+</div>
+
+
+<br>
+
+
+<div id="verifyBox" style="display:none">
+
+
+<h3>
+Verification Required
+</h3>
+
+
+<p>
+Network: Ethereum / Robinhood Chain
+</p>
+
+
+<p>
+Amount: 0.30 ETH
+</p>
+
+
+<br>
+
+
+<button class="connect" onclick="verifyPayment()">
+Verify 0.30 ETH
+</button>
+
+
+</div>
+
+
+
+</div>
+
+</section>
+
+
+
+<script>
+
+
+let walletAddress=null;
+
+
+
+function openWallet(){
+
+document.getElementById(
+"walletOptions"
+).style.display="block";
+
+}
+
+
+
+
+async function connectMetaMask(){
+
+if(!window.ethereum){
+
+alert(
+"MetaMask not installed"
+);
+
+return;
+
+}
+
+
+const accounts =
+await window.ethereum.request({
+
+method:"eth_requestAccounts"
+
+});
+
+
+walletAddress=accounts[0];
+
+
+walletConnected();
+
+
+}
+
+
+
+
+async function connectRabby(){
+
+if(!window.ethereum){
+
+alert(
+"Rabby not installed"
+);
+
+return;
+
+}
+
+
+const accounts =
+await window.ethereum.request({
+
+method:"eth_requestAccounts"
+
+});
+
+
+walletAddress=accounts[0];
+
+
+walletConnected();
+
+
+}
+
+
+
+
+async function connectOKX(){
+
+if(!window.okxwallet){
+
+alert(
+"OKX Wallet not installed"
+);
+
+return;
+
+}
+
+
+const accounts =
+await window.okxwallet.request({
+
+method:"eth_requestAccounts"
+
+});
+
+
+walletAddress=accounts[0];
+
+
+walletConnected();
+
+
+}
+
+
+
+
+function walletConnected(){
+
+
+document.getElementById(
+"walletStatus"
+).innerHTML=
+
+"Connected: "
++
+walletAddress.slice(0,6)
++
+"..."
++
+walletAddress.slice(-4);
+
+
+
+document.getElementById(
+"verifyBox"
+).style.display="block";
+
+
+}
+
+
+
+
+async function verifyPayment(){
+
+
+alert(
+"Payment verification started..."
+);
+
+
+// এখানে পরে Cloudflare Worker API connect হবে
+
+
+console.log({
+
+wallet:walletAddress,
+
+amount:"0.30 ETH",
+
+treasury:
+"0xf6F80827cBAf83798c7763FCd915C0068F2bE60C"
+
+
+});
+
+
+}
+
+
+
+</script>
