@@ -3,7 +3,7 @@ main = "worker.js"
 compatibility_date = "2026-09-20"
 
 [vars]
-FRONTEND_URL = "https://veyrohood.com"
+FRONTEND_URL = "https://joinveyrohood.github.io/NFTwhitelist"
 DISCORD_CLIENT_ID = "1550955229652975636"
 
 [[d1_databases]]

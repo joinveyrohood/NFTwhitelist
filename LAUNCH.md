@@ -1,52 +1,33 @@
-# VeyroHood launch checklist (by tomorrow)
+# VeyroHood — live by tomorrow
 
-Site repo: https://github.com/joinveyrohood/NFTwhitelist
-Pages URL: https://joinveyrohood.github.io/NFTwhitelist/
-Worker name: veyrohood-api-v2
-Expected worker URL: https://veyrohood-api-v2.mdb885941.workers.dev
+Site is already on GitHub Pages:
+https://joinveyrohood.github.io/NFTwhitelist/
 
-## 1) GitHub secrets
-Repo Settings → Secrets → Actions:
-- CLOUDFLARE_API_TOKEN
-- CLOUDFLARE_ACCOUNT_ID
+Worker:
+https://veyrohood-api-v2.mdb885941.workers.dev
 
-Then run workflow: Deploy VeyroHood Worker
+veyrohood.com DNS is not resolving yet. Point the domain at GitHub Pages or Cloudflare Pages when you own it. CORS already allows both hosts.
 
-## 2) Cloudflare Worker secrets
-In Cloudflare dashboard → Workers → veyrohood-api-v2 → Settings → Variables:
-- ETHEREUM_RPC = your Ethereum HTTPS RPC
-- ROBINHOOD_RPC = your Robinhood Chain HTTPS RPC
+## Must do tonight
+1. Confirm GitHub Pages source is `main` / root.
+2. Confirm Actions secrets exist:
+   - CLOUDFLARE_API_TOKEN
+   - CLOUDFLARE_ACCOUNT_ID
+3. After this commit, Actions deploys `veyrohood-api-v2`.
+4. In Cloudflare Worker settings add secret `ADMIN_SECRET` (long random string).
+5. Open admin: https://joinveyrohood.github.io/NFTwhitelist/admin.html
+6. Do a $0.30 USDG test pay from a burner wallet, then Recheck hash.
 
-D1 binding must stay:
-- binding DB
-- database veyrohood-db
-- id 9da108b5-5b86-4a13-982a-ce9bd52c6a1b
+## Fee
+Exact amount encoded: 300000 units = $0.30 USDG (6 decimals).
 
-## 3) GitHub Pages
-Settings → Pages → Deploy from branch → main / root
+## Not blocking launch
+- Custom domain
+- NFT mint contract address
+- Cloudflare Access in front of admin.html (recommended after launch)
+- X API auto-scoring (admin can paste performance scores)
 
-Open:
-- https://joinveyrohood.github.io/NFTwhitelist/
-- /missions.html
-- /verify.html
-
-## 4) Domain (if ready)
-Point veyrohood.com to GitHub Pages or Cloudflare.
-CORS already allows:
-- https://veyrohood.com
-- https://www.veyrohood.com
-- https://joinveyrohood.github.io
-- https://joinveyrohood.github.io/NFTwhitelist
-
-## Live flow tomorrow
-1. Home
-2. Missions (X follow, Discord, quote, reply)
-3. Verify form
-4. Pay $0.30 USDG on Robinhood or Ethereum to treasury 0xf6F80827cBAf83798c7763FCd915C0068F2bE60C
-5. First 1000 paid = OG number
-6. Referral link after paid verify
-
-Not required for tomorrow:
-- NFT mint contract
-- $2 claim / admin payout panel
-- X performance WL lottery
+## Do not
+- Put treasury private key anywhere
+- Trust frontend "success" as payment proof
+- Reset nft_allocation_counter
