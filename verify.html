@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VeyroHood — Verify</title>
-<meta name="theme-color" content="#050607">
+<meta name="theme-color" content="#07080c">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -17,58 +17,64 @@
     <a href="missions.html">Missions</a>
     <a class="active" href="verify.html">Verify</a>
     <a href="dashboard.html">Dashboard</a>
+    <a href="how.html">How it works</a>
   </div>
 </nav>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">EXACT $0.02 USDG · ROBINHOOD CHAIN</div>
+    <div class="kicker">$0.30 USDG · ETHEREUM OR ROBINHOOD</div>
     <h1>LOCK YOUR <i>SEAT.</i></h1>
-    <p class="lead">The site sends only $0.02 USDG. Nothing more in USDG. If you already paid, paste the tx hash and recheck. Do not pay twice.</p>
+    <p class="lead">Frontend success is never the proof. Cloudflare Worker reads the receipt: sender, USDG token, treasury, amount ≥ $0.30, chain, confirmations, unused tx, one wallet.</p>
   </div>
 </section>
 <section class="panel">
-  <h2>1 / CONNECT</h2>
-  <p class="muted">Same wallet you will keep. Open this page in the wallet browser on phone.</p>
+  <h2>1 / CONNECT WALLET</h2>
+  <p class="muted">MetaMask, Rabby, OKX, or any compatible EVM wallet. One wallet = one NFT.</p>
   <button class="btn" id="connectWallet" type="button">CONNECT WALLET</button>
   <div id="walletPick" class="pick"></div>
   <div id="walletAddress" class="wallet-line"></div>
 </section>
 <section class="panel">
-  <h2>2 / PROOF</h2>
-  <label>X username</label><input id="xUsername" placeholder="@username">
+  <h2>2 / VERIFICATION FORM</h2>
+  <label>X username</label><input id="xUsername" placeholder="@VeyroHood">
   <label>Discord username</label><input id="discordUsername" placeholder="username">
   <label>Quote link</label><input id="quoteLink" placeholder="https://x.com/...">
   <label>Reply link</label><input id="replyLink" placeholder="https://x.com/...">
-  <label>Referral code</label><input id="referralCode" placeholder="VHXXXX optional">
+  <label>Referral code</label><input id="referralCode" placeholder="optional VH...">
   <button class="btn" id="submitVerification" type="button">SAVE DETAILS</button>
 </section>
 <section class="panel">
-  <h2>3 / PAY EXACT $0.02 USDG</h2>
-  <p class="muted">Wallet will show 0.02 USDG only. Robinhood still needs a tiny bit of ETH as network gas. That is the chain, not extra USDG. We cannot turn chain gas to zero without a sponsor wallet.</p>
-  <button class="btn" id="payButton" type="button">PAY EXACT $0.02 USDG</button>
+  <h2>3 / PAY $0.30 USDG</h2>
+  <label>Network</label>
+  <select id="chainSelect">
+    <option value="4663">Robinhood Chain (4663)</option>
+    <option value="1">Ethereum Mainnet (1)</option>
+  </select>
+  <p class="muted" style="margin-top:10px">Treasury 0xf6F80827cBAf83798c7763FCd915C0068F2bE60C. Need a little native ETH for gas. That is not extra USDG.</p>
+  <button class="btn" id="payButton" type="button">PAY $0.30 USDG</button>
 </section>
 <section class="panel">
   <h2>ALREADY PAID?</h2>
-  <p class="muted">Paste the payment tx hash. We mark verify from that hash. No second payment.</p>
-  <label>Transaction hash</label><input id="txHashInput" placeholder="0x...">
+  <label>Payment TX hash</label><input id="txHashInput" placeholder="0x...">
   <button class="btn ghost" id="recheckBtn" type="button">RECHECK HASH</button>
   <div id="formStatus" class="status"></div>
 </section>
-<footer><span>VeyroHood</span><span>Do not pay twice.</span></footer>
+<footer><span>VeyroHood</span><span>Do not pay twice</span></footer>
 </div>
 <script src="wallet.js"></script>
 <script>
-const CHAIN_ID = 4663;
 const formStatus=document.getElementById("formStatus");
 function showStatus(message,type){formStatus.textContent=message;formStatus.className="status show "+type}
 function isValidUrl(value){try{const u=new URL(value);return u.protocol==="https:"||u.protocol==="http:"}catch{return false}}
+function selectedChain(){return Number(document.getElementById("chainSelect").value)}
 async function markPaid(txHash){
-  const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:window.VH.wallet,txHash,chainId:CHAIN_ID})});
+  const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:window.VH.wallet,txHash,chainId:selectedChain()})});
   const result=await response.json();
   if(!response.ok||!result.success) throw new Error(result.error||"Payment check failed");
-  let msg="Paid and verified.";
+  let msg="On-chain verified.";
   if(result.ogNumber) msg+=" OG #"+result.ogNumber+".";
-  if(result.referralLink) msg+=" "+result.referralLink;
+  else if(result.wlPool) msg+=" Entered WL pool.";
+  if(result.referralLink) msg+=" Referral: "+result.referralLink;
   showStatus(msg,"success");
 }
 const params=new URLSearchParams(location.search);
@@ -87,17 +93,18 @@ document.getElementById("submitVerification").onclick=async()=>{
     const response=await fetch(API_URL+"/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     const result=await response.json();
     if(!response.ok||!result.success) throw new Error(result.error||"Submit failed");
-    showStatus("Saved. Pay exact $0.02 USDG next. ID #"+result.id,"success");
+    showStatus(result.message||("Saved. Pay $0.30 USDG next. ID #"+result.id),"success");
   }catch(error){showStatus(error.message,"error")}
 };
 document.getElementById("payButton").onclick=async()=>{
   if(!window.VH.wallet||!window.VH.provider) return showStatus("Connect wallet first.","error");
+  const chainId=selectedChain();
   try{
-    await switchChain(CHAIN_ID);
+    await switchChain(chainId);
     const data="0xa9059cbb"+pad64(TREASURY)+pad64(toHex(PAY_AMOUNT));
-    const txHash=await window.VH.provider.request({method:"eth_sendTransaction",params:[{from:window.VH.wallet,to:TOKENS[String(CHAIN_ID)],data,value:"0x0"}]});
+    const txHash=await window.VH.provider.request({method:"eth_sendTransaction",params:[{from:window.VH.wallet,to:TOKENS[String(chainId)],data,value:"0x0"}]});
     document.getElementById("txHashInput").value=txHash;
-    showStatus("Sent exact $0.02 USDG. Checking...","success");
+    showStatus("Sent $0.30 USDG. Waiting for backend receipt check...","success");
     let lastError="Transaction not found yet";
     for(let i=0;i<8;i++){
       try{await markPaid(txHash);return;}catch(error){lastError=error.message;await new Promise(r=>setTimeout(r,2000));}
