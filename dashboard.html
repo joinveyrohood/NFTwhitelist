@@ -8,14 +8,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="dashboard">
 <div class="wrap">
 <nav>
   <a class="logo" href="index.html">VEYROHOOD<small>NFT COMMUNITY</small></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="missions.html">Missions</a>
-    <a href="verify.html">Verify</a>
+    <a href="missions.html" data-gate="missions">Missions</a>
+    <a href="verify.html" data-gate="verify">Verify</a>
     <a class="active" href="dashboard.html">Dashboard</a>
     <a href="how.html">How it works</a>
   </div>
@@ -24,7 +24,7 @@
   <div>
     <div class="kicker">YOUR FILE</div>
     <h1>YOUR <i>HOOD FILE.</i></h1>
-    <p class="lead">Only you see your wallet status, referral link, and claims after you connect.</p>
+    <p class="lead">This page opens only after verify succeeds.</p>
   </div>
 </section>
 <section class="panel">
@@ -41,11 +41,11 @@
 </section>
 <section class="grid2">
   <div class="card"><h2>EARNED</h2><p class="rule">Lifetime <span id="earned">$0.00</span><br>Withdrawn <span id="withdrawn">$0.00</span></p></div>
-  <div class="card"><h2>YOUR LINK</h2><p class="muted" id="refLink">Hidden until you are verified.</p></div>
+  <div class="card"><h2>YOUR LINK</h2><p class="muted" id="refLink">Hidden until loaded.</p></div>
 </section>
 <section class="panel">
   <h2>CLAIM</h2>
-  <p class="muted">Available from $2. You confirm the request from this wallet.</p>
+  <p class="muted">Available from $2.</p>
   <label>Payout network</label>
   <select id="claimChain">
     <option value="4663">Robinhood Chain</option>
@@ -59,8 +59,9 @@
   <div class="card"><h2>BOARD</h2><div id="board" class="muted">Loading...</div></div>
   <div class="card"><h2>YOUR CLAIMS</h2><div id="claims" class="muted">No claims yet.</div></div>
 </section>
-<footer><span>VeyroHood</span><span>Private to your wallet</span></footer>
+<footer><span>VeyroHood</span><span>Verified members only</span></footer>
 </div>
+<script src="gate.js"></script>
 <script src="wallet.js"></script>
 <script>
 function money(v){return "$"+Number(v||0).toFixed(2)}
@@ -80,7 +81,7 @@ async function loadMe(){
   document.getElementById("avail").textContent=money(data.availableBalance);
   document.getElementById("earned").textContent=money(data.totalEarned);
   document.getElementById("withdrawn").textContent=money(data.totalWithdrawn);
-  document.getElementById("refLink").textContent=data.referralLink||"Hidden until you are verified.";
+  document.getElementById("refLink").textContent=data.referralLink||"No link yet.";
   document.getElementById("statusLine").textContent=data.message||"";
   document.getElementById("claimBtn").disabled=!data.canClaim;
 }

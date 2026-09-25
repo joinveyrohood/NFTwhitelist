@@ -8,15 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="verify">
 <div class="wrap">
 <nav>
   <a class="logo" href="index.html">VEYROHOOD<small>NFT COMMUNITY</small></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="missions.html">Missions</a>
+    <a href="missions.html" data-gate="missions">Missions</a>
     <a class="active" href="verify.html">Verify</a>
-    <a href="dashboard.html">Dashboard</a>
+    <a href="dashboard.html" data-gate="dashboard">Dashboard</a>
     <a href="how.html">How it works</a>
   </div>
 </nav>
@@ -27,22 +27,20 @@
 </div>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">PHASE 03 · VERIFY</div>
+    <div class="kicker">PHASE 03</div>
     <h1>LOCK YOUR <i>SEAT.</i></h1>
-    <p class="lead">Finish missions first. Then connect one wallet and complete entry. Only you see your wallet, usernames, and links.</p>
-    <p class="warn" id="missionGate"></p>
+    <p class="lead">Connect one wallet and complete entry. Dashboard opens only after this succeeds.</p>
   </div>
 </section>
 <section class="panel">
   <h2>1 / CONNECT WALLET</h2>
-  <p class="muted">Use your own wallet. One wallet = one seat.</p>
+  <p class="muted">One wallet = one seat.</p>
   <button class="btn" id="connectWallet" type="button">CONNECT WALLET</button>
   <div id="walletPick" class="pick"></div>
   <div id="walletAddress" class="wallet-line"></div>
 </section>
 <section class="panel">
   <h2>2 / YOUR LINKS</h2>
-  <p class="muted">Used only to confirm missions. Not shown on the public homepage.</p>
   <label>X username</label><input id="xUsername" placeholder="your X handle" autocomplete="off">
   <label>Discord username</label><input id="discordUsername" placeholder="your Discord name" autocomplete="off">
   <label>Quote link</label><input id="quoteLink" placeholder="your quote post link" autocomplete="off">
@@ -57,7 +55,7 @@
     <option value="4663">Robinhood Chain</option>
     <option value="1">Ethereum</option>
   </select>
-  <p class="muted" style="margin-top:10px">Entry is $0.30 USDG. Your wallet will ask you to confirm. Do not send twice.</p>
+  <p class="muted" style="margin-top:10px">Entry is $0.30 USDG. Confirm in your wallet. Do not send twice.</p>
   <button class="btn" id="payButton" type="button">PAY $0.30 USDG</button>
 </section>
 <section class="panel">
@@ -66,32 +64,22 @@
   <button class="btn ghost" id="recheckBtn" type="button">RECHECK</button>
   <div id="formStatus" class="status"></div>
 </section>
-<footer><span>VeyroHood</span><span>Your details stay on your dashboard</span></footer>
+<footer><span>VeyroHood</span><span>Dashboard locked until verified</span></footer>
 </div>
+<script src="gate.js"></script>
 <script src="wallet.js"></script>
 <script>
 const formStatus=document.getElementById("formStatus");
-const gate=document.getElementById("missionGate");
-function missionsDone(){
-  try{
-    const saved=JSON.parse(localStorage.getItem("veyrohood_mission_checklist_v1")||"null");
-    return Array.isArray(saved)&&saved.filter(Boolean).length===4;
-  }catch(e){return false}
-}
-if(!missionsDone()){
-  gate.innerHTML='Finish missions first. <a href="missions.html" style="color:var(--green)">Go to Phase 02</a>';
-}
 function showStatus(message,type){formStatus.textContent=message;formStatus.className="status show "+type}
 function isValidUrl(value){try{const u=new URL(value);return u.protocol==="https:"||u.protocol==="http:"}catch{return false}}
 function selectedChain(){return Number(document.getElementById("chainSelect").value)}
+function openDash(){vhMarkVerified();location.href="dashboard.html"}
 async function markPaid(txHash){
   const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:window.VH.wallet,txHash,chainId:selectedChain()})});
   const result=await response.json();
   if(!response.ok||!result.success) throw new Error(result.error||"Payment check failed");
-  let msg="Verified.";
-  if(result.ogNumber) msg+=" You are OG.";
-  else if(result.wlPool) msg+=" You are in the whitelist pool.";
-  showStatus(msg,"success");
+  showStatus("Verified. Opening dashboard...","success");
+  setTimeout(openDash,700);
 }
 const params=new URLSearchParams(location.search);
 if(params.get("ref")) document.getElementById("referralCode").value=params.get("ref");
@@ -101,7 +89,6 @@ document.getElementById("connectWallet").onclick=()=>connectFlow("walletPick",(w
   showStatus("Wallet connected","success");
 },msg=>showStatus(msg,"error"));
 document.getElementById("submitVerification").onclick=async()=>{
-  if(!missionsDone()) return showStatus("Finish the 4 missions first.","error");
   const payload={wallet_address:window.VH.wallet,x_username:document.getElementById("xUsername").value.trim(),discord_username:document.getElementById("discordUsername").value.trim(),quote_link:document.getElementById("quoteLink").value.trim(),reply_link:document.getElementById("replyLink").value.trim(),referral_code:document.getElementById("referralCode").value.trim()};
   if(!payload.wallet_address) return showStatus("Connect wallet first.","error");
   if(!payload.x_username||!payload.discord_username) return showStatus("Enter X and Discord usernames.","error");
@@ -114,7 +101,6 @@ document.getElementById("submitVerification").onclick=async()=>{
   }catch(error){showStatus(error.message,"error")}
 };
 document.getElementById("payButton").onclick=async()=>{
-  if(!missionsDone()) return showStatus("Finish the 4 missions first.","error");
   if(!window.VH.wallet||!window.VH.provider) return showStatus("Connect wallet first.","error");
   const chainId=selectedChain();
   try{

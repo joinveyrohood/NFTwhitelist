@@ -10,6 +10,7 @@ nav{display:flex;justify-content:space-between;align-items:center;gap:16px;paddi
 .logo small{display:block;color:var(--muted);font-family:VT323,monospace;font-size:16px;letter-spacing:.28em}
 .nav-links{display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-size:22px}
 .nav-links a:hover,.nav-links a.active{color:var(--green)}
+.nav-links a.locked{color:#4a555b;pointer-events:none;opacity:.45}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;border:0;cursor:pointer;background:var(--green);color:#0a0e06;font-family:"Press Start 2P",monospace;font-size:9px;box-shadow:5px 5px 0 #000}
 .btn.ghost{background:transparent;color:var(--cyan);border:1px solid #35555b;box-shadow:4px 4px 0 #000}
 .btn:disabled{opacity:.4;cursor:not-allowed}

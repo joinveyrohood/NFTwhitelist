@@ -8,15 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="how">
 <div class="wrap">
 <nav>
   <a class="logo" href="index.html">VEYROHOOD<small>NFT COMMUNITY</small></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
-    <a href="missions.html">Missions</a>
-    <a href="verify.html">Verify</a>
-    <a href="dashboard.html">Dashboard</a>
+    <a href="missions.html" data-gate="missions">Missions</a>
+    <a href="verify.html" data-gate="verify">Verify</a>
+    <a href="dashboard.html" data-gate="dashboard">Dashboard</a>
     <a class="active" href="how.html">How it works</a>
   </div>
 </nav>
@@ -27,14 +27,13 @@
   </div>
 </section>
 <section class="grid2">
-  <div class="card"><h2>SUPPLY</h2><p class="rule">10,000 memberships. First 1,000 verified wallets are OG. The rest wait for whitelist.</p></div>
-  <div class="card"><h2>ENTRY</h2><p class="rule">Finish missions, then pay $0.30 USDG from your wallet. Confirmation happens on-chain.</p></div>
-  <div class="card"><h2>ONE WALLET</h2><p class="rule">One wallet, one seat. Missions without payment do not count as OG.</p></div>
-  <div class="card"><h2>REFERRAL</h2><p class="rule">Your private link appears on the dashboard after you are verified. You earn when someone you invited also verifies.</p></div>
-  <div class="card"><h2>CLAIM</h2><p class="rule">When your available reward reaches $2 you can request payout from the dashboard.</p></div>
-  <div class="card"><h2>MINT</h2><p class="rule">Mint opens later for allocated wallets. Still one NFT max.</p></div>
+  <div class="card"><h2>FLOW</h2><p class="rule">Home. Press Start Mission. Finish four quests. Then verify. Dashboard opens last.</p></div>
+  <div class="card"><h2>SUPPLY</h2><p class="rule">10,000 seats. First 1,000 verified wallets are OG. The rest wait for whitelist.</p></div>
+  <div class="card"><h2>ENTRY</h2><p class="rule">After missions, pay $0.30 USDG from your wallet.</p></div>
+  <div class="card"><h2>ONE WALLET</h2><p class="rule">One wallet, one seat.</p></div>
 </section>
-<footer><span>VeyroHood</span><span>Community first</span></footer>
+<footer><span>VeyroHood</span><span>Phase lock on</span></footer>
 </div>
+<script src="gate.js"></script>
 </body>
 </html>

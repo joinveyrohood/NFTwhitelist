@@ -8,39 +8,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="missions">
 <div class="wrap">
 <nav>
   <a class="logo" href="index.html">VEYROHOOD<small>NFT COMMUNITY</small></a>
   <div class="nav-links">
     <a href="index.html">Home</a>
     <a class="active" href="missions.html">Missions</a>
-    <a href="verify.html">Verify</a>
-    <a href="dashboard.html">Dashboard</a>
+    <a href="verify.html" data-gate="verify">Verify</a>
+    <a href="dashboard.html" data-gate="dashboard">Dashboard</a>
     <a href="how.html">How it works</a>
   </div>
 </nav>
 <div class="phases">
-  <a class="phase done" href="index.html"><b>PHASE 01</b><span>Index / Home</span></a>
+  <a class="phase done" href="index.html"><b>PHASE 01</b><span>Home</span></a>
   <div class="phase now"><b>PHASE 02</b><span>Missions</span></div>
   <div class="phase" id="phase3"><b>PHASE 03</b><span>Verify locked</span></div>
 </div>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">PHASE 02 · REQUIRED TO ENTER</div>
+    <div class="kicker">PHASE 02</div>
     <h1>FINISH THE <i>FOUR QUESTS.</i></h1>
-    <p class="lead">Mark all 4 local checks. Then Phase 03 Verify unlocks. Missions without payment still do not make you OG.</p>
+    <p class="lead">Mark all four done. Verify does not open before that.</p>
   </div>
 </section>
 <section class="panel">
   <h2>PROGRESS</h2>
-  <div style="display:flex;justify-content:space-between" class="muted"><span>Local checklist</span><span id="progressText">0 / 4</span></div>
+  <div style="display:flex;justify-content:space-between" class="muted"><span>Checklist</span><span id="progressText">0 / 4</span></div>
   <div class="bar"><div class="fill" id="progressFill"></div></div>
 </section>
 <section class="panel">
   <h2>QUESTS</h2>
   <div class="mission"><div><strong>01 / FOLLOW</strong><p class="muted">Follow @VeyroHood on X</p></div><a class="btn ghost" href="https://x.com/VeyroHood" target="_blank" rel="noopener">OPEN X</a></div>
-  <div class="mission"><div><strong>02 / DISCORD</strong><p class="muted">Join discord.gg/6CYd3ewU5</p></div><a class="btn ghost" href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">JOIN</a></div>
+  <div class="mission"><div><strong>02 / DISCORD</strong><p class="muted">Join the community Discord</p></div><a class="btn ghost" href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">JOIN</a></div>
   <div class="mission"><div><strong>03 / QUOTE</strong><p class="muted">Quote the pinned post</p></div><a class="btn ghost" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">QUOTE</a></div>
   <div class="mission"><div><strong>04 / REPLY</strong><p class="muted">Reply on the same pinned post</p></div><a class="btn ghost" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">REPLY</a></div>
 </section>
@@ -50,17 +50,18 @@
   <label><input type="checkbox" class="missionCheck"> Joined Discord</label>
   <label><input type="checkbox" class="missionCheck"> Quoted pinned post</label>
   <label><input type="checkbox" class="missionCheck"> Replied to pinned post</label>
-  <p class="warn" id="lockNote">Verify stays locked until all 4 boxes are checked.</p>
+  <p class="warn" id="lockNote">Verify stays locked until all 4 are checked.</p>
   <div class="actions" style="margin-top:18px">
     <button class="btn ghost" id="resetBtn" type="button">RESET</button>
-    <a class="btn" id="goVerify" href="#">GO VERIFY</a>
+    <a class="btn" id="goVerify" href="#">VERIFY LOCKED</a>
   </div>
 </section>
 <footer><span>VeyroHood</span><span>Phase 02 of 03</span></footer>
 </div>
+<script src="gate.js"></script>
 <script>
 const checks=[...document.querySelectorAll(".missionCheck")];
-const key="veyrohood_mission_checklist_v1";
+const key=VH_GATE.missions;
 const go=document.getElementById("goVerify");
 const phase3=document.getElementById("phase3");
 const note=document.getElementById("lockNote");
@@ -71,20 +72,20 @@ function render(){
   document.getElementById("progressFill").style.width=(n/4*100)+"%";
   if(n===4){
     go.href="verify.html";
-    go.textContent="PHASE 03 · VERIFY";
-    go.removeAttribute("aria-disabled");
+    go.textContent="GO VERIFY";
     phase3.className="phase done";
     phase3.innerHTML="<b>PHASE 03</b><span>Verify unlocked</span>";
-    note.textContent="All quests marked. Open Verify and pay $0.30 USDG.";
+    note.textContent="All quests marked. Open Verify.";
     note.style.color="var(--green)";
   }else{
     go.href="#";
     go.textContent="VERIFY LOCKED";
     phase3.className="phase";
     phase3.innerHTML="<b>PHASE 03</b><span>Verify locked</span>";
-    note.textContent="Verify stays locked until all 4 boxes are checked.";
+    note.textContent="Verify stays locked until all 4 are checked.";
     note.style.color="var(--danger)";
   }
+  vhBindNav();
 }
 function save(){try{localStorage.setItem(key,JSON.stringify(checks.map(c=>c.checked)))}catch(e){}}
 try{const saved=JSON.parse(localStorage.getItem(key)||"null");if(Array.isArray(saved))checks.forEach((c,i)=>c.checked=!!saved[i])}catch(e){}

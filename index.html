@@ -4,72 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VeyroHood — NFT Community</title>
-<meta name="description" content="VeyroHood — Earn your place. Mint your hood.">
 <meta name="theme-color" content="#07080c">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="home">
 <div class="wrap">
 <nav>
   <a class="logo" href="index.html">VEYROHOOD<small>NFT COMMUNITY</small></a>
   <div class="nav-links">
     <a class="active" href="index.html">Home</a>
-    <a href="missions.html">Missions</a>
-    <a href="verify.html">Verify</a>
-    <a href="dashboard.html">Dashboard</a>
+    <a href="missions.html" data-gate="missions">Missions</a>
+    <a href="verify.html" data-gate="verify">Verify</a>
+    <a href="dashboard.html" data-gate="dashboard">Dashboard</a>
     <a href="how.html">How it works</a>
-    <a class="btn" href="missions.html">START</a>
   </div>
 </nav>
 <div class="phases">
   <div class="phase now"><b>PHASE 01</b><span>Home</span></div>
-  <div class="phase"><b>PHASE 02</b><span>Missions</span></div>
-  <div class="phase"><b>PHASE 03</b><span>Verify</span></div>
+  <div class="phase"><b>PHASE 02</b><span>Missions locked</span></div>
+  <div class="phase"><b>PHASE 03</b><span>Verify locked</span></div>
 </div>
 <section class="hero">
   <div>
     <div class="kicker">VEYROHOOD · NFT COMMUNITY</div>
     <h1>EARN YOUR PLACE.<br><i>MINT YOUR HOOD.</i></h1>
-    <p class="lead">Complete the missions. Then verify with one wallet. First 1,000 verified members become OG. The rest enter the whitelist.</p>
+    <p class="lead">Press Start Mission to begin. Nothing else opens until you finish each phase.</p>
     <div class="actions">
-      <a class="btn" href="missions.html">START MISSIONS</a>
-      <a class="btn ghost" href="how.html">HOW IT WORKS</a>
+      <button class="btn" id="startMission" type="button">START MISSION</button>
     </div>
   </div>
   <div class="portrait"><img src="character.jpg" alt="VeyroHood character"></div>
 </section>
 <section class="stats">
   <div class="card stat">Supply<b>10,000</b></div>
-  <div class="card stat">OG seats<b id="ogCount">0 / 1000</b></div>
-  <div class="card stat">Verified<b id="joinedCount">0</b></div>
+  <div class="card stat">OG seats<b>1,000</b></div>
+  <div class="card stat">Whitelist<b>9,000</b></div>
   <div class="card stat">Entry fee<b>$0.30</b></div>
 </section>
 <section class="grid3">
-  <div class="card"><h2>01 HOME</h2><p class="rule">Learn the hood. One wallet. One place.</p></div>
-  <div class="card"><h2>02 MISSIONS</h2><p class="rule">Follow, join, quote, reply. Mark the four quests done.</p></div>
-  <div class="card"><h2>03 VERIFY</h2><p class="rule">Connect wallet and complete entry. Payment is checked on-chain.</p></div>
+  <div class="card"><h2>01 HOME</h2><p class="rule">Start here. Missions stay closed until you press Start Mission.</p></div>
+  <div class="card"><h2>02 MISSIONS</h2><p class="rule">Finish all four quests. Verify stays closed until then.</p></div>
+  <div class="card"><h2>03 VERIFY</h2><p class="rule">Complete entry. Dashboard stays closed until you are verified.</p></div>
 </section>
-<section class="grid2">
-  <div class="card"><h2>REFERRALS</h2><p class="rule">After you are verified you get a private referral link on your dashboard. Share it. Earn when someone you invited gets verified.</p></div>
-  <div class="card"><h2>LIVE BOARD</h2><div id="board" class="muted">No referrals yet.</div></div>
-</section>
-<footer><span>VeyroHood</span><span>Home → Missions → Verify</span></footer>
+<footer><span>VeyroHood</span><span>Start Mission is the only way in</span></footer>
 </div>
-<script src="wallet.js"></script>
+<script src="gate.js"></script>
 <script>
-async function loadStats(){
-  try{
-    const data = await (await fetch(API_URL + "/api/stats")).json();
-    if(!data.success) return;
-    document.getElementById("ogCount").textContent = (data.og||0) + " / " + (data.ogLimit||1000);
-    document.getElementById("joinedCount").textContent = String(data.joined||0);
-    const rows = data.leaderboard||[];
-    document.getElementById("board").innerHTML = rows.length ? rows.map((r,i)=>(i+1)+". "+mask(r.referral_code)+" · "+(r.referred_count||0)+" refs").join("<br>") : "No referrals yet.";
-  }catch(e){}
-}
-function mask(code){if(!code) return "member"; return String(code).slice(0,4)+"****"}
-loadStats();
+document.getElementById("startMission").onclick=function(){vhGoMissions()};
 </script>
 </body>
 </html>
