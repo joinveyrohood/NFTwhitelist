@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeyroHood — Dashboard</title>
+<meta name="theme-color" content="#07080c">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080c;--panel:#10161d;--green:#b7ff3c;--cyan:#54f6ff;--text:#edf5ee;--muted:#94a5ad;--line:#243038}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(circle at 20% 0,#163226 0%,transparent 36%),var(--bg);color:var(--text);font-family:VT323,monospace;font-size:22px}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(980px,calc(100% - 32px));margin:auto}
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px;line-height:1.7}
+.links{display:flex;gap:14px;flex-wrap:wrap}
+.links a.active,.links a:hover{color:var(--green)}
+.hero{padding:36px 0 10px;text-align:center}
+.eyebrow{color:var(--cyan);letter-spacing:2px}
+h1,h2{font-family:"Press Start 2P",monospace;color:var(--green);line-height:1.7}
+h1{font-size:clamp(18px,4vw,26px);margin:12px 0}
+h2{font-size:12px;margin-bottom:12px}
+.panel{background:var(--panel);border:1px solid var(--line);padding:22px;margin:16px 0;box-shadow:6px 6px 0 #0008}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{border:1px solid var(--line);padding:14px}
+.card b{display:block;color:var(--green);font-size:28px}
+button{min-height:48px;padding:0 14px;border:0;background:var(--green);color:#10150a;font-family:"Press Start 2P",monospace;font-size:10px;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}
+.muted{color:var(--muted)}
+.status{margin-top:12px}
+code{color:var(--cyan);word-break:break-all}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <a class="logo" href="index.html">VEYROHOOD</a>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="missions.html">Missions</a>
+    <a href="verify.html">Verify</a>
+    <a class="active" href="dashboard.html">Dashboard</a>
+  </div>
+</nav>
+<section class="hero">
+  <div class="eyebrow">EARN YOUR PLACE. MINT YOUR HOOD.</div>
+  <h1>YOUR HOOD STATUS</h1>
+  <p class="muted">OG #1-1000 mint guaranteed. Other 9,000 = WL / random. Referrals pay $0.06. Claim from $2.</p>
+</section>
+<section class="panel">
+  <button id="connectBtn" type="button">CONNECT WALLET</button>
+  <p id="walletLine" class="muted"></p>
+  <p id="statusLine" class="status muted">Connect the same wallet you verified with.</p>
+</section>
+<section class="panel">
+  <h2>STATUS</h2>
+  <div class="grid">
+    <div class="card">Tier<b id="tier">-</b></div>
+    <div class="card">Referrals<b id="refs">0</b></div>
+    <div class="card">Available<b id="avail">$0.00</b></div>
+  </div>
+  <p class="muted" style="margin-top:14px">Your link<br><code id="refLink">Verify first to unlock referral link</code></p>
+  <p class="muted">Lifetime earned: <span id="earned">$0.00</span></p>
+</section>
+<section class="panel">
+  <h2>CLAIM</h2>
+  <p class="muted">Minimum $2. If you earned $2 or $100, one application holds the full available balance.</p>
+  <button id="claimBtn" type="button" disabled>APPLY TO CLAIM</button>
+</section>
+<section class="panel">
+  <h2>LEADERBOARD</h2>
+  <div id="board" class="muted">Loading...</div>
+</section>
+<section class="panel">
+  <h2>YOUR CLAIMS</h2>
+  <div id="claims" class="muted">No claims yet.</div>
+</section>
+</div>
+<script>
+const API_URL="https://veyrohood-api-v2.mdb885941.workers.dev";
+let wallet=null;
+function money(v){return "$"+Number(v||0).toFixed(2)}
+document.getElementById("connectBtn").onclick=async()=>{
+  if(!window.ethereum) return document.getElementById("statusLine").textContent="Open in MetaMask, Rabby, or OKX.";
+  const accounts=await window.ethereum.request({method:"eth_requestAccounts"});
+  wallet=accounts[0];
+  document.getElementById("walletLine").textContent=wallet;
+  document.getElementById("connectBtn").textContent="WALLET CONNECTED";
+  loadMe(); loadClaims();
+};
+async function loadMe(){
+  const res=await fetch(API_URL+"/api/me?wallet="+wallet);
+  const data=await res.json();
+  if(!data.success){document.getElementById("statusLine").textContent=data.error||"Not found";return;}
+  const tier=data.ogNumber?("OG #"+data.ogNumber):(data.paymentVerified?"VERIFIED / WL POOL":"NOT VERIFIED");
+  document.getElementById("tier").textContent=tier;
+  document.getElementById("refs").textContent=String(data.referredCount||0);
+  document.getElementById("avail").textContent=money(data.availableBalance);
+  document.getElementById("earned").textContent=money(data.totalEarned);
+  document.getElementById("refLink").textContent=data.referralLink||"Verify to get your link";
+  document.getElementById("statusLine").textContent=data.message||"";
+  document.getElementById("claimBtn").disabled=!data.canClaim;
+}
+async function loadBoard(){
+  const res=await fetch(API_URL+"/api/stats");
+  const data=await res.json();
+  const rows=data.leaderboard||[];
+  document.getElementById("board").innerHTML=rows.length?rows.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)+" refs · $"+Number(r.total_earned||0).toFixed(2)).join("<br>"):"No referrals yet.";
+}
+async function loadClaims(){
+  if(!wallet) return;
+  const res=await fetch(API_URL+"/api/claims?wallet="+wallet);
+  const data=await res.json();
+  const rows=data.claims||[];
+  document.getElementById("claims").innerHTML=rows.length?rows.map(c=>"#"+c.id+" · $"+Number(c.amount).toFixed(2)+" · "+c.status).join("<br>"):"No claims yet.";
+}
+document.getElementById("claimBtn").onclick=async()=>{
+  const res=await fetch(API_URL+"/api/claim",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet})});
+  const data=await res.json();
+  document.getElementById("statusLine").textContent=data.error||data.message||"Claim submitted";
+  loadMe(); loadClaims();
+};
+loadBoard();
+</script>
+</body>
+</html>
