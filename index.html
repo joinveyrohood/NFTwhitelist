@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VeyroHood — NFT Community</title>
-<meta name="description" content="VeyroHood — Earn your place. Mint your hood. 10,000 NFT supply. First 1,000 verified wallets are OG.">
+<meta name="description" content="VeyroHood — Earn your place. Mint your hood. Phase 1 Home, Phase 2 Missions, Phase 3 Verify.">
 <meta name="theme-color" content="#07080c">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -19,17 +19,21 @@
     <a href="verify.html">Verify</a>
     <a href="dashboard.html">Dashboard</a>
     <a href="how.html">How it works</a>
-    <a class="btn" href="verify.html">CONNECT</a>
+    <a class="btn" href="missions.html">START</a>
   </div>
 </nav>
+<div class="phases">
+  <div class="phase now"><b>PHASE 01</b><span>Index / Home</span></div>
+  <div class="phase"><b>PHASE 02</b><span>Missions</span></div>
+  <div class="phase"><b>PHASE 03</b><span>Verify + Pay</span></div>
+</div>
 <section class="hero">
   <div>
     <div class="kicker">VEYROHOOD · NFT COMMUNITY</div>
     <h1>EARN YOUR PLACE.<br><i>MINT YOUR HOOD.</i></h1>
-    <p class="lead">10,000 NFT supply. Complete missions, connect one wallet, pay $0.30 USDG. First 1,000 paid verifies become OG #1–#1000. The other 9,000 enter random + X performance WL.</p>
+    <p class="lead">Flow is locked: Home → finish 4 missions → then verify and pay $0.30 USDG. First 1,000 paid wallets are OG #1–#1000. Rest enter WL #1001–#10000.</p>
     <div class="actions">
-      <a class="btn" href="verify.html">CONNECT WALLET</a>
-      <a class="btn ghost" href="missions.html">START MISSIONS</a>
+      <a class="btn" href="missions.html">PHASE 02 · MISSIONS</a>
       <a class="btn ghost" href="how.html">HOW IT WORKS</a>
     </div>
   </div>
@@ -42,15 +46,15 @@
   <div class="card stat">Verify fee<b>$0.30</b></div>
 </section>
 <section class="grid3">
-  <div class="card"><h2>01 MISSIONS</h2><p class="rule">Follow @VeyroHood. Join Discord. Quote and reply the pinned post.</p></div>
-  <div class="card"><h2>02 PAY</h2><p class="rule">$0.30 USDG on Ethereum or Robinhood Chain to treasury. Backend checks the chain, not the frontend.</p></div>
-  <div class="card"><h2>03 ALLOCATE</h2><p class="rule">OG #1–#1000 mint first. Remaining wallets wait for random + X performance WL #1001–#10000.</p></div>
+  <div class="card"><h2>01 HOME</h2><p class="rule">Read the rules. One wallet = one NFT. No skip to pay before missions.</p></div>
+  <div class="card"><h2>02 MISSIONS</h2><p class="rule">Follow @VeyroHood. Join Discord. Quote and reply the pinned post. Mark all 4 done.</p></div>
+  <div class="card"><h2>03 VERIFY</h2><p class="rule">Connect wallet, submit links, pay $0.30 USDG. Backend reads the chain, not the UI.</p></div>
 </section>
 <section class="grid2">
-  <div class="card"><h2>REFERRALS</h2><p class="rule">Link appears only after paid verify. Each successful referred verify pays 20% = $0.06. Treasury keeps $0.24. Claim all at $2+. Claimant pays gas.</p></div>
+  <div class="card"><h2>REFERRALS</h2><p class="rule">Link appears only after paid verify. Each successful referred verify pays 20% = $0.06. Claim all at $2+. Claimant pays gas.</p></div>
   <div class="card"><h2>LIVE BOARD</h2><div id="board" class="muted">No referrals yet.</div></div>
 </section>
-<footer><span>VeyroHood</span><span>One wallet = one NFT</span></footer>
+<footer><span>VeyroHood</span><span>Phase lock: Index → Missions → Verify</span></footer>
 </div>
 <script src="wallet.js"></script>
 <script>

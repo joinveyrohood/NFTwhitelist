@@ -20,11 +20,17 @@
     <a href="how.html">How it works</a>
   </div>
 </nav>
+<div class="phases">
+  <a class="phase done" href="index.html"><b>PHASE 01</b><span>Index / Home</span></a>
+  <a class="phase done" href="missions.html"><b>PHASE 02</b><span>Missions</span></a>
+  <div class="phase now"><b>PHASE 03</b><span>Verify + Pay</span></div>
+</div>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">$0.30 USDG · ETHEREUM OR ROBINHOOD</div>
+    <div class="kicker">PHASE 03 · $0.30 USDG · ETHEREUM OR ROBINHOOD</div>
     <h1>LOCK YOUR <i>SEAT.</i></h1>
-    <p class="lead">Frontend success is never the proof. Cloudflare Worker reads the receipt: sender, USDG token, treasury, amount ≥ $0.30, chain, confirmations, unused tx, one wallet.</p>
+    <p class="lead">Do missions first. Then connect one wallet, save links, pay $0.30 USDG. Worker checks sender, token, treasury, amount, unused tx, one wallet.</p>
+    <p class="warn" id="missionGate"></p>
   </div>
 </section>
 <section class="panel">
@@ -59,11 +65,21 @@
   <button class="btn ghost" id="recheckBtn" type="button">RECHECK HASH</button>
   <div id="formStatus" class="status"></div>
 </section>
-<footer><span>VeyroHood</span><span>Do not pay twice</span></footer>
+<footer><span>VeyroHood</span><span>Phase 03 of 03 · Do not pay twice</span></footer>
 </div>
 <script src="wallet.js"></script>
 <script>
 const formStatus=document.getElementById("formStatus");
+const gate=document.getElementById("missionGate");
+function missionsDone(){
+  try{
+    const saved=JSON.parse(localStorage.getItem("veyrohood_mission_checklist_v1")||"null");
+    return Array.isArray(saved)&&saved.filter(Boolean).length===4;
+  }catch(e){return false}
+}
+if(!missionsDone()){
+  gate.innerHTML='Missions incomplete. <a href="missions.html" style="color:var(--green)">Go finish Phase 02</a> before paying.';
+}
 function showStatus(message,type){formStatus.textContent=message;formStatus.className="status show "+type}
 function isValidUrl(value){try{const u=new URL(value);return u.protocol==="https:"||u.protocol==="http:"}catch{return false}}
 function selectedChain(){return Number(document.getElementById("chainSelect").value)}
@@ -85,6 +101,7 @@ document.getElementById("connectWallet").onclick=()=>connectFlow("walletPick",(w
   showStatus("Connected with "+name,"success");
 },msg=>showStatus(msg,"error"));
 document.getElementById("submitVerification").onclick=async()=>{
+  if(!missionsDone()) return showStatus("Finish the 4 missions first.","error");
   const payload={wallet_address:window.VH.wallet,x_username:document.getElementById("xUsername").value.trim(),discord_username:document.getElementById("discordUsername").value.trim(),quote_link:document.getElementById("quoteLink").value.trim(),reply_link:document.getElementById("replyLink").value.trim(),referral_code:document.getElementById("referralCode").value.trim()};
   if(!payload.wallet_address) return showStatus("Connect wallet first.","error");
   if(!payload.x_username||!payload.discord_username) return showStatus("Enter X and Discord usernames.","error");
@@ -97,6 +114,7 @@ document.getElementById("submitVerification").onclick=async()=>{
   }catch(error){showStatus(error.message,"error")}
 };
 document.getElementById("payButton").onclick=async()=>{
+  if(!missionsDone()) return showStatus("Finish the 4 missions first.","error");
   if(!window.VH.wallet||!window.VH.provider) return showStatus("Connect wallet first.","error");
   const chainId=selectedChain();
   try{

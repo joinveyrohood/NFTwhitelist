@@ -13,7 +13,13 @@ nav{display:flex;justify-content:space-between;align-items:center;gap:16px;paddi
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;border:0;cursor:pointer;background:var(--green);color:#0a0e06;font-family:"Press Start 2P",monospace;font-size:9px;box-shadow:5px 5px 0 #000}
 .btn.ghost{background:transparent;color:var(--cyan);border:1px solid #35555b;box-shadow:4px 4px 0 #000}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:42px;align-items:center;padding:56px 0 28px}
+.phases{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 8px}
+.phase{border:1px solid var(--line);background:#0a0f13;padding:14px 12px;box-shadow:4px 4px 0 #000}
+.phase b{display:block;font-family:"Press Start 2P",monospace;font-size:9px;color:var(--muted);margin-bottom:6px}
+.phase span{font-size:22px}
+.phase.now{border-color:var(--green);color:var(--green)}
+.phase.done{border-color:#35555b;color:var(--cyan)}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:42px;align-items:center;padding:40px 0 28px}
 .kicker{color:var(--cyan);letter-spacing:.22em;font-size:18px;margin-bottom:14px}
 h1{font-family:"Press Start 2P",monospace;font-size:clamp(22px,4.6vw,46px);line-height:1.45}
 h1 i{font-style:normal;color:var(--green);text-shadow:0 0 24px rgba(204,255,0,.25)}
@@ -42,4 +48,5 @@ input,select{width:100%;min-height:50px;border:1px solid var(--line);background:
 .mission:last-child{border:0}
 .bar{height:10px;background:#05080b;border:1px solid var(--line);margin-top:10px}
 .fill{height:100%;width:0;background:var(--green)}
-@media(max-width:860px){.hero,.stats,.grid3,.grid2{grid-template-columns:1fr}.hero{padding:32px 0;text-align:center}.lead{margin-left:auto;margin-right:auto}.actions{justify-content:center}.nav-links{font-size:18px}}
+.warn{margin-top:12px;color:var(--danger);font-size:20px}
+@media(max-width:860px){.hero,.stats,.grid3,.grid2,.phases{grid-template-columns:1fr}.hero{padding:32px 0;text-align:center}.lead{margin-left:auto;margin-right:auto}.actions{justify-content:center}.nav-links{font-size:18px}}
