@@ -21,14 +21,14 @@
 </nav>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">ONE WALLET · $0.02 USDG</div>
+    <div class="kicker">EXACT $0.02 USDG · ROBINHOOD CHAIN</div>
     <h1>LOCK YOUR <i>SEAT.</i></h1>
-    <p class="lead">Connect any EVM wallet. Submit proof. Pay $0.02 USDG. First 1,000 paid verifies become OG and mint. Do not switch wallets after this.</p>
+    <p class="lead">The site sends only $0.02 USDG. Nothing more in USDG. If you already paid, paste the tx hash and recheck. Do not pay twice.</p>
   </div>
 </section>
 <section class="panel">
   <h2>1 / CONNECT</h2>
-  <p class="muted">MetaMask, Rabby, OKX, Coinbase, Bitget, Trust, Brave, TokenPocket. Phone: open this page inside the wallet browser.</p>
+  <p class="muted">Same wallet you will keep. Open this page in the wallet browser on phone.</p>
   <button class="btn" id="connectWallet" type="button">CONNECT WALLET</button>
   <div id="walletPick" class="pick"></div>
   <div id="walletAddress" class="wallet-line"></div>
@@ -43,20 +43,34 @@
   <button class="btn" id="submitVerification" type="button">SAVE DETAILS</button>
 </section>
 <section class="panel">
-  <h2>3 / PAY $0.02 USDG</h2>
-  <p class="muted">Confirm in your wallet. Gas extra.</p>
-  <label>Network</label>
-  <select id="payChain"><option value="4663">Robinhood Chain</option><option value="1">Ethereum</option></select>
-  <button class="btn" id="payButton" type="button">PAY $0.02 USDG</button>
+  <h2>3 / PAY EXACT $0.02 USDG</h2>
+  <p class="muted">Wallet will show 0.02 USDG only. Robinhood still needs a tiny bit of ETH as network gas. That is the chain, not extra USDG. We cannot turn chain gas to zero without a sponsor wallet.</p>
+  <button class="btn" id="payButton" type="button">PAY EXACT $0.02 USDG</button>
+</section>
+<section class="panel">
+  <h2>ALREADY PAID?</h2>
+  <p class="muted">Paste the payment tx hash. We mark verify from that hash. No second payment.</p>
+  <label>Transaction hash</label><input id="txHashInput" placeholder="0x...">
+  <button class="btn ghost" id="recheckBtn" type="button">RECHECK HASH</button>
   <div id="formStatus" class="status"></div>
 </section>
-<footer><span>VeyroHood</span><span>OG mint is not WL.</span></footer>
+<footer><span>VeyroHood</span><span>Do not pay twice.</span></footer>
 </div>
 <script src="wallet.js"></script>
 <script>
+const CHAIN_ID = 4663;
 const formStatus=document.getElementById("formStatus");
 function showStatus(message,type){formStatus.textContent=message;formStatus.className="status show "+type}
 function isValidUrl(value){try{const u=new URL(value);return u.protocol==="https:"||u.protocol==="http:"}catch{return false}}
+async function markPaid(txHash){
+  const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:window.VH.wallet,txHash,chainId:CHAIN_ID})});
+  const result=await response.json();
+  if(!response.ok||!result.success) throw new Error(result.error||"Payment check failed");
+  let msg="Paid and verified.";
+  if(result.ogNumber) msg+=" OG #"+result.ogNumber+".";
+  if(result.referralLink) msg+=" "+result.referralLink;
+  showStatus(msg,"success");
+}
 const params=new URLSearchParams(location.search);
 if(params.get("ref")) document.getElementById("referralCode").value=params.get("ref");
 document.getElementById("connectWallet").onclick=()=>connectFlow("walletPick",(wallet,name)=>{
@@ -73,25 +87,29 @@ document.getElementById("submitVerification").onclick=async()=>{
     const response=await fetch(API_URL+"/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     const result=await response.json();
     if(!response.ok||!result.success) throw new Error(result.error||"Submit failed");
-    showStatus("Saved. Pay $0.02 USDG next. ID #"+result.id,"success");
+    showStatus("Saved. Pay exact $0.02 USDG next. ID #"+result.id,"success");
   }catch(error){showStatus(error.message,"error")}
 };
 document.getElementById("payButton").onclick=async()=>{
   if(!window.VH.wallet||!window.VH.provider) return showStatus("Connect wallet first.","error");
-  const chainId=document.getElementById("payChain").value;
   try{
-    await switchChain(chainId);
+    await switchChain(CHAIN_ID);
     const data="0xa9059cbb"+pad64(TREASURY)+pad64(toHex(PAY_AMOUNT));
-    const txHash=await window.VH.provider.request({method:"eth_sendTransaction",params:[{from:window.VH.wallet,to:TOKENS[chainId],data,value:"0x0"}]});
-    showStatus("Payment sent. Checking chain...","success");
-    const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:window.VH.wallet,txHash,chainId:Number(chainId)})});
-    const result=await response.json();
-    if(!response.ok||!result.success) throw new Error(result.error||"Payment check failed");
-    let msg="Paid and verified.";
-    if(result.ogNumber) msg+=" OG #"+result.ogNumber+".";
-    if(result.referralLink) msg+=" "+result.referralLink;
-    showStatus(msg,"success");
+    const txHash=await window.VH.provider.request({method:"eth_sendTransaction",params:[{from:window.VH.wallet,to:TOKENS[String(CHAIN_ID)],data,value:"0x0"}]});
+    document.getElementById("txHashInput").value=txHash;
+    showStatus("Sent exact $0.02 USDG. Checking...","success");
+    let lastError="Transaction not found yet";
+    for(let i=0;i<8;i++){
+      try{await markPaid(txHash);return;}catch(error){lastError=error.message;await new Promise(r=>setTimeout(r,2000));}
+    }
+    throw new Error(lastError+" Paste the hash below and tap Recheck.");
   }catch(error){showStatus(error.message||"Payment failed","error")}
+};
+document.getElementById("recheckBtn").onclick=async()=>{
+  if(!window.VH.wallet) return showStatus("Connect wallet first.","error");
+  const txHash=document.getElementById("txHashInput").value.trim();
+  if(!/^0x[a-fA-F0-9]{64}$/.test(txHash)) return showStatus("Paste a valid tx hash.","error");
+  try{await markPaid(txHash);}catch(error){showStatus(error.message,"error")}
 };
 </script>
 </body>
