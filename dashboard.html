@@ -4,139 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VeyroHood — Dashboard</title>
-<meta name="theme-color" content="#07080c">
+<meta name="theme-color" content="#050607">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#07080c;--panel:#10161d;--green:#b7ff3c;--cyan:#54f6ff;--text:#edf5ee;--muted:#94a5ad;--line:#243038}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:radial-gradient(circle at 20% 0,#163226 0%,transparent 36%),var(--bg);color:var(--text);font-family:VT323,monospace;font-size:22px}
-a{color:inherit;text-decoration:none}
-.wrap{width:min(980px,calc(100% - 32px));margin:auto}
-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px}
-.links{display:flex;gap:14px;flex-wrap:wrap}
-.links a.active,.links a:hover{color:var(--green)}
-.hero{padding:36px 0 10px;text-align:center}
-.eyebrow{color:var(--cyan)}
-h1,h2{font-family:"Press Start 2P",monospace;color:var(--green);line-height:1.7}
-h1{font-size:clamp(18px,4vw,26px);margin:12px 0}
-h2{font-size:12px;margin-bottom:12px}
-.panel{background:var(--panel);border:1px solid var(--line);padding:22px;margin:16px 0;box-shadow:6px 6px 0 #0008}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.card{border:1px solid var(--line);padding:14px}
-.card b{display:block;color:var(--green);font-size:28px}
-button{min-height:48px;padding:0 14px;border:0;background:var(--green);color:#10150a;font-family:"Press Start 2P",monospace;font-size:10px;cursor:pointer}
-button:disabled{opacity:.4}
-.pick{display:none;margin-top:12px}
-.pick button{width:100%;margin-top:6px;background:#0b1116;color:var(--cyan);font-family:VT323,monospace;font-size:18px}
-.muted{color:var(--muted)}code{color:var(--cyan);word-break:break-all}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="wrap">
 <nav>
-  <a class="logo" href="index.html">VEYROHOOD</a>
-  <div class="links">
+  <a class="logo" href="index.html">VEYROHOOD<small>NFT COMMUNITY</small></a>
+  <div class="nav-links">
     <a href="index.html">Home</a>
     <a href="missions.html">Missions</a>
     <a href="verify.html">Verify</a>
     <a class="active" href="dashboard.html">Dashboard</a>
   </div>
 </nav>
-<section class="hero">
-  <div class="eyebrow">EARN YOUR PLACE. MINT YOUR HOOD.</div>
-  <h1>YOUR HOOD STATUS</h1>
-  <p class="muted">Any EVM wallet. OG #1-1000 mint guaranteed. Other 9,000 = WL / random.</p>
-</section>
-<section class="panel">
-  <button id="connectBtn" type="button">CONNECT WALLET</button>
-  <div id="walletPick" class="pick"></div>
-  <p id="walletLine" class="muted"></p>
-  <p id="statusLine" class="muted">Connect the same wallet you verified with. Phone users: open this page in the wallet browser.</p>
-</section>
-<section class="panel">
-  <h2>STATUS</h2>
-  <div class="grid">
-    <div class="card">Tier<b id="tier">-</b></div>
-    <div class="card">Referrals<b id="refs">0</b></div>
-    <div class="card">Available<b id="avail">$0.00</b></div>
+<section class="hero" style="grid-template-columns:1fr">
+  <div>
+    <div class="kicker">STATUS TERMINAL</div>
+    <h1>YOUR <i>HOOD FILE.</i></h1>
+    <p class="lead">OG wallets mint. Verified non-OG wallets sit in the WL / random pool. Referral earnings unlock claim at $2.</p>
   </div>
-  <p class="muted" style="margin-top:14px">Your link<br><code id="refLink">Verify first to unlock referral link</code></p>
-  <p class="muted">Lifetime earned: <span id="earned">$0.00</span></p>
 </section>
+<section class="panel">
+  <button class="btn" id="connectBtn" type="button">CONNECT WALLET</button>
+  <div id="walletPick" class="pick"></div>
+  <p id="walletLine" class="wallet-line"></p>
+  <p id="statusLine" class="muted">Connect the exact wallet you verified with.</p>
+</section>
+<section class="stats">
+  <div class="card stat">Tier<b id="tier">-</b></div>
+  <div class="card stat">Referrals<b id="refs">0</b></div>
+  <div class="card stat">Available<b id="avail">$0.00</b></div>
+  <div class="card stat">Lifetime<b id="earned">$0.00</b></div>
+</section>
+<section class="panel"><h2>YOUR LINK</h2><p class="muted" id="refLink">Verify first.</p></section>
 <section class="panel">
   <h2>CLAIM</h2>
-  <p class="muted">Minimum $2. $2 or $100 — one application holds the full available balance.</p>
-  <button id="claimBtn" type="button" disabled>APPLY TO CLAIM</button>
+  <p class="muted">Minimum $2. One application holds the full available balance.</p>
+  <button class="btn" id="claimBtn" type="button" disabled>APPLY TO CLAIM</button>
 </section>
-<section class="panel">
-  <h2>LEADERBOARD</h2>
-  <div id="board" class="muted">Loading...</div>
+<section class="grid2">
+  <div class="card"><h2>BOARD</h2><div id="board" class="muted">Loading...</div></div>
+  <div class="card"><h2>CLAIMS</h2><div id="claims" class="muted">No claims yet.</div></div>
 </section>
-<section class="panel">
-  <h2>YOUR CLAIMS</h2>
-  <div id="claims" class="muted">No claims yet.</div>
-</section>
+<footer><span>VeyroHood</span><span>Admin pays after review.</span></footer>
 </div>
+<script src="wallet.js"></script>
 <script>
-const API_URL="https://veyrohood-api-v2.mdb885941.workers.dev";
-let wallet=null;
 function money(v){return "$"+Number(v||0).toFixed(2)}
-function discoverProviders(){
-  const found=new Map();
-  window.addEventListener("eip6963:announceProvider",event=>{const d=event.detail;if(d&&d.info&&d.provider)found.set(d.info.uuid||d.info.name,d)});
-  window.dispatchEvent(new Event("eip6963:requestProvider"));
-  const fallbacks=[[window.ethereum,"Browser EVM"],[window.okxwallet,"OKX Wallet"],[window.rabby,"Rabby"],[window.bitkeep&&window.bitkeep.ethereum,"Bitget"],[window.coinbaseWalletExtension,"Coinbase"],[window.tokenpocket,"TokenPocket"],[window.trustwallet,"Trust Wallet"],[window.phantom&&window.phantom.ethereum,"Phantom EVM"]];
-  fallbacks.forEach(([p,name])=>{if(p&&p.request)found.set(name,{info:{name,uuid:name},provider:p})});
-  if(window.ethereum&&window.ethereum.providers){window.ethereum.providers.forEach((p,i)=>found.set("injected-"+i,{info:{name:p.isMetaMask?"MetaMask":p.isRabby?"Rabby":"EVM Wallet "+(i+1),uuid:"inj-"+i},provider:p}))}
-  return [...found.values()];
-}
-async function connectWith(selected){
-  const accounts=await selected.provider.request({method:"eth_requestAccounts"});
-  wallet=accounts[0];
-  document.getElementById("walletLine").textContent=wallet+" · "+selected.info.name;
-  document.getElementById("connectBtn").textContent="WALLET CONNECTED";
-  document.getElementById("walletPick").style.display="none";
+document.getElementById("connectBtn").onclick=()=>connectFlow("walletPick",(wallet,name)=>{
+  document.getElementById("walletLine").textContent=wallet+" · "+name;
+  document.getElementById("connectBtn").textContent="WALLET LOCKED";
   loadMe(); loadClaims();
-}
-document.getElementById("connectBtn").onclick=async()=>{
-  const list=discoverProviders();
-  if(!list.length){document.getElementById("statusLine").textContent="No EVM wallet found. Use a wallet browser or extension.";return;}
-  if(list.length===1) return connectWith(list[0]).catch(e=>document.getElementById("statusLine").textContent=e.message);
-  const box=document.getElementById("walletPick");
-  box.style.display="block";
-  box.innerHTML=list.map((w,i)=>"<button type='button' data-i='"+i+"'>"+w.info.name+"</button>").join("");
-  box.querySelectorAll("button").forEach(btn=>btn.onclick=()=>connectWith(list[Number(btn.dataset.i)]).catch(e=>document.getElementById("statusLine").textContent=e.message));
-};
+},msg=>document.getElementById("statusLine").textContent=msg);
 async function loadMe(){
-  const res=await fetch(API_URL+"/api/me?wallet="+wallet);
-  const data=await res.json();
+  const data=await (await fetch(API_URL+"/api/me?wallet="+window.VH.wallet)).json();
   if(!data.success){document.getElementById("statusLine").textContent=data.error||"Not found";return;}
-  document.getElementById("tier").textContent=data.ogNumber?("OG #"+data.ogNumber):(data.paymentVerified?"VERIFIED / WL POOL":"NOT VERIFIED");
+  document.getElementById("tier").textContent=data.ogNumber?("OG #"+data.ogNumber):(data.paymentVerified?"WL POOL":"UNPAID");
   document.getElementById("refs").textContent=String(data.referredCount||0);
   document.getElementById("avail").textContent=money(data.availableBalance);
   document.getElementById("earned").textContent=money(data.totalEarned);
-  document.getElementById("refLink").textContent=data.referralLink||"Verify to get your link";
+  document.getElementById("refLink").textContent=data.referralLink||"Verify first.";
   document.getElementById("statusLine").textContent=data.message||"";
   document.getElementById("claimBtn").disabled=!data.canClaim;
 }
 async function loadBoard(){
-  const res=await fetch(API_URL+"/api/stats");
-  const data=await res.json();
+  const data=await (await fetch(API_URL+"/api/stats")).json();
   const rows=data.leaderboard||[];
-  document.getElementById("board").innerHTML=rows.length?rows.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)+" refs · $"+Number(r.total_earned||0).toFixed(2)).join("<br>"):"No referrals yet.";
+  document.getElementById("board").innerHTML=rows.length?rows.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)+" · "+money(r.total_earned)).join("<br>"):"No referrals yet.";
 }
 async function loadClaims(){
-  if(!wallet) return;
-  const res=await fetch(API_URL+"/api/claims?wallet="+wallet);
-  const data=await res.json();
+  if(!window.VH.wallet) return;
+  const data=await (await fetch(API_URL+"/api/claims?wallet="+window.VH.wallet)).json();
   const rows=data.claims||[];
   document.getElementById("claims").innerHTML=rows.length?rows.map(c=>"#"+c.id+" · $"+Number(c.amount).toFixed(2)+" · "+c.status).join("<br>"):"No claims yet.";
 }
 document.getElementById("claimBtn").onclick=async()=>{
-  const res=await fetch(API_URL+"/api/claim",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet})});
-  const data=await res.json();
+  const data=await (await fetch(API_URL+"/api/claim",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:window.VH.wallet})})).json();
   document.getElementById("statusLine").textContent=data.error||data.message||"Claim submitted";
   loadMe(); loadClaims();
 };
