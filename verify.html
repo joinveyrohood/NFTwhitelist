@@ -48,7 +48,7 @@ footer{text-align:center;color:var(--muted);padding:28px 0}
 <section class="hero">
   <div class="eyebrow">EARN YOUR PLACE. MINT YOUR HOOD.</div>
   <h1>VERIFY YOUR PLACE</h1>
-  <p class="muted">Any EVM wallet. One address. $0.30 USDG. First 1,000 paid verifications are OG.</p>
+  <p class="muted">Any EVM wallet. One address. $0.02 USDG. First 1,000 paid verifications are OG.</p>
 </section>
 <section class="panel">
   <h2>1. CONNECT WALLET</h2>
@@ -67,14 +67,14 @@ footer{text-align:center;color:var(--muted);padding:28px 0}
   <button id="submitVerification" type="button">SUBMIT DETAILS</button>
 </section>
 <section class="panel">
-  <h2>3. PAY $0.30 USDG</h2>
+  <h2>3. PAY $0.02 USDG</h2>
   <p class="muted">Treasury 0xf6F80827cBAf83798c7763FCd915C0068F2bE60C · gas extra.</p>
   <label>Network</label>
   <select id="payChain">
     <option value="4663">Robinhood Chain</option>
     <option value="1">Ethereum</option>
   </select>
-  <button id="payButton" type="button">PAY $0.30 USDG</button>
+  <button id="payButton" type="button">PAY $0.02 USDG</button>
   <div id="formStatus" class="status"></div>
 </section>
 <footer>VeyroHood · 10,000 NFT supply</footer>
@@ -82,7 +82,7 @@ footer{text-align:center;color:var(--muted);padding:28px 0}
 <script>
 const API_URL="https://veyrohood-api-v2.mdb885941.workers.dev";
 const TREASURY="0xf6F80827cBAf83798c7763FCd915C0068F2bE60C";
-const PAY_AMOUNT=300000n;
+const PAY_AMOUNT=20000n;
 const TOKENS={"1":"0xe343167631d89B6Ffc58B88d6b7fB0228795491D","4663":"0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"};
 const CHAINS={
   "1":{chainId:"0x1",chainName:"Ethereum",rpcUrls:["https://ethereum-rpc.publicnode.com"],nativeCurrency:{name:"ETH",symbol:"ETH",decimals:18},blockExplorerUrls:["https://etherscan.io"]},
@@ -96,37 +96,17 @@ function toHex(v){return "0x"+v.toString(16)}
 function pad64(hex){return hex.replace(/^0x/,"").padStart(64,"0")}
 function discoverProviders(){
   const found=new Map();
-  window.addEventListener("eip6963:announceProvider",event=>{
-    const d=event.detail; if(d&&d.info&&d.provider) found.set(d.info.uuid||d.info.name,d);
-  });
+  window.addEventListener("eip6963:announceProvider",event=>{const d=event.detail; if(d&&d.info&&d.provider) found.set(d.info.uuid||d.info.name,d);});
   window.dispatchEvent(new Event("eip6963:requestProvider"));
-  const fallbacks=[
-    [window.ethereum,"Browser EVM"],
-    [window.okxwallet,"OKX Wallet"],
-    [window.rabby,"Rabby"],
-    [window.bitkeep&&window.bitkeep.ethereum,"Bitget"],
-    [window.coinbaseWalletExtension,"Coinbase"],
-    [window.tokenpocket,"TokenPocket"],
-    [window.trustwallet,"Trust Wallet"],
-    [window.phantom&&window.phantom.ethereum,"Phantom EVM"]
-  ];
+  const fallbacks=[[window.ethereum,"Browser EVM"],[window.okxwallet,"OKX Wallet"],[window.rabby,"Rabby"],[window.bitkeep&&window.bitkeep.ethereum,"Bitget"],[window.coinbaseWalletExtension,"Coinbase"],[window.tokenpocket,"TokenPocket"],[window.trustwallet,"Trust Wallet"],[window.phantom&&window.phantom.ethereum,"Phantom EVM"]];
   fallbacks.forEach(([p,name])=>{if(p&&p.request) found.set(name,{info:{name,uuid:name},provider:p})});
-  if(window.ethereum&&window.ethereum.providers){
-    window.ethereum.providers.forEach((p,i)=>found.set("injected-"+i,{info:{name:p.isMetaMask?"MetaMask":p.isRabby?"Rabby":p.isOkxWallet?"OKX":"EVM Wallet "+(i+1),uuid:"inj-"+i},provider:p}));
-  }
+  if(window.ethereum&&window.ethereum.providers){window.ethereum.providers.forEach((p,i)=>found.set("injected-"+i,{info:{name:p.isMetaMask?"MetaMask":p.isRabby?"Rabby":p.isOkxWallet?"OKX":"EVM Wallet "+(i+1),uuid:"inj-"+i},provider:p}));}
   return [...found.values()];
 }
 async function switchChain(chainId){
   const hex=CHAINS[String(chainId)].chainId;
-  try{
-    await provider.request({method:"wallet_switchEthereumChain",params:[{chainId:hex}]});
-  }catch(error){
-    if(error&&(error.code===4902||String(error.message||"").includes("Unrecognized"))){
-      await provider.request({method:"wallet_addEthereumChain",params:[CHAINS[String(chainId)]]});
-      return;
-    }
-    throw error;
-  }
+  try{await provider.request({method:"wallet_switchEthereumChain",params:[{chainId:hex}]);}
+  catch(error){if(error&&(error.code===4902||String(error.message||"").includes("Unrecognized"))){await provider.request({method:"wallet_addEthereumChain",params:[CHAINS[String(chainId)]]});return;}throw error;}
 }
 async function connectWith(selected){
   provider=selected.provider;
@@ -138,11 +118,10 @@ async function connectWith(selected){
   document.getElementById("connectWallet").textContent="WALLET CONNECTED";
   document.getElementById("walletPick").style.display="none";
   showStatus("Connected with "+selected.info.name,"success");
-  provider.on&&provider.on("accountsChanged",accs=>{if(accs&&accs[0]){connectedWallet=accs[0];box.textContent=connectedWallet+" · "+selected.info.name}});
 }
 document.getElementById("connectWallet").onclick=async()=>{
   const list=discoverProviders();
-  if(!list.length) return showStatus("No EVM wallet found. Install MetaMask/Rabby/OKX or open this page in a wallet browser.","error");
+  if(!list.length) return showStatus("No EVM wallet found. Open this page in a wallet browser.","error");
   if(list.length===1) return connectWith(list[0]).catch(e=>showStatus(e.message,"error"));
   const box=document.getElementById("walletPick");
   box.style.display="block";
@@ -160,7 +139,7 @@ document.getElementById("submitVerification").onclick=async()=>{
     const response=await fetch(API_URL+"/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     const result=await response.json();
     if(!response.ok||!result.success) throw new Error(result.error||"Submit failed");
-    showStatus("Details saved. Now pay $0.30 USDG. ID #"+result.id,"success");
+    showStatus("Details saved. Now pay $0.02 USDG. ID #"+result.id,"success");
   }catch(error){showStatus(error.message,"error")}
 };
 document.getElementById("payButton").onclick=async()=>{
