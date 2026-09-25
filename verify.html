@@ -12,25 +12,26 @@
 body{background:radial-gradient(circle at 80% 0,#163226 0%,transparent 36%),var(--bg);color:var(--text);font-family:VT323,monospace;font-size:22px}
 a{color:inherit;text-decoration:none}
 .wrap{width:min(760px,calc(100% - 32px));margin:auto}
-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
-.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px;line-height:1.7}
-.links{display:flex;gap:16px;flex-wrap:wrap}
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px}
+.links{display:flex;gap:14px;flex-wrap:wrap}
 .links a.active,.links a:hover{color:var(--green)}
 .hero{padding:36px 0 10px;text-align:center}
-.eyebrow{color:var(--cyan);letter-spacing:2px}
-h1{font-family:"Press Start 2P",monospace;color:var(--green);font-size:clamp(18px,4vw,26px);line-height:1.7;margin:12px 0}
+.eyebrow{color:var(--cyan)}
+h1,h2{font-family:"Press Start 2P",monospace;color:var(--green);line-height:1.7}
+h1{font-size:clamp(18px,4vw,26px);margin:12px 0}
+h2{font-size:11px;margin:6px 0 14px}
 .panel{background:var(--panel);border:1px solid var(--line);padding:22px;margin:16px 0;box-shadow:6px 6px 0 #0008}
-h2{font-family:"Press Start 2P",monospace;color:var(--green);font-size:11px;line-height:1.8;margin:6px 0 14px}
 label{display:block;margin:14px 0 6px}
 input,select,button{width:100%;min-height:48px;border:1px solid var(--line);background:#070b10;color:#fff;padding:0 12px;font:inherit}
 button{background:var(--green);color:#10150a;border:0;font-family:"Press Start 2P",monospace;font-size:10px;cursor:pointer;margin-top:14px}
 .muted{color:var(--muted)}
 .status{display:none;margin-top:14px;padding:12px;border:1px solid var(--line)}
-.status.show{display:block}
-.status.error{color:#ff8f8f}
-.status.success{color:var(--green)}
+.status.show{display:block}.status.error{color:#ff8f8f}.status.success{color:var(--green)}
 .wallet{display:none;margin-top:10px;color:var(--green);word-break:break-all}
-footer{text-align:center;color:var(--muted);padding:28px 0;font-size:18px}
+.pick{display:none;margin-top:12px;border:1px solid var(--line)}
+.pick button{margin:0;border-radius:0;background:#0b1116;color:var(--cyan);text-align:left;font-size:16px;font-family:VT323,monospace}
+footer{text-align:center;color:var(--muted);padding:28px 0}
 </style>
 </head>
 <body>
@@ -41,17 +42,19 @@ footer{text-align:center;color:var(--muted);padding:28px 0;font-size:18px}
     <a href="index.html">Home</a>
     <a href="missions.html">Missions</a>
     <a class="active" href="verify.html">Verify</a>
+    <a href="dashboard.html">Dashboard</a>
   </div>
 </nav>
 <section class="hero">
   <div class="eyebrow">EARN YOUR PLACE. MINT YOUR HOOD.</div>
   <h1>VERIFY YOUR PLACE</h1>
-  <p class="muted">One wallet. $0.30 USDG. First 1,000 paid verifications are OG.</p>
+  <p class="muted">Any EVM wallet. One address. $0.30 USDG. First 1,000 paid verifications are OG.</p>
 </section>
 <section class="panel">
   <h2>1. CONNECT WALLET</h2>
-  <p class="muted">Use the same wallet you will keep for your Hood.</p>
+  <p class="muted">MetaMask, Rabby, OKX, Coinbase, Bitget, Trust, Brave, TokenPocket and other EVM wallets. On phone, open this page inside the wallet browser.</p>
   <button id="connectWallet" type="button">CONNECT WALLET</button>
+  <div id="walletPick" class="pick"></div>
   <div id="walletAddress" class="wallet"></div>
 </section>
 <section class="panel">
@@ -81,24 +84,73 @@ const API_URL="https://veyrohood-api-v2.mdb885941.workers.dev";
 const TREASURY="0xf6F80827cBAf83798c7763FCd915C0068F2bE60C";
 const PAY_AMOUNT=300000n;
 const TOKENS={"1":"0xe343167631d89B6Ffc58B88d6b7fB0228795491D","4663":"0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"};
-let connectedWallet=null;
+const CHAINS={
+  "1":{chainId:"0x1",chainName:"Ethereum",rpcUrls:["https://ethereum-rpc.publicnode.com"],nativeCurrency:{name:"ETH",symbol:"ETH",decimals:18},blockExplorerUrls:["https://etherscan.io"]},
+  "4663":{chainId:"0x1237",chainName:"Robinhood Chain",rpcUrls:["https://rpc.mainnet.chain.robinhood.com"],nativeCurrency:{name:"ETH",symbol:"ETH",decimals:18},blockExplorerUrls:["https://robinhoodchain.blockscout.com"]}
+};
+let connectedWallet=null,provider=null;
 const formStatus=document.getElementById("formStatus");
 function showStatus(message,type){formStatus.textContent=message;formStatus.className="status show "+type}
 function isValidUrl(value){try{const u=new URL(value);return u.protocol==="https:"||u.protocol==="http:"}catch{return false}}
 function toHex(v){return "0x"+v.toString(16)}
 function pad64(hex){return hex.replace(/^0x/,"").padStart(64,"0")}
-const params=new URLSearchParams(location.search);
-if(params.get("ref")) document.getElementById("referralCode").value=params.get("ref");
-document.getElementById("connectWallet").onclick=async()=>{
-  if(!window.ethereum) return showStatus("Open this page in MetaMask, Rabby, or OKX.","error");
-  const accounts=await window.ethereum.request({method:"eth_requestAccounts"});
+function discoverProviders(){
+  const found=new Map();
+  window.addEventListener("eip6963:announceProvider",event=>{
+    const d=event.detail; if(d&&d.info&&d.provider) found.set(d.info.uuid||d.info.name,d);
+  });
+  window.dispatchEvent(new Event("eip6963:requestProvider"));
+  const fallbacks=[
+    [window.ethereum,"Browser EVM"],
+    [window.okxwallet,"OKX Wallet"],
+    [window.rabby,"Rabby"],
+    [window.bitkeep&&window.bitkeep.ethereum,"Bitget"],
+    [window.coinbaseWalletExtension,"Coinbase"],
+    [window.tokenpocket,"TokenPocket"],
+    [window.trustwallet,"Trust Wallet"],
+    [window.phantom&&window.phantom.ethereum,"Phantom EVM"]
+  ];
+  fallbacks.forEach(([p,name])=>{if(p&&p.request) found.set(name,{info:{name,uuid:name},provider:p})});
+  if(window.ethereum&&window.ethereum.providers){
+    window.ethereum.providers.forEach((p,i)=>found.set("injected-"+i,{info:{name:p.isMetaMask?"MetaMask":p.isRabby?"Rabby":p.isOkxWallet?"OKX":"EVM Wallet "+(i+1),uuid:"inj-"+i},provider:p}));
+  }
+  return [...found.values()];
+}
+async function switchChain(chainId){
+  const hex=CHAINS[String(chainId)].chainId;
+  try{
+    await provider.request({method:"wallet_switchEthereumChain",params:[{chainId:hex}]});
+  }catch(error){
+    if(error&&(error.code===4902||String(error.message||"").includes("Unrecognized"))){
+      await provider.request({method:"wallet_addEthereumChain",params:[CHAINS[String(chainId)]]});
+      return;
+    }
+    throw error;
+  }
+}
+async function connectWith(selected){
+  provider=selected.provider;
+  const accounts=await provider.request({method:"eth_requestAccounts"});
   connectedWallet=accounts[0];
   const box=document.getElementById("walletAddress");
   box.style.display="block";
-  box.textContent=connectedWallet;
+  box.textContent=connectedWallet+" · "+selected.info.name;
   document.getElementById("connectWallet").textContent="WALLET CONNECTED";
-  showStatus("Wallet connected.","success");
+  document.getElementById("walletPick").style.display="none";
+  showStatus("Connected with "+selected.info.name,"success");
+  provider.on&&provider.on("accountsChanged",accs=>{if(accs&&accs[0]){connectedWallet=accs[0];box.textContent=connectedWallet+" · "+selected.info.name}});
+}
+document.getElementById("connectWallet").onclick=async()=>{
+  const list=discoverProviders();
+  if(!list.length) return showStatus("No EVM wallet found. Install MetaMask/Rabby/OKX or open this page in a wallet browser.","error");
+  if(list.length===1) return connectWith(list[0]).catch(e=>showStatus(e.message,"error"));
+  const box=document.getElementById("walletPick");
+  box.style.display="block";
+  box.innerHTML=list.map((w,i)=>"<button type='button' data-i='"+i+"'>"+w.info.name+"</button>").join("");
+  box.querySelectorAll("button").forEach(btn=>btn.onclick=()=>connectWith(list[Number(btn.dataset.i)]).catch(e=>showStatus(e.message,"error")));
 };
+const params=new URLSearchParams(location.search);
+if(params.get("ref")) document.getElementById("referralCode").value=params.get("ref");
 document.getElementById("submitVerification").onclick=async()=>{
   const payload={wallet_address:connectedWallet,x_username:document.getElementById("xUsername").value.trim(),discord_username:document.getElementById("discordUsername").value.trim(),quote_link:document.getElementById("quoteLink").value.trim(),reply_link:document.getElementById("replyLink").value.trim(),referral_code:document.getElementById("referralCode").value.trim()};
   if(!payload.wallet_address) return showStatus("Connect wallet first.","error");
@@ -112,12 +164,12 @@ document.getElementById("submitVerification").onclick=async()=>{
   }catch(error){showStatus(error.message,"error")}
 };
 document.getElementById("payButton").onclick=async()=>{
-  if(!connectedWallet||!window.ethereum) return showStatus("Connect wallet first.","error");
+  if(!connectedWallet||!provider) return showStatus("Connect wallet first.","error");
   const chainId=document.getElementById("payChain").value;
   try{
-    await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:toHex(BigInt(chainId))}]});
+    await switchChain(chainId);
     const data="0xa9059cbb"+pad64(TREASURY)+pad64(toHex(PAY_AMOUNT));
-    const txHash=await window.ethereum.request({method:"eth_sendTransaction",params:[{from:connectedWallet,to:TOKENS[chainId],data,value:"0x0"}]});
+    const txHash=await provider.request({method:"eth_sendTransaction",params:[{from:connectedWallet,to:TOKENS[chainId],data,value:"0x0"}]});
     showStatus("Payment sent. Checking...","success");
     const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:connectedWallet,txHash,chainId:Number(chainId)})});
     const result=await response.json();
