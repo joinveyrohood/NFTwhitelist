@@ -21,51 +21,52 @@
   </div>
 </nav>
 <div class="phases">
-  <a class="phase done" href="index.html"><b>PHASE 01</b><span>Index / Home</span></a>
+  <a class="phase done" href="index.html"><b>PHASE 01</b><span>Home</span></a>
   <a class="phase done" href="missions.html"><b>PHASE 02</b><span>Missions</span></a>
-  <div class="phase now"><b>PHASE 03</b><span>Verify + Pay</span></div>
+  <div class="phase now"><b>PHASE 03</b><span>Verify</span></div>
 </div>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">PHASE 03 · $0.30 USDG · ETHEREUM OR ROBINHOOD</div>
+    <div class="kicker">PHASE 03 · VERIFY</div>
     <h1>LOCK YOUR <i>SEAT.</i></h1>
-    <p class="lead">Do missions first. Then connect one wallet, save links, pay $0.30 USDG. Worker checks sender, token, treasury, amount, unused tx, one wallet.</p>
+    <p class="lead">Finish missions first. Then connect one wallet and complete entry. Only you see your wallet, usernames, and links.</p>
     <p class="warn" id="missionGate"></p>
   </div>
 </section>
 <section class="panel">
   <h2>1 / CONNECT WALLET</h2>
-  <p class="muted">MetaMask, Rabby, OKX, or any compatible EVM wallet. One wallet = one NFT.</p>
+  <p class="muted">Use your own wallet. One wallet = one seat.</p>
   <button class="btn" id="connectWallet" type="button">CONNECT WALLET</button>
   <div id="walletPick" class="pick"></div>
   <div id="walletAddress" class="wallet-line"></div>
 </section>
 <section class="panel">
-  <h2>2 / VERIFICATION FORM</h2>
-  <label>X username</label><input id="xUsername" placeholder="@VeyroHood">
-  <label>Discord username</label><input id="discordUsername" placeholder="username">
-  <label>Quote link</label><input id="quoteLink" placeholder="https://x.com/...">
-  <label>Reply link</label><input id="replyLink" placeholder="https://x.com/...">
-  <label>Referral code</label><input id="referralCode" placeholder="optional VH...">
+  <h2>2 / YOUR LINKS</h2>
+  <p class="muted">Used only to confirm missions. Not shown on the public homepage.</p>
+  <label>X username</label><input id="xUsername" placeholder="your X handle" autocomplete="off">
+  <label>Discord username</label><input id="discordUsername" placeholder="your Discord name" autocomplete="off">
+  <label>Quote link</label><input id="quoteLink" placeholder="your quote post link" autocomplete="off">
+  <label>Reply link</label><input id="replyLink" placeholder="your reply post link" autocomplete="off">
+  <label>Referral code</label><input id="referralCode" placeholder="optional" autocomplete="off">
   <button class="btn" id="submitVerification" type="button">SAVE DETAILS</button>
 </section>
 <section class="panel">
-  <h2>3 / PAY $0.30 USDG</h2>
+  <h2>3 / COMPLETE ENTRY</h2>
   <label>Network</label>
   <select id="chainSelect">
-    <option value="4663">Robinhood Chain (4663)</option>
-    <option value="1">Ethereum Mainnet (1)</option>
+    <option value="4663">Robinhood Chain</option>
+    <option value="1">Ethereum</option>
   </select>
-  <p class="muted" style="margin-top:10px">Treasury 0xf6F80827cBAf83798c7763FCd915C0068F2bE60C. Need a little native ETH for gas. That is not extra USDG.</p>
+  <p class="muted" style="margin-top:10px">Entry is $0.30 USDG. Your wallet will ask you to confirm. Do not send twice.</p>
   <button class="btn" id="payButton" type="button">PAY $0.30 USDG</button>
 </section>
 <section class="panel">
   <h2>ALREADY PAID?</h2>
-  <label>Payment TX hash</label><input id="txHashInput" placeholder="0x...">
-  <button class="btn ghost" id="recheckBtn" type="button">RECHECK HASH</button>
+  <label>Transaction hash</label><input id="txHashInput" placeholder="paste hash only if needed" autocomplete="off">
+  <button class="btn ghost" id="recheckBtn" type="button">RECHECK</button>
   <div id="formStatus" class="status"></div>
 </section>
-<footer><span>VeyroHood</span><span>Phase 03 of 03 · Do not pay twice</span></footer>
+<footer><span>VeyroHood</span><span>Your details stay on your dashboard</span></footer>
 </div>
 <script src="wallet.js"></script>
 <script>
@@ -78,7 +79,7 @@ function missionsDone(){
   }catch(e){return false}
 }
 if(!missionsDone()){
-  gate.innerHTML='Missions incomplete. <a href="missions.html" style="color:var(--green)">Go finish Phase 02</a> before paying.';
+  gate.innerHTML='Finish missions first. <a href="missions.html" style="color:var(--green)">Go to Phase 02</a>';
 }
 function showStatus(message,type){formStatus.textContent=message;formStatus.className="status show "+type}
 function isValidUrl(value){try{const u=new URL(value);return u.protocol==="https:"||u.protocol==="http:"}catch{return false}}
@@ -87,18 +88,17 @@ async function markPaid(txHash){
   const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:window.VH.wallet,txHash,chainId:selectedChain()})});
   const result=await response.json();
   if(!response.ok||!result.success) throw new Error(result.error||"Payment check failed");
-  let msg="On-chain verified.";
-  if(result.ogNumber) msg+=" OG #"+result.ogNumber+".";
-  else if(result.wlPool) msg+=" Entered WL pool.";
-  if(result.referralLink) msg+=" Referral: "+result.referralLink;
+  let msg="Verified.";
+  if(result.ogNumber) msg+=" You are OG.";
+  else if(result.wlPool) msg+=" You are in the whitelist pool.";
   showStatus(msg,"success");
 }
 const params=new URLSearchParams(location.search);
 if(params.get("ref")) document.getElementById("referralCode").value=params.get("ref");
 document.getElementById("connectWallet").onclick=()=>connectFlow("walletPick",(wallet,name)=>{
-  document.getElementById("walletAddress").textContent=wallet+" · "+name;
+  document.getElementById("walletAddress").textContent=wallet.slice(0,6)+"…"+wallet.slice(-4)+" · "+name;
   document.getElementById("connectWallet").textContent="WALLET LOCKED";
-  showStatus("Connected with "+name,"success");
+  showStatus("Wallet connected","success");
 },msg=>showStatus(msg,"error"));
 document.getElementById("submitVerification").onclick=async()=>{
   if(!missionsDone()) return showStatus("Finish the 4 missions first.","error");
@@ -110,7 +110,7 @@ document.getElementById("submitVerification").onclick=async()=>{
     const response=await fetch(API_URL+"/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     const result=await response.json();
     if(!response.ok||!result.success) throw new Error(result.error||"Submit failed");
-    showStatus(result.message||("Saved. Pay $0.30 USDG next. ID #"+result.id),"success");
+    showStatus("Saved. Complete entry next.","success");
   }catch(error){showStatus(error.message,"error")}
 };
 document.getElementById("payButton").onclick=async()=>{
@@ -122,18 +122,18 @@ document.getElementById("payButton").onclick=async()=>{
     const data="0xa9059cbb"+pad64(TREASURY)+pad64(toHex(PAY_AMOUNT));
     const txHash=await window.VH.provider.request({method:"eth_sendTransaction",params:[{from:window.VH.wallet,to:TOKENS[String(chainId)],data,value:"0x0"}]});
     document.getElementById("txHashInput").value=txHash;
-    showStatus("Sent $0.30 USDG. Waiting for backend receipt check...","success");
-    let lastError="Transaction not found yet";
+    showStatus("Payment sent. Checking...","success");
+    let lastError="Not confirmed yet";
     for(let i=0;i<8;i++){
       try{await markPaid(txHash);return;}catch(error){lastError=error.message;await new Promise(r=>setTimeout(r,2000));}
     }
-    throw new Error(lastError+" Paste the hash below and tap Recheck.");
+    throw new Error(lastError+". Paste the hash and tap Recheck.");
   }catch(error){showStatus(error.message||"Payment failed","error")}
 };
 document.getElementById("recheckBtn").onclick=async()=>{
   if(!window.VH.wallet) return showStatus("Connect wallet first.","error");
   const txHash=document.getElementById("txHashInput").value.trim();
-  if(!/^0x[a-fA-F0-9]{64}$/.test(txHash)) return showStatus("Paste a valid tx hash.","error");
+  if(!/^0x[a-fA-F0-9]{64}$/.test(txHash)) return showStatus("Paste a valid hash.","error");
   try{await markPaid(txHash);}catch(error){showStatus(error.message,"error")}
 };
 </script>

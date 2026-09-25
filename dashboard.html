@@ -22,31 +22,31 @@
 </nav>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">STATUS TERMINAL</div>
+    <div class="kicker">YOUR FILE</div>
     <h1>YOUR <i>HOOD FILE.</i></h1>
-    <p class="lead">Referral link only after paid verify. Claim All at $2+ holds the full available balance for admin review. You pay claim gas.</p>
+    <p class="lead">Only you see your wallet status, referral link, and claims after you connect.</p>
   </div>
 </section>
 <section class="panel">
   <button class="btn" id="connectBtn" type="button">CONNECT WALLET</button>
   <div id="walletPick" class="pick"></div>
   <p id="walletLine" class="wallet-line"></p>
-  <p id="statusLine" class="muted">Connect the exact wallet you verified with.</p>
+  <p id="statusLine" class="muted">Connect the wallet you verified with.</p>
 </section>
 <section class="stats">
   <div class="card stat">Tier<b id="tier">-</b></div>
-  <div class="card stat">NFT #<b id="nft">-</b></div>
+  <div class="card stat">Seat<b id="nft">-</b></div>
   <div class="card stat">Referrals<b id="refs">0</b></div>
   <div class="card stat">Available<b id="avail">$0.00</b></div>
 </section>
 <section class="grid2">
   <div class="card"><h2>EARNED</h2><p class="rule">Lifetime <span id="earned">$0.00</span><br>Withdrawn <span id="withdrawn">$0.00</span></p></div>
-  <div class="card"><h2>YOUR LINK</h2><p class="muted" id="refLink">Hidden until paid verify.</p></div>
+  <div class="card"><h2>YOUR LINK</h2><p class="muted" id="refLink">Hidden until you are verified.</p></div>
 </section>
 <section class="panel">
-  <h2>CLAIM ALL</h2>
-  <p class="muted">Minimum $2. Claimant pays gas. Treasury does not cover gas.</p>
-  <label>Payout chain</label>
+  <h2>CLAIM</h2>
+  <p class="muted">Available from $2. You confirm the request from this wallet.</p>
+  <label>Payout network</label>
   <select id="claimChain">
     <option value="4663">Robinhood Chain</option>
     <option value="1">Ethereum</option>
@@ -56,42 +56,44 @@
   </div>
 </section>
 <section class="grid2">
-  <div class="card"><h2>LEADERBOARD</h2><div id="board" class="muted">Loading...</div></div>
-  <div class="card"><h2>CLAIMS</h2><div id="claims" class="muted">No claims yet.</div></div>
+  <div class="card"><h2>BOARD</h2><div id="board" class="muted">Loading...</div></div>
+  <div class="card"><h2>YOUR CLAIMS</h2><div id="claims" class="muted">No claims yet.</div></div>
 </section>
-<footer><span>VeyroHood</span><span>Admin pays after review</span></footer>
+<footer><span>VeyroHood</span><span>Private to your wallet</span></footer>
 </div>
 <script src="wallet.js"></script>
 <script>
 function money(v){return "$"+Number(v||0).toFixed(2)}
+function short(w){if(!w) return "-"; return w.slice(0,6)+"…"+w.slice(-4)}
+function mask(code){if(!code) return "member"; return String(code).slice(0,4)+"****"}
 document.getElementById("connectBtn").onclick=()=>connectFlow("walletPick",(wallet,name)=>{
-  document.getElementById("walletLine").textContent=wallet+" · "+name;
+  document.getElementById("walletLine").textContent=short(wallet)+" · "+name;
   document.getElementById("connectBtn").textContent="WALLET LOCKED";
   loadMe(); loadClaims();
 },msg=>document.getElementById("statusLine").textContent=msg);
 async function loadMe(){
   const data=await (await fetch(API_URL+"/api/me?wallet="+window.VH.wallet)).json();
   if(!data.success){document.getElementById("statusLine").textContent=data.error||"Not found";return;}
-  document.getElementById("tier").textContent=data.ogNumber?("OG #"+data.ogNumber):(data.allocationType==="WL"?"WL":(data.paymentVerified?"WL POOL":"UNPAID"));
+  document.getElementById("tier").textContent=data.ogNumber?"OG":(data.allocationType==="WL"?"WL":(data.paymentVerified?"WL POOL":"UNPAID"));
   document.getElementById("nft").textContent=data.nftNumber||"-";
   document.getElementById("refs").textContent=String(data.referredCount||0);
   document.getElementById("avail").textContent=money(data.availableBalance);
   document.getElementById("earned").textContent=money(data.totalEarned);
   document.getElementById("withdrawn").textContent=money(data.totalWithdrawn);
-  document.getElementById("refLink").textContent=data.referralLink||"Hidden until paid verify.";
+  document.getElementById("refLink").textContent=data.referralLink||"Hidden until you are verified.";
   document.getElementById("statusLine").textContent=data.message||"";
   document.getElementById("claimBtn").disabled=!data.canClaim;
 }
 async function loadBoard(){
   const data=await (await fetch(API_URL+"/api/stats")).json();
   const rows=data.leaderboard||[];
-  document.getElementById("board").innerHTML=rows.length?rows.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)+" · "+money(r.total_earned)).join("<br>"):"No referrals yet.";
+  document.getElementById("board").innerHTML=rows.length?rows.map((r,i)=>(i+1)+". "+mask(r.referral_code)+" · "+(r.referred_count||0)).join("<br>"):"No referrals yet.";
 }
 async function loadClaims(){
   if(!window.VH.wallet) return;
   const data=await (await fetch(API_URL+"/api/claims?wallet="+window.VH.wallet)).json();
   const rows=data.claims||[];
-  document.getElementById("claims").innerHTML=rows.length?rows.map(c=>"#"+c.id+" · $"+Number(c.amount).toFixed(2)+" · chain "+c.chain_id+" · "+c.status).join("<br>"):"No claims yet.";
+  document.getElementById("claims").innerHTML=rows.length?rows.map(c=>"#"+c.id+" · "+money(c.amount)+" · "+c.status).join("<br>"):"No claims yet.";
 }
 document.getElementById("claimBtn").onclick=async()=>{
   const chainId=Number(document.getElementById("claimChain").value);
