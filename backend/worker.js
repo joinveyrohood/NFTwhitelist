@@ -1,7 +1,7 @@
 const CONFIG = {
   treasury: "0xf6F80827cBAf83798c7763FCd915C0068F2bE60C",
-  minPayment: 300000n,
-  commission: 60000n,
+  minPayment: 20000n,
+  commission: 4000n,
   ogLimit: 1000,
   minClaim: 2,
   allowedOrigins: ["https://veyrohood.com","https://www.veyrohood.com","https://joinveyrohood.github.io","https://joinveyrohood.github.io/NFTwhitelist"],
@@ -99,9 +99,9 @@ async function handleSubmitVerification(request, env, origin) {
   if (!isHttpUrl(quoteLink)) return json({ error: "Valid quote link is required" }, 400, origin);
   if (!isHttpUrl(replyLink)) return json({ error: "Valid reply link is required" }, 400, origin);
   const existing = await env.DB.prepare("SELECT id, payment_verified, status FROM verifications WHERE lower(wallet_address) = ? LIMIT 1").bind(wallet).first();
-  if (existing) return json({ success: true, id: existing.id, alreadySubmitted: true, paymentVerified: existing.payment_verified === 1, status: existing.status, message: existing.payment_verified === 1 ? "Wallet already verified" : "Submission found. Continue to $0.30 USDG payment." }, 200, origin);
+  if (existing) return json({ success: true, id: existing.id, alreadySubmitted: true, paymentVerified: existing.payment_verified === 1, status: existing.status, message: existing.payment_verified === 1 ? "Wallet already verified" : "Submission found. Continue to $0.02 USDG payment." }, 200, origin);
   const inserted = await env.DB.prepare("INSERT INTO verifications (wallet_address, x_username, discord_username, quote_link, reply_link, referral_code, status) VALUES (?, ?, ?, ?, ?, ?, 'submitted')").bind(wallet, xUsername, discordUsername, quoteLink, replyLink, referralCode || null).run();
-  return json({ success: true, id: inserted.meta.last_row_id, paymentRequired: true, amountUsd: "0.30", treasury: CONFIG.treasury, message: "Details saved. Pay $0.30 USDG to finish verification." }, 200, origin);
+  return json({ success: true, id: inserted.meta.last_row_id, paymentRequired: true, amountUsd: "0.02", treasury: CONFIG.treasury, message: "Details saved. Pay $0.02 USDG to finish verification." }, 200, origin);
 }
 async function assignOgIfNeeded(env, verificationId) {
   const paidCount = await env.DB.prepare("SELECT COUNT(*) AS c FROM verifications WHERE COALESCE(payment_verified, 0) = 1 AND og_number IS NOT NULL").first();
@@ -146,8 +146,8 @@ async function handleVerifyPayment(request, env, origin) {
         const ledgerInsert = await env.DB.prepare("INSERT OR IGNORE INTO referral_ledger (referrer_wallet, source_wallet, source_payment_tx, chain_id, amount_usdg_micros, entry_type, idempotency_key) VALUES (?, ?, ?, ?, ?, 'commission', ?)").bind(normalizeAddress(referrer.wallet_address), wallet, txHash, chainId, Number(CONFIG.commission), idempotencyKey).run();
         if (ledgerInsert.meta.changes === 1) {
           await env.DB.batch([
-            env.DB.prepare("UPDATE referral_users SET available_balance = CAST(COALESCE(available_balance, '0') AS REAL) + 0.06, total_earned = CAST(COALESCE(total_earned, '0') AS REAL) + 0.06, referred_count = COALESCE(referred_count, 0) + 1 WHERE id = ?").bind(referrer.id),
-            env.DB.prepare("INSERT OR IGNORE INTO referral_events (referrer_id, referred_verification_id, commission_amount, status) VALUES (?, ?, '0.06', 'credited')").bind(referrer.id, verification.id)
+            env.DB.prepare("UPDATE referral_users SET available_balance = CAST(COALESCE(available_balance, '0') AS REAL) + 0.004, total_earned = CAST(COALESCE(total_earned, '0') AS REAL) + 0.004, referred_count = COALESCE(referred_count, 0) + 1 WHERE id = ?").bind(referrer.id),
+            env.DB.prepare("INSERT OR IGNORE INTO referral_events (referrer_id, referred_verification_id, commission_amount, status) VALUES (?, ?, '0.004', 'credited')").bind(referrer.id, verification.id)
           ]);
           commissionCredited = true;
         }
@@ -178,7 +178,7 @@ async function handleMe(request, env, origin) {
   const paymentVerified = !!(verification && verification.payment_verified === 1);
   const ogNumber = verification && verification.og_number ? verification.og_number : null;
   const code = (ref && ref.referral_code) || (paymentVerified ? makeReferralCode(wallet) : null);
-  return json({ success: true, wallet, paymentVerified, ogNumber, mintEligible: !!ogNumber, wlPool: paymentVerified && !ogNumber, status: verification ? verification.status : "none", referralCode: code, referralLink: code ? "https://joinveyrohood.github.io/NFTwhitelist/verify.html?ref=" + code : null, availableBalance: available, totalEarned: money(ref && ref.total_earned), referredCount: Number(ref && ref.referred_count || 0), canClaim: paymentVerified && available >= CONFIG.minClaim && !pending, pendingClaim: pending || null, message: !verification ? "This wallet has not submitted yet." : !paymentVerified ? "Details saved. Pay $0.30 USDG to verify." : ogNumber ? ("OG #" + ogNumber + ". This wallet can mint 1 NFT.") : "Verified. In WL / random pool for remaining 9,000." }, 200, origin);
+  return json({ success: true, wallet, paymentVerified, ogNumber, mintEligible: !!ogNumber, wlPool: paymentVerified && !ogNumber, status: verification ? verification.status : "none", referralCode: code, referralLink: code ? "https://joinveyrohood.github.io/NFTwhitelist/verify.html?ref=" + code : null, availableBalance: available, totalEarned: money(ref && ref.total_earned), referredCount: Number(ref && ref.referred_count || 0), canClaim: paymentVerified && available >= CONFIG.minClaim && !pending, pendingClaim: pending || null, message: !verification ? "This wallet has not submitted yet." : !paymentVerified ? "Details saved. Pay $0.02 USDG to verify." : ogNumber ? ("OG #" + ogNumber + ". This wallet can mint 1 NFT.") : "Verified. In WL / random pool for remaining 9,000." }, 200, origin);
 }
 async function handleClaim(request, env, origin) {
   let body; try { body = await request.json(); } catch { return json({ error: "Invalid JSON body" }, 400, origin); }
@@ -246,7 +246,7 @@ export default {
     const origin = request.headers.get("Origin") || "";
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
     try { await ensureSchema(env); } catch (error) { return json({ error: error.message || "Database unavailable" }, 500, origin); }
-    if (url.pathname === "/" || url.pathname === "/api/health") return json({ status: "online", service: "VeyroHood API", version: "0.3.1", fee: "0.30 USDG" }, 200, origin);
+    if (url.pathname === "/" || url.pathname === "/api/health") return json({ status: "online", service: "VeyroHood API", version: "0.3.2", fee: "0.02 USDG" }, 200, origin);
     if ((url.pathname === "/verify" || url.pathname === "/api/verify") && request.method === "POST") return handleSubmitVerification(request, env, origin);
     if (url.pathname === "/api/verify-payment" && request.method === "POST") return handleVerifyPayment(request, env, origin);
     if ((url.pathname === "/api/stats" || url.pathname === "/stats") && request.method === "GET") return handleStats(env, origin);
