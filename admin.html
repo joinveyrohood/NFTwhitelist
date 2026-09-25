@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeyroHood — Admin</title>
+<meta name="theme-color" content="#07080c">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <a class="logo" href="index.html">VEYROHOOD<small>ADMIN</small></a>
+  <div class="nav-links"><a href="index.html">Site</a></div>
+</nav>
+<section class="panel">
+  <h2>ADMIN SECRET</h2>
+  <p class="muted">Set Cloudflare Worker secret ADMIN_SECRET, then paste it here. Stored only in this browser.</p>
+  <input id="secret" type="password" placeholder="ADMIN_SECRET">
+  <div class="actions" style="margin-top:12px"><button class="btn" id="saveBtn" type="button">SAVE + LOAD</button></div>
+  <div id="status" class="status"></div>
+</section>
+<section class="stats">
+  <div class="card stat">Next OG<b id="nextOg">-</b></div>
+  <div class="card stat">Next WL<b id="nextWl">-</b></div>
+  <div class="card stat">Apps<b id="appCount">0</b></div>
+  <div class="card stat">Claims<b id="claimCount">0</b></div>
+</section>
+<section class="panel">
+  <h2>WL RUN</h2>
+  <p class="muted">Random + X performance. Select N eligible candidates into #1001+.</p>
+  <label>Count</label><input id="wlCount" value="10">
+  <button class="btn" id="wlBtn" type="button">RUN SELECTION</button>
+</section>
+<section class="panel"><h2>APPLICATIONS</h2><div id="apps" class="muted">Locked.</div></section>
+<section class="panel"><h2>CLAIMS</h2><div id="claims" class="muted">Locked.</div></section>
+<section class="panel"><h2>REFERRALS</h2><div id="refs" class="muted">Locked.</div></section>
+<section class="panel"><h2>WL CANDIDATES</h2><div id="wl" class="muted">Locked.</div></section>
+</div>
+<script src="wallet.js"></script>
+<script>
+function secret(){return sessionStorage.getItem("vh_admin")||""}
+function auth(){return {Authorization:"Bearer "+secret(),"Content-Type":"application/json"}}
+function show(id,html){document.getElementById(id).innerHTML=html}
+document.getElementById("secret").value=secret();
+document.getElementById("saveBtn").onclick=()=>{sessionStorage.setItem("vh_admin",document.getElementById("secret").value.trim());load()};
+async function load(){
+  const box=document.getElementById("status");
+  try{
+    const res=await fetch(API_URL+"/api/admin/overview",{headers:auth()});
+    const data=await res.json();
+    if(!res.ok||!data.success) throw new Error(data.error||"Unauthorized");
+    box.className="status show success"; box.textContent="Admin session ok.";
+    document.getElementById("nextOg").textContent=data.counter?data.counter.next_og_number:"-";
+    document.getElementById("nextWl").textContent=data.counter?data.counter.next_wl_number:"-";
+    document.getElementById("appCount").textContent=String((data.applications||[]).length);
+    document.getElementById("claimCount").textContent=String((data.claims||[]).length);
+    show("apps",(data.applications||[]).map(a=>"#"+a.id+" · "+(a.wallet_address||"").slice(0,8)+" · @"+(a.x_username||"-")+" · "+a.status+" · OG "+(a.og_number||"-")+" · "+(a.payment_tx||"")).join("<br>")||"None");
+    show("claims",(data.claims||[]).map(c=>"#"+c.id+" · "+c.wallet_address.slice(0,10)+" · $"+c.amount+" · chain "+c.chain_id+" · "+c.status+" <button data-id='"+c.id+"' data-act='approve'>approve</button> <button data-id='"+c.id+"' data-act='reject'>reject</button> <button data-id='"+c.id+"' data-act='paid'>paid</button>").join("<br>")||"None");
+    show("refs",(data.referrals||[]).map(r=>(r.referral_code||"")+" · "+(r.referred_count||0)+" refs · avail $"+Number(r.available_balance||0).toFixed(2)).join("<br>")||"None");
+    show("wl",(data.wlCandidates||[]).map(w=>w.wallet_address.slice(0,10)+" · @"+(w.x_username||"-")+" · "+w.status).join("<br>")||"None");
+    document.getElementById("claims").onclick=async ev=>{
+      const btn=ev.target.closest("button"); if(!btn) return;
+      const action=btn.dataset.act; const id=Number(btn.dataset.id);
+      let payout_tx=""; if(action==="paid") payout_tx=prompt("Payout tx hash")||"";
+      const out=await (await fetch(API_URL+"/api/admin/claims",{method:"POST",headers:auth(),body:JSON.stringify({id,action,payout_tx})})).json();
+      alert(out.message||out.error||"done"); load();
+    };
+  }catch(e){box.className="status show error"; box.textContent=e.message}
+}
+document.getElementById("wlBtn").onclick=async()=>{
+  const count=Number(document.getElementById("wlCount").value||10);
+  const out=await (await fetch(API_URL+"/api/admin/wl-run",{method:"POST",headers:auth(),body:JSON.stringify({count})})).json();
+  alert(out.error||("Selected "+((out.allocated||[]).length))); load();
+};
+if(secret()) load();
+</script>
+</body>
+</html>
