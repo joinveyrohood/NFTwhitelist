@@ -3,126 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VeyroHood — Verification</title>
+<title>VeyroHood — Verify</title>
 <meta name="theme-color" content="#07080c">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#07080c;color:#f5f7fa;font-family:Inter,system-ui,sans-serif}
+:root{--bg:#07080c;--panel:#10161d;--green:#b7ff3c;--cyan:#54f6ff;--text:#edf5ee;--muted:#94a5ad;--line:#243038}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(circle at 80% 0,#163226 0%,transparent 36%),var(--bg);color:var(--text);font-family:VT323,monospace;font-size:22px}
 a{color:inherit;text-decoration:none}
-.wrap{width:min(720px,calc(100% - 32px));margin:auto}
-nav{height:72px;display:flex;align-items:center;justify-content:space-between}
-.logo{color:#b7ff3c;font-weight:900;letter-spacing:.12em}
-.card{border:1px solid #292f3a;border-radius:18px;padding:22px;background:linear-gradient(135deg,rgba(183,255,60,.05),rgba(255,255,255,.02))}
-h1{font-size:42px;letter-spacing:-.05em}
-label{display:block;margin:14px 0 6px;font-size:12px}
-input,select,button{width:100%;min-height:48px;border-radius:12px;border:1px solid #303743;background:#11141a;color:#fff;padding:0 12px}
-button{background:#b7ff3c;color:#07080c;border:0;font-weight:800;cursor:pointer;margin-top:14px}
-.status{display:none;margin-top:12px;padding:12px;border:1px solid #303743;border-radius:10px;font-size:13px}
+.wrap{width:min(760px,calc(100% - 32px));margin:auto}
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px;line-height:1.7}
+.links{display:flex;gap:16px;flex-wrap:wrap}
+.links a.active,.links a:hover{color:var(--green)}
+.hero{padding:36px 0 10px;text-align:center}
+.eyebrow{color:var(--cyan);letter-spacing:2px}
+h1{font-family:"Press Start 2P",monospace;color:var(--green);font-size:clamp(18px,4vw,26px);line-height:1.7;margin:12px 0}
+.panel{background:var(--panel);border:1px solid var(--line);padding:22px;margin:16px 0;box-shadow:6px 6px 0 #0008}
+h2{font-family:"Press Start 2P",monospace;color:var(--green);font-size:11px;line-height:1.8;margin:6px 0 14px}
+label{display:block;margin:14px 0 6px}
+input,select,button{width:100%;min-height:48px;border:1px solid var(--line);background:#070b10;color:#fff;padding:0 12px;font:inherit}
+button{background:var(--green);color:#10150a;border:0;font-family:"Press Start 2P",monospace;font-size:10px;cursor:pointer;margin-top:14px}
+.muted{color:var(--muted)}
+.status{display:none;margin-top:14px;padding:12px;border:1px solid var(--line)}
 .status.show{display:block}
 .status.error{color:#ff8f8f}
-.status.success{color:#b7ff3c}
-.muted{color:#8f97a6;font-size:14px;line-height:1.6}
+.status.success{color:var(--green)}
+.wallet{display:none;margin-top:10px;color:var(--green);word-break:break-all}
+footer{text-align:center;color:var(--muted);padding:28px 0;font-size:18px}
 </style>
 </head>
 <body>
 <div class="wrap">
 <nav>
   <a class="logo" href="index.html">VEYROHOOD</a>
-  <a href="missions.html">Missions</a>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="missions.html">Missions</a>
+    <a class="active" href="verify.html">Verify</a>
+  </div>
 </nav>
-<h1>Verify your <span style="color:#b7ff3c">place.</span></h1>
-<p class="muted">Connect one wallet. Complete missions. Pay $0.30 USDG. First 1,000 paid verifications are OG.</p>
-<div class="card">
-  <button id="connectWallet" type="button">Connect Wallet</button>
-  <div id="walletAddress" class="muted" style="margin-top:8px"></div>
-  <label>X Username</label><input id="xUsername" placeholder="@username">
-  <label>Discord Username</label><input id="discordUsername" placeholder="username">
-  <label>Quote Link</label><input id="quoteLink" placeholder="https://x.com/...">
-  <label>Reply Link</label><input id="replyLink" placeholder="https://x.com/...">
+<section class="hero">
+  <div class="eyebrow">EARN YOUR PLACE. MINT YOUR HOOD.</div>
+  <h1>VERIFY YOUR PLACE</h1>
+  <p class="muted">One wallet. $0.30 USDG. First 1,000 paid verifications are OG.</p>
+</section>
+<section class="panel">
+  <h2>1. CONNECT WALLET</h2>
+  <p class="muted">Use the same wallet you will keep for your Hood.</p>
+  <button id="connectWallet" type="button">CONNECT WALLET</button>
+  <div id="walletAddress" class="wallet"></div>
+</section>
+<section class="panel">
+  <h2>2. MISSION DETAILS</h2>
+  <label>X username</label><input id="xUsername" placeholder="@username">
+  <label>Discord username</label><input id="discordUsername" placeholder="username">
+  <label>Quote link</label><input id="quoteLink" placeholder="https://x.com/...">
+  <label>Reply link</label><input id="replyLink" placeholder="https://x.com/...">
   <label>Referral code (optional)</label><input id="referralCode" placeholder="VHXXXX">
-  <button id="submitVerification" type="button">Submit details</button>
-  <label>Payment network</label>
+  <button id="submitVerification" type="button">SUBMIT DETAILS</button>
+</section>
+<section class="panel">
+  <h2>3. PAY $0.30 USDG</h2>
+  <p class="muted">Treasury 0xf6F80827cBAf83798c7763FCd915C0068F2bE60C · gas extra.</p>
+  <label>Network</label>
   <select id="payChain">
     <option value="4663">Robinhood Chain</option>
     <option value="1">Ethereum</option>
   </select>
-  <button id="payButton" type="button">Pay $0.30 USDG</button>
+  <button id="payButton" type="button">PAY $0.30 USDG</button>
   <div id="formStatus" class="status"></div>
-  <p class="muted" style="margin-top:14px">Fee: $0.30 USDG to 0xf6F80827cBAf83798c7763FCd915C0068F2bE60C. Gas is separate. One wallet = one verification.</p>
-</div>
+</section>
+<footer>VeyroHood · 10,000 NFT supply</footer>
 </div>
 <script>
-const API_URL = "https://veyrohood-api-v2.mdb885941.workers.dev";
-const TREASURY = "0xf6F80827cBAf83798c7763FCd915C0068F2bE60C";
-const PAY_AMOUNT = 300000n;
-const TOKENS = {
-  "1": "0xe343167631d89B6Ffc58B88d6b7fB0228795491D",
-  "4663": "0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"
+const API_URL="https://veyrohood-api-v2.mdb885941.workers.dev";
+const TREASURY="0xf6F80827cBAf83798c7763FCd915C0068F2bE60C";
+const PAY_AMOUNT=300000n;
+const TOKENS={"1":"0xe343167631d89B6Ffc58B88d6b7fB0228795491D","4663":"0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168"};
+let connectedWallet=null;
+const formStatus=document.getElementById("formStatus");
+function showStatus(message,type){formStatus.textContent=message;formStatus.className="status show "+type}
+function isValidUrl(value){try{const u=new URL(value);return u.protocol==="https:"||u.protocol==="http:"}catch{return false}}
+function toHex(v){return "0x"+v.toString(16)}
+function pad64(hex){return hex.replace(/^0x/,"").padStart(64,"0")}
+const params=new URLSearchParams(location.search);
+if(params.get("ref")) document.getElementById("referralCode").value=params.get("ref");
+document.getElementById("connectWallet").onclick=async()=>{
+  if(!window.ethereum) return showStatus("Open this page in MetaMask, Rabby, or OKX.","error");
+  const accounts=await window.ethereum.request({method:"eth_requestAccounts"});
+  connectedWallet=accounts[0];
+  const box=document.getElementById("walletAddress");
+  box.style.display="block";
+  box.textContent=connectedWallet;
+  document.getElementById("connectWallet").textContent="WALLET CONNECTED";
+  showStatus("Wallet connected.","success");
 };
-let connectedWallet = null;
-const formStatus = document.getElementById("formStatus");
-function showStatus(message, type) {
-  formStatus.textContent = message;
-  formStatus.className = "status show " + type;
-}
-function isValidUrl(value) {
-  try { const url = new URL(value); return url.protocol === "https:" || url.protocol === "http:"; } catch { return false; }
-}
-function toHex(value) { return "0x" + value.toString(16); }
-function pad64(hex) { return hex.replace(/^0x/, "").padStart(64, "0"); }
-const params = new URLSearchParams(location.search);
-if (params.get("ref")) document.getElementById("referralCode").value = params.get("ref");
-document.getElementById("connectWallet").onclick = async () => {
-  if (!window.ethereum) return showStatus("Open this page in MetaMask, Rabby, or OKX.", "error");
-  const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-  connectedWallet = accounts[0];
-  document.getElementById("walletAddress").textContent = connectedWallet;
-  document.getElementById("connectWallet").textContent = "Wallet Connected";
-  showStatus("Wallet connected.", "success");
+document.getElementById("submitVerification").onclick=async()=>{
+  const payload={wallet_address:connectedWallet,x_username:document.getElementById("xUsername").value.trim(),discord_username:document.getElementById("discordUsername").value.trim(),quote_link:document.getElementById("quoteLink").value.trim(),reply_link:document.getElementById("replyLink").value.trim(),referral_code:document.getElementById("referralCode").value.trim()};
+  if(!payload.wallet_address) return showStatus("Connect wallet first.","error");
+  if(!payload.x_username||!payload.discord_username) return showStatus("Enter X and Discord usernames.","error");
+  if(!isValidUrl(payload.quote_link)||!isValidUrl(payload.reply_link)) return showStatus("Enter valid quote and reply links.","error");
+  try{
+    const response=await fetch(API_URL+"/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    const result=await response.json();
+    if(!response.ok||!result.success) throw new Error(result.error||"Submit failed");
+    showStatus("Details saved. Now pay $0.30 USDG. ID #"+result.id,"success");
+  }catch(error){showStatus(error.message,"error")}
 };
-document.getElementById("submitVerification").onclick = async () => {
-  const payload = {
-    wallet_address: connectedWallet,
-    x_username: document.getElementById("xUsername").value.trim(),
-    discord_username: document.getElementById("discordUsername").value.trim(),
-    quote_link: document.getElementById("quoteLink").value.trim(),
-    reply_link: document.getElementById("replyLink").value.trim(),
-    referral_code: document.getElementById("referralCode").value.trim()
-  };
-  if (!payload.wallet_address) return showStatus("Connect wallet first.", "error");
-  if (!payload.x_username || !payload.discord_username) return showStatus("Enter X and Discord usernames.", "error");
-  if (!isValidUrl(payload.quote_link) || !isValidUrl(payload.reply_link)) return showStatus("Enter valid quote and reply links.", "error");
-  try {
-    const response = await fetch(API_URL + "/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    const result = await response.json();
-    if (!response.ok || !result.success) throw new Error(result.error || "Submit failed");
-    showStatus("Details saved. Now pay $0.30 USDG. ID #" + result.id, "success");
-  } catch (error) {
-    showStatus(error.message, "error");
-  }
-};
-document.getElementById("payButton").onclick = async () => {
-  if (!connectedWallet || !window.ethereum) return showStatus("Connect wallet first.", "error");
-  const chainId = document.getElementById("payChain").value;
-  const token = TOKENS[chainId];
-  try {
-    await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: toHex(BigInt(chainId)) }] });
-    const data = "0xa9059cbb" + pad64(TREASURY) + pad64(toHex(PAY_AMOUNT));
-    const txHash = await window.ethereum.request({ method: "eth_sendTransaction", params: [{ from: connectedWallet, to: token, data, value: "0x0" }] });
-    showStatus("Payment sent. Checking...", "success");
-    const response = await fetch(API_URL + "/api/verify-payment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ wallet: connectedWallet, txHash, chainId: Number(chainId) })
-    });
-    const result = await response.json();
-    if (!response.ok || !result.success) throw new Error(result.error || "Payment check failed");
-    let msg = "Paid and verified.";
-    if (result.ogNumber) msg += " OG #" + result.ogNumber + ".";
-    if (result.referralLink) msg += " " + result.referralLink;
-    showStatus(msg, "success");
-  } catch (error) {
-    showStatus(error.message || "Payment failed", "error");
-  }
+document.getElementById("payButton").onclick=async()=>{
+  if(!connectedWallet||!window.ethereum) return showStatus("Connect wallet first.","error");
+  const chainId=document.getElementById("payChain").value;
+  try{
+    await window.ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:toHex(BigInt(chainId))}]});
+    const data="0xa9059cbb"+pad64(TREASURY)+pad64(toHex(PAY_AMOUNT));
+    const txHash=await window.ethereum.request({method:"eth_sendTransaction",params:[{from:connectedWallet,to:TOKENS[chainId],data,value:"0x0"}]});
+    showStatus("Payment sent. Checking...","success");
+    const response=await fetch(API_URL+"/api/verify-payment",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({wallet:connectedWallet,txHash,chainId:Number(chainId)})});
+    const result=await response.json();
+    if(!response.ok||!result.success) throw new Error(result.error||"Payment check failed");
+    let msg="Paid and verified.";
+    if(result.ogNumber) msg+=" OG #"+result.ogNumber+".";
+    if(result.referralLink) msg+=" "+result.referralLink;
+    showStatus(msg,"success");
+  }catch(error){showStatus(error.message||"Payment failed","error")}
 };
 </script>
 </body>

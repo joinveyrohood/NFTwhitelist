@@ -1,430 +1,88 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080b10">
-  <title>Missions — VeyroHood NFT Community</title>
-  <meta name="description" content="Complete VeyroHood community missions and submit your verification.">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #080b10;
-      --panel: #111820;
-      --panel2: #17222b;
-      --green: #b7ff3c;
-      --cyan: #54f6ff;
-      --text: #edf5ee;
-      --muted: #94a5ad;
-      --border: #34434a;
-      --danger: #ff7777;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background:
-        radial-gradient(ellipse at 50% 0%, #18312a 0%, transparent 55%),
-        var(--bg);
-      color: var(--text);
-      font-family: 'VT323', monospace;
-      font-size: 22px;
-      min-height: 100vh;
-      line-height: 1.4;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    .wrap {
-      width: min(100% - 32px, 1050px);
-      margin: auto;
-    }
-
-    header {
-      border-bottom: 2px solid var(--border);
-      background: #080b10eF;
-    }
-
-    .nav {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      padding: 12px 0;
-    }
-
-    .brand {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 13px;
-      color: var(--green);
-      line-height: 1.8;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      font-size: 21px;
-    }
-
-    .nav-links a:hover { color: var(--green); }
-
-    .hero {
-      text-align: center;
-      padding: 58px 0 30px;
-    }
-
-    .eyebrow {
-      color: var(--cyan);
-      font-size: 18px;
-      letter-spacing: 2px;
-      margin-bottom: 18px;
-    }
-
-    h1, h2, h3 {
-      font-family: 'Press Start 2P', monospace;
-      line-height: 1.8;
-    }
-
-    h1 {
-      color: var(--green);
-      font-size: clamp(20px, 4vw, 34px);
-      text-shadow: 3px 3px #35551a;
-    }
-
-    .hero p {
-      color: var(--muted);
-      max-width: 650px;
-      margin: 15px auto 0;
-      font-size: 25px;
-    }
-
-    .panel {
-      background: linear-gradient(145deg, var(--panel), #0d131a);
-      border: 2px solid var(--border);
-      box-shadow: 5px 5px 0 #0008;
-      padding: 24px;
-      margin: 18px 0;
-    }
-
-    .section-title {
-      font-size: 15px;
-      color: var(--green);
-      margin-bottom: 18px;
-    }
-
-    .notice {
-      border: 1px solid #526334;
-      background: #b7ff3c0b;
-      color: #d9f9ad;
-      padding: 14px 16px;
-      margin: 20px 0;
-      font-size: 21px;
-    }
-
-    .mission {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 18px;
-      padding: 18px 0;
-      border-bottom: 1px dashed var(--border);
-    }
-
-    .mission:last-child { border-bottom: 0; }
-
-    .mission h3 {
-      font-size: 12px;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .mission p {
-      color: var(--muted);
-      font-size: 21px;
-    }
-
-    .tag {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 3px 9px;
-      border: 1px solid var(--border);
-      color: var(--cyan);
-      font-size: 17px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 11px 15px;
-      min-height: 44px;
-      background: var(--green);
-      color: #10150a;
-      border: 2px solid #e3ffad;
-      box-shadow: 3px 3px 0 #4e6c24;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 9px;
-      cursor: pointer;
-      transition: transform .12s ease;
-    }
-
-    .btn:hover { transform: translate(-1px, -1px); }
-    .btn.secondary {
-      background: var(--panel2);
-      color: var(--cyan);
-      border-color: #42636a;
-      box-shadow: 3px 3px 0 #13282c;
-    }
-
-    .actions {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .progress-track {
-      height: 13px;
-      background: #05080b;
-      border: 1px solid var(--border);
-      margin-top: 12px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--green);
-      transition: width .25s ease;
-    }
-
-    .progress-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 20px;
-    }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .step {
-      border: 1px solid var(--border);
-      background: #0b1117;
-      padding: 15px;
-      color: var(--muted);
-    }
-
-    .step strong {
-      display: block;
-      color: var(--green);
-      margin-bottom: 6px;
-    }
-
-    .footer {
-      text-align: center;
-      color: var(--muted);
-      padding: 35px 0;
-      font-size: 18px;
-    }
-
-    @media (max-width: 650px) {
-      .mission { grid-template-columns: 1fr; }
-      .mission .btn { width: 100%; }
-      .steps { grid-template-columns: 1fr; }
-      .panel { padding: 17px; }
-      .brand { font-size: 11px; }
-      .nav { justify-content: center; text-align: center; }
-      .nav-links { justify-content: center; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeyroHood — Missions</title>
+<meta name="theme-color" content="#07080c">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080c;--panel:#10161d;--green:#b7ff3c;--cyan:#54f6ff;--text:#edf5ee;--muted:#94a5ad;--line:#243038}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(circle at 20% 0,#163226 0%,transparent 36%),var(--bg);color:var(--text);font-family:VT323,monospace;font-size:22px}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(980px,calc(100% - 32px));margin:auto}
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px;line-height:1.7}
+.links{display:flex;gap:16px;flex-wrap:wrap}
+.links a:hover,.links a.active{color:var(--green)}
+.hero{padding:42px 0 18px;text-align:center}
+.eyebrow{color:var(--cyan);letter-spacing:2px}
+h1{font-family:"Press Start 2P",monospace;color:var(--green);font-size:clamp(18px,4vw,28px);line-height:1.7;margin:12px 0}
+.panel{background:var(--panel);border:1px solid var(--line);padding:22px;margin:16px 0;box-shadow:6px 6px 0 #0008}
+h2{font-family:"Press Start 2P",monospace;color:var(--green);font-size:12px;line-height:1.8;margin-bottom:14px}
+.mission{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:16px 0;border-bottom:1px dashed var(--line)}
+.mission:last-child{border:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;background:var(--green);color:#10150a;border:0;font-family:"Press Start 2P",monospace;font-size:9px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--cyan);border:1px solid #42636a}
+.muted{color:var(--muted)}
+.bar{height:12px;background:#05080b;border:1px solid var(--line);margin-top:10px}
+.fill{height:100%;width:0;background:var(--green)}
+label{display:block;margin:10px 0}
+footer{text-align:center;color:var(--muted);padding:28px 0;font-size:18px}
+@media(max-width:680px){.mission{flex-direction:column;align-items:stretch}}
+</style>
 </head>
-
 <body>
-<header>
-  <div class="wrap nav">
-    <a class="brand" href="index.html">VEYROHOOD</a>
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="missions.html" aria-current="page">Missions</a>
-      <a href="verify.html">Verify</a>
-    </nav>
+<div class="wrap">
+<nav>
+  <a class="logo" href="index.html">VEYROHOOD</a>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a class="active" href="missions.html">Missions</a>
+    <a href="verify.html">Verify</a>
   </div>
-</header>
-
-<main class="wrap">
-  <section class="hero">
-    <div class="eyebrow">◆ VEYROHOOD COMMUNITY QUEST ◆</div>
-    <h1>COMPLETE MISSIONS</h1>
-    <p>Complete the community tasks, submit your details, and proceed to verification.</p>
-  </section>
-
-  <section class="panel">
-    <div class="section-title">YOUR MISSION PROGRESS</div>
-    <div class="progress-row">
-      <span>Checklist progress</span>
-      <span id="progressText">0 / 4</span>
-    </div>
-    <div class="progress-track" role="progressbar"
-         aria-label="Mission checklist progress" aria-valuemin="0"
-         aria-valuemax="4" aria-valuenow="0" id="progressBar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-    <div class="notice">
-      Checklist progress is saved only on this device. It is NOT proof of mission completion.
-      Final eligibility requires server-side review/verification.
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="section-title">YOUR QUESTS — 04 MISSIONS</div>
-
-    <article class="mission">
-      <div>
-        <h3>01 / FOLLOW ON X</h3>
-        <p>Follow the official VeyroHood X account.</p>
-        <span class="tag">COMMUNITY TASK</span>
-      </div>
-      <a class="btn secondary" href="https://x.com/VeyroHood"
-         target="_blank" rel="noopener noreferrer">OPEN X ↗</a>
-    </article>
-
-    <article class="mission">
-      <div>
-        <h3>02 / JOIN DISCORD</h3>
-        <p>Join the official VeyroHood Discord community.</p>
-        <span class="tag">COMMUNITY TASK</span>
-      </div>
-      <a class="btn secondary" href="https://discord.gg/6CYd3ewU5"
-         target="_blank" rel="noopener noreferrer">JOIN DISCORD ↗</a>
-    </article>
-
-    <article class="mission">
-      <div>
-        <h3>03 / QUOTE THE PINNED POST</h3>
-        <p>Quote the official pinned post on X.</p>
-        <span class="tag">X ENGAGEMENT</span>
-      </div>
-      <a class="btn secondary"
-         href="https://x.com/VeyroHood/status/2095434542094115048"
-         target="_blank" rel="noopener noreferrer">OPEN POST ↗</a>
-    </article>
-
-    <article class="mission">
-      <div>
-        <h3>04 / REPLY TO THE PINNED POST</h3>
-        <p>Reply to the official VeyroHood pinned post on X.</p>
-        <span class="tag">X ENGAGEMENT</span>
-      </div>
-      <a class="btn secondary"
-         href="https://x.com/VeyroHood/status/2095434542094115048"
-         target="_blank" rel="noopener noreferrer">OPEN POST ↗</a>
-    </article>
-  </section>
-
-  <section class="panel">
-    <div class="section-title">CHECKLIST — ON THIS DEVICE</div>
-    <p style="color:var(--muted); margin-bottom:12px">
-      Tick a task after completing it. These checkboxes are reminders only;
-      they do not verify your X or Discord activity.
-    </p>
-
-    <label style="display:block; margin:12px 0">
-      <input type="checkbox" class="missionCheck"> I followed VeyroHood on X
-    </label>
-    <label style="display:block; margin:12px 0">
-      <input type="checkbox" class="missionCheck"> I joined the VeyroHood Discord
-    </label>
-    <label style="display:block; margin:12px 0">
-      <input type="checkbox" class="missionCheck"> I quoted the pinned post
-    </label>
-    <label style="display:block; margin:12px 0">
-      <input type="checkbox" class="missionCheck"> I replied to the pinned post
-    </label>
-
-    <div class="actions">
-      <button class="btn secondary" id="resetBtn" type="button">RESET CHECKLIST</button>
-      <a class="btn" href="verify.html">CONTINUE TO VERIFY →</a>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="section-title">HOW IT WORKS</div>
-    <div class="steps">
-      <div class="step"><strong>01. COMPLETE</strong>Finish the community missions.</div>
-      <div class="step"><strong>02. SUBMIT</strong>Submit your details on the verification page.</div>
-      <div class="step"><strong>03. REVIEW</strong>Server-side checks determine verification and eligibility.</div>
-    </div>
-    <div class="notice">
-      Completing missions alone does not guarantee OG, WL, or an NFT.
-      Verification and allocation rules apply.
-    </div>
-  </section>
-</main>
-
-<footer class="footer wrap">
-  VeyroHood NFT Community · Earn your place. Mint your hood.
-</footer>
-
+</nav>
+<section class="hero">
+  <div class="eyebrow">EARN YOUR PLACE. MINT YOUR HOOD.</div>
+  <h1>COMPLETE MISSIONS</h1>
+  <p class="muted">Follow, join, quote and reply. Then verify with one wallet.</p>
+</section>
+<section class="panel">
+  <h2>PROGRESS</h2>
+  <div style="display:flex;justify-content:space-between" class="muted"><span>Checklist</span><span id="progressText">0 / 4</span></div>
+  <div class="bar"><div class="fill" id="progressFill"></div></div>
+</section>
+<section class="panel">
+  <h2>REQUIRED QUESTS</h2>
+  <div class="mission"><div><strong>01 / FOLLOW ON X</strong><p class="muted">Follow @VeyroHood</p></div><a class="btn ghost" href="https://x.com/VeyroHood" target="_blank" rel="noopener">OPEN X</a></div>
+  <div class="mission"><div><strong>02 / JOIN DISCORD</strong><p class="muted">Join the official server</p></div><a class="btn ghost" href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">JOIN</a></div>
+  <div class="mission"><div><strong>03 / QUOTE PINNED POST</strong><p class="muted">Quote the official pinned post</p></div><a class="btn ghost" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">QUOTE</a></div>
+  <div class="mission"><div><strong>04 / REPLY PINNED POST</strong><p class="muted">Reply to the same post</p></div><a class="btn ghost" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">REPLY</a></div>
+</section>
+<section class="panel">
+  <h2>CHECKLIST</h2>
+  <p class="muted">Saved on this device only. Not proof of completion.</p>
+  <label><input type="checkbox" class="missionCheck"> Followed on X</label>
+  <label><input type="checkbox" class="missionCheck"> Joined Discord</label>
+  <label><input type="checkbox" class="missionCheck"> Quoted pinned post</label>
+  <label><input type="checkbox" class="missionCheck"> Replied to pinned post</label>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+    <button class="btn ghost" id="resetBtn" type="button">RESET</button>
+    <a class="btn" href="verify.html">CONTINUE TO VERIFY</a>
+  </div>
+</section>
+<footer>VeyroHood · 10,000 NFT supply · $0.30 USDG verify</footer>
+</div>
 <script>
-  (() => {
-    const checks = [...document.querySelectorAll('.missionCheck')];
-    const progressText = document.getElementById('progressText');
-    const progressFill = document.getElementById('progressFill');
-    const progressBar = document.getElementById('progressBar');
-    const storageKey = 'veyrohood_mission_checklist_v1';
-
-    function updateProgress() {
-      const completed = checks.filter(c => c.checked).length;
-      progressText.textContent = `${completed} / ${checks.length}`;
-      progressFill.style.width = `${completed / checks.length * 100}%`;
-      progressBar.setAttribute('aria-valuenow', String(completed));
-    }
-
-    function save() {
-      try {
-        localStorage.setItem(
-          storageKey,
-          JSON.stringify(checks.map(c => c.checked))
-        );
-      } catch (_) {}
-    }
-
-    function load() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
-        if (Array.isArray(saved) && saved.length === checks.length) {
-          checks.forEach((c, i) => c.checked = saved[i] === true);
-        }
-      } catch (_) {}
-      updateProgress();
-    }
-
-    checks.forEach(c => c.addEventListener('change', () => {
-      save();
-      updateProgress();
-    }));
-
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      checks.forEach(c => c.checked = false);
-      save();
-      updateProgress();
-    });
-
-    load();
-  })();
+const checks=[...document.querySelectorAll(".missionCheck")];
+const key="veyrohood_mission_checklist_v1";
+function render(){const n=checks.filter(c=>c.checked).length;document.getElementById("progressText").textContent=n+" / 4";document.getElementById("progressFill").style.width=(n/4*100)+"%"}
+function save(){try{localStorage.setItem(key,JSON.stringify(checks.map(c=>c.checked)))}catch(e){}}
+try{const saved=JSON.parse(localStorage.getItem(key)||"null");if(Array.isArray(saved))checks.forEach((c,i)=>c.checked=!!saved[i])}catch(e){}
+checks.forEach(c=>c.addEventListener("change",()=>{save();render()}));
+document.getElementById("resetBtn").onclick=()=>{checks.forEach(c=>c.checked=false);save();render()};
+render();
 </script>
 </body>
 </html>
