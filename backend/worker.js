@@ -65,6 +65,12 @@ function makeReferralCode(wallet) {
   return "VH" + wallet.slice(2, 8).toUpperCase() + wallet.slice(-4).toUpperCase();
 }
 
+async function runIgnore(env, sql) {
+  try {
+    await env.DB.prepare(sql).run();
+  } catch (_error) {}
+}
+
 async function ensureSchema(env) {
   if (!env.DB) throw new Error("D1 database is not bound");
   await env.DB.batch([
@@ -85,7 +91,6 @@ async function ensureSchema(env) {
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       verified_at TEXT
     )`),
-    env.DB.prepare(`CREATE UNIQUE INDEX IF NOT EXISTS idx_verifications_wallet ON verifications (wallet_address)`),
     env.DB.prepare(`CREATE TABLE IF NOT EXISTS referral_users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       wallet_address TEXT NOT NULL UNIQUE,
@@ -115,6 +120,24 @@ async function ensureSchema(env) {
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )`)
   ]);
+
+  const alters = [
+    "ALTER TABLE verifications ADD COLUMN x_username TEXT",
+    "ALTER TABLE verifications ADD COLUMN discord_username TEXT",
+    "ALTER TABLE verifications ADD COLUMN quote_link TEXT",
+    "ALTER TABLE verifications ADD COLUMN reply_link TEXT",
+    "ALTER TABLE verifications ADD COLUMN referral_code TEXT",
+    "ALTER TABLE verifications ADD COLUMN payment_tx TEXT",
+    "ALTER TABLE verifications ADD COLUMN payment_amount TEXT",
+    "ALTER TABLE verifications ADD COLUMN payment_verified INTEGER DEFAULT 0",
+    "ALTER TABLE verifications ADD COLUMN network TEXT",
+    "ALTER TABLE verifications ADD COLUMN status TEXT",
+    "ALTER TABLE verifications ADD COLUMN og_number INTEGER",
+    "ALTER TABLE verifications ADD COLUMN created_at TEXT",
+    "ALTER TABLE verifications ADD COLUMN verified_at TEXT"
+  ];
+  for (const sql of alters) await runIgnore(env, sql);
+  await runIgnore(env, "CREATE UNIQUE INDEX IF NOT EXISTS idx_verifications_wallet ON verifications (wallet_address)");
 }
 
 async function rpcCall(rpcUrl, method, params = []) {
@@ -192,7 +215,7 @@ async function handleSubmitVerification(request, env, origin) {
 }
 
 async function assignOgIfNeeded(env, verificationId) {
-  const paidCount = await env.DB.prepare("SELECT COUNT(*) AS c FROM verifications WHERE payment_verified = 1 AND og_number IS NOT NULL").first();
+  const paidCount = await env.DB.prepare("SELECT COUNT(*) AS c FROM verifications WHERE COALESCE(payment_verified, 0) = 1 AND og_number IS NOT NULL").first();
   const used = Number(paidCount && paidCount.c || 0);
   if (used >= CONFIG.ogLimit) return null;
   const next = used + 1;
@@ -258,17 +281,25 @@ async function handleVerifyPayment(request, env, origin) {
 }
 
 async function handleStats(env, origin) {
-  const row = await env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN payment_verified = 1 THEN 1 ELSE 0 END) AS verified, SUM(CASE WHEN og_number IS NOT NULL THEN 1 ELSE 0 END) AS og FROM verifications").first();
-  const board = await env.DB.prepare("SELECT referral_code, referred_count, total_earned FROM referral_users ORDER BY referred_count DESC, CAST(total_earned AS REAL) DESC LIMIT 10").all();
-  return json({
-    success: true,
-    supply: 10000,
-    ogLimit: CONFIG.ogLimit,
-    joined: Number(row && row.verified || 0),
-    submitted: Number(row && row.total || 0),
-    og: Number(row && row.og || 0),
-    leaderboard: board.results || []
-  }, 200, origin);
+  try {
+    const row = await env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN COALESCE(payment_verified, 0) = 1 THEN 1 ELSE 0 END) AS verified, SUM(CASE WHEN og_number IS NOT NULL THEN 1 ELSE 0 END) AS og FROM verifications").first();
+    let leaderboard = [];
+    try {
+      const board = await env.DB.prepare("SELECT referral_code, referred_count, total_earned FROM referral_users ORDER BY COALESCE(referred_count, 0) DESC LIMIT 10").all();
+      leaderboard = board && board.results ? board.results : [];
+    } catch (_error) {}
+    return json({
+      success: true,
+      supply: 10000,
+      ogLimit: CONFIG.ogLimit,
+      joined: Number(row && row.verified || 0),
+      submitted: Number(row && row.total || 0),
+      og: Number(row && row.og || 0),
+      leaderboard
+    }, 200, origin);
+  } catch (error) {
+    return json({ success: false, error: error.message || "Stats query failed", joined: 0, submitted: 0, og: 0, leaderboard: [] }, 200, origin);
+  }
 }
 
 export default {
@@ -280,7 +311,7 @@ export default {
       return json({ error: error.message || "Database unavailable" }, 500, origin);
     }
     if (url.pathname === "/" || url.pathname === "/api/health") {
-      return json({ status: "online", service: "VeyroHood API", version: "0.2.0", fee: "0.30 USDG" }, 200, origin);
+      return json({ status: "online", service: "VeyroHood API", version: "0.2.1", fee: "0.30 USDG" }, 200, origin);
     }
     if ((url.pathname === "/verify" || url.pathname === "/api/verify") && request.method === "POST") {
       return handleSubmitVerification(request, env, origin);
