@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VeyroHood — Earn your place. Mint your hood.</title>
-<meta name="description" content="10,000 Hoods. First 1,000 paid verifies are OG and mint. Remaining 9,000 are WL / random. $0.02 USDG.">
-<meta name="theme-color" content="#050607">
+<title>VeyroHood — NFT Community</title>
+<meta name="description" content="VeyroHood — Earn your place. Mint your hood. 10,000 NFT supply. First 1,000 verified wallets are OG.">
+<meta name="theme-color" content="#07080c">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -18,37 +18,39 @@
     <a href="missions.html">Missions</a>
     <a href="verify.html">Verify</a>
     <a href="dashboard.html">Dashboard</a>
-    <a class="btn" href="verify.html">ENTER</a>
+    <a href="how.html">How it works</a>
+    <a class="btn" href="verify.html">CONNECT</a>
   </div>
 </nav>
 <section class="hero">
   <div>
-    <div class="kicker">10,000 SUPPLY · ROBINHOOD CHAIN</div>
+    <div class="kicker">VEYROHOOD · NFT COMMUNITY</div>
     <h1>EARN YOUR PLACE.<br><i>MINT YOUR HOOD.</i></h1>
-    <p class="lead">Complete the missions, lock one wallet, pay $0.02 USDG. First 1,000 paid wallets are OG and mint. The other 9,000 enter WL / random. One wallet. One Hood.</p>
+    <p class="lead">10,000 NFT supply. Complete missions, connect one wallet, pay $0.30 USDG. First 1,000 paid verifies become OG #1–#1000. The other 9,000 enter random + X performance WL.</p>
     <div class="actions">
-      <a class="btn" href="missions.html">START MISSIONS</a>
-      <a class="btn ghost" href="verify.html">VERIFY WALLET</a>
+      <a class="btn" href="verify.html">CONNECT WALLET</a>
+      <a class="btn ghost" href="missions.html">START MISSIONS</a>
+      <a class="btn ghost" href="how.html">HOW IT WORKS</a>
     </div>
   </div>
-  <div class="portrait"><img src="character.jpg" alt="VeyroHood"></div>
+  <div class="portrait"><img src="character.jpg" alt="VeyroHood character"></div>
 </section>
 <section class="stats">
   <div class="card stat">Supply<b>10,000</b></div>
-  <div class="card stat">OG mint seats<b id="ogCount">0 / 1000</b></div>
+  <div class="card stat">OG seats<b id="ogCount">0 / 1000</b></div>
   <div class="card stat">Verified<b id="joinedCount">0</b></div>
-  <div class="card stat">Verify fee<b>$0.02</b></div>
+  <div class="card stat">Verify fee<b>$0.30</b></div>
 </section>
 <section class="grid3">
-  <div class="card"><h2>01 MISSIONS</h2><p class="rule">Follow X. Join Discord. Quote and reply the pinned post.</p></div>
-  <div class="card"><h2>02 VERIFY</h2><p class="rule">One EVM wallet. Pay $0.02 USDG. No second wallet.</p></div>
-  <div class="card"><h2>03 ALLOCATION</h2><p class="rule">OG #1-1000 mint 1/1. Everyone else waits for WL / random.</p></div>
+  <div class="card"><h2>01 MISSIONS</h2><p class="rule">Follow @VeyroHood. Join Discord. Quote and reply the pinned post.</p></div>
+  <div class="card"><h2>02 PAY</h2><p class="rule">$0.30 USDG on Ethereum or Robinhood Chain to treasury. Backend checks the chain, not the frontend.</p></div>
+  <div class="card"><h2>03 ALLOCATE</h2><p class="rule">OG #1–#1000 mint first. Remaining wallets wait for random + X performance WL #1001–#10000.</p></div>
 </section>
 <section class="grid2">
-  <div class="card"><h2>REFERRALS</h2><p class="rule">After verify you get a link. Each eligible verify pays 20% = $0.004. At $2 claim the full available balance.</p></div>
+  <div class="card"><h2>REFERRALS</h2><p class="rule">Link appears only after paid verify. Each successful referred verify pays 20% = $0.06. Treasury keeps $0.24. Claim all at $2+. Claimant pays gas.</p></div>
   <div class="card"><h2>LIVE BOARD</h2><div id="board" class="muted">No referrals yet.</div></div>
 </section>
-<footer><span>VeyroHood</span><span>Robinhood Chain</span></footer>
+<footer><span>VeyroHood</span><span>One wallet = one NFT</span></footer>
 </div>
 <script src="wallet.js"></script>
 <script>
@@ -59,7 +61,7 @@ async function loadStats(){
     document.getElementById("ogCount").textContent = (data.og||0) + " / " + (data.ogLimit||1000);
     document.getElementById("joinedCount").textContent = String(data.joined||0);
     const rows = data.leaderboard||[];
-    document.getElementById("board").innerHTML = rows.length ? rows.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)+" refs").join("<br>") : "No referrals yet.";
+    document.getElementById("board").innerHTML = rows.length ? rows.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)+" refs · $"+Number(r.total_earned||0).toFixed(2)).join("<br>") : "No referrals yet.";
   }catch(e){}
 }
 loadStats();
