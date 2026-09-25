@@ -3,102 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VeyroHood — NFT Community</title>
-<meta name="description" content="Earn your place. Mint your hood. 10,000 NFT supply on Robinhood Chain.">
-<meta name="theme-color" content="#07080c">
+<title>VeyroHood — Earn your place. Mint your hood.</title>
+<meta name="description" content="10,000 Hoods. First 1,000 paid verifies are OG and mint. Remaining 9,000 are WL / random. $0.02 USDG.">
+<meta name="theme-color" content="#050607">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#07080c;--panel:#10161d;--green:#b7ff3c;--cyan:#54f6ff;--text:#edf5ee;--muted:#94a5ad;--line:#243038}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:radial-gradient(circle at 15% 10%,rgba(183,255,60,.08),transparent 32%),radial-gradient(circle at 85% 0,rgba(84,246,255,.07),transparent 28%),var(--bg);color:var(--text);font-family:VT323,monospace;font-size:22px}
-a{color:inherit;text-decoration:none}
-.wrap{width:min(1080px,calc(100% - 32px));margin:auto}
-nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);position:sticky;top:0;background:#07080cf2;z-index:20}
-.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px;line-height:1.7}
-.logo span{display:block;color:var(--muted);font-family:VT323,monospace;font-size:18px;letter-spacing:3px}
-.links{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.links a:hover{color:var(--green)}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 14px;background:var(--green);color:#10150a;border:0;font-family:"Press Start 2P",monospace;font-size:9px;cursor:pointer;box-shadow:4px 4px 0 #000}
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:54px 0}
-.eyebrow{color:var(--cyan);letter-spacing:2px;margin-bottom:14px}
-h1{font-family:"Press Start 2P",monospace;font-size:clamp(22px,4vw,42px);line-height:1.55}
-h1 em{color:var(--green);font-style:normal}
-.muted{color:var(--muted)}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
-.scene{display:grid;place-items:center;min-height:340px}
-.scene img{width:min(100%,340px);image-rendering:pixelated;animation:float 3.2s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(183,255,60,.25))}
-@keyframes float{50%{transform:translateY(-12px)}}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:10px 0 36px}
-.card{background:var(--panel);border:1px solid var(--line);padding:20px;box-shadow:6px 6px 0 #0008}
-.card b{display:block;font-family:"Press Start 2P",monospace;color:var(--green);font-size:18px;margin-top:10px}
-h2{font-family:"Press Start 2P",monospace;color:var(--green);font-size:14px;line-height:1.8;margin-bottom:14px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
-.how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px}
-footer{border-top:1px solid var(--line);padding:22px 0 36px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-@media(max-width:800px){.hero,.stats,.grid2,.how{grid-template-columns:1fr}.hero{padding:32px 0;text-align:center}.actions{justify-content:center}}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="wrap">
 <nav>
-  <a class="logo" href="index.html">VEYROHOOD<span>NFT COMMUNITY</span></a>
-  <div class="links">
+  <a class="logo" href="index.html">VEYROHOOD<small>NFT COMMUNITY</small></a>
+  <div class="nav-links">
+    <a class="active" href="index.html">Home</a>
     <a href="missions.html">Missions</a>
     <a href="verify.html">Verify</a>
     <a href="dashboard.html">Dashboard</a>
-    <a class="btn" href="verify.html">CONNECT / VERIFY</a>
+    <a class="btn" href="verify.html">ENTER</a>
   </div>
 </nav>
 <section class="hero">
   <div>
-    <div class="eyebrow">10,000 NFT SUPPLY · ROBINHOOD CHAIN</div>
-    <h1>EARN YOUR PLACE.<br><em>MINT YOUR HOOD.</em></h1>
-    <p class="muted" style="margin-top:16px;font-size:26px">Complete missions, verify one wallet, and pay $0.02 USDG. First 1,000 verified wallets are OG and can mint. Remaining 9,000 are WL / random.</p>
+    <div class="kicker">10,000 SUPPLY · ROBINHOOD CHAIN</div>
+    <h1>EARN YOUR PLACE.<br><i>MINT YOUR HOOD.</i></h1>
+    <p class="lead">Complete the missions, lock one wallet, pay $0.02 USDG. First 1,000 paid wallets are OG and mint. The other 9,000 enter WL / random. One wallet. One Hood.</p>
     <div class="actions">
       <a class="btn" href="missions.html">START MISSIONS</a>
-      <a class="btn" href="dashboard.html" style="background:#10161d;color:var(--cyan);box-shadow:4px 4px 0 #000;border:1px solid #42636a">DASHBOARD</a>
+      <a class="btn ghost" href="verify.html">VERIFY WALLET</a>
     </div>
   </div>
-  <div class="scene">
-    <img src="character.jpg" alt="VeyroHood character">
-  </div>
+  <div class="portrait"><img src="character.jpg" alt="VeyroHood"></div>
 </section>
 <section class="stats">
-  <div class="card">Supply<b>10,000</b></div>
-  <div class="card">OG spots<b id="ogCount">0 / 1000</b></div>
-  <div class="card">Verified<b id="joinedCount">0</b></div>
+  <div class="card stat">Supply<b>10,000</b></div>
+  <div class="card stat">OG mint seats<b id="ogCount">0 / 1000</b></div>
+  <div class="card stat">Verified<b id="joinedCount">0</b></div>
+  <div class="card stat">Verify fee<b>$0.02</b></div>
 </section>
-<section class="how">
-  <div class="card"><h2>01</h2><p>Do the X + Discord missions.</p></div>
-  <div class="card"><h2>02</h2><p>Pay $0.02 USDG from one wallet.</p></div>
-  <div class="card"><h2>03</h2><p>OG mints later. Others enter WL / random.</p></div>
+<section class="grid3">
+  <div class="card"><h2>01 MISSIONS</h2><p class="rule">Follow X. Join Discord. Quote and reply the pinned post.</p></div>
+  <div class="card"><h2>02 VERIFY</h2><p class="rule">One EVM wallet. Pay $0.02 USDG to treasury. No second wallet.</p></div>
+  <div class="card"><h2>03 ALLOCATION</h2><p class="rule">OG #1-1000 mint 1/1. Everyone else waits for WL / random.</p></div>
 </section>
 <section class="grid2">
-  <div class="card">
-    <h2>REFERRALS</h2>
-    <p class="muted">20% = $0.004 USDG per eligible verify. At $2 you can apply to claim the full available balance.</p>
-  </div>
-  <div class="card">
-    <h2>LEADERBOARD</h2>
-    <div id="board" class="muted">No referrals yet.</div>
-  </div>
+  <div class="card"><h2>REFERRALS</h2><p class="rule">After verify you get a link. Each eligible verify pays 20% = $0.004. At $2 claim the full available balance.</p></div>
+  <div class="card"><h2>LIVE BOARD</h2><div id="board" class="muted">No referrals yet.</div></div>
 </section>
-<footer>
-  <span>VeyroHood · Earn your place. Mint your hood.</span>
-  <span>Treasury 0xf6F8…E60C</span>
-</footer>
+<footer><span>VeyroHood</span><span>Treasury 0xf6F80827cBAf83798c7763FCd915C0068F2bE60C</span></footer>
 </div>
+<script src="wallet.js"></script>
 <script>
-const API_URL="https://veyrohood-api-v2.mdb885941.workers.dev";
 async function loadStats(){
   try{
-    const res=await fetch(API_URL+"/api/stats");
-    const data=await res.json();
-    if(!data||!data.success) return;
-    document.getElementById("ogCount").textContent=(data.og||0)+" / "+(data.ogLimit||1000);
-    document.getElementById("joinedCount").textContent=String(data.joined||0);
-    const board=data.leaderboard||[];
-    document.getElementById("board").innerHTML=board.length?board.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)).join("<br>"):"No referrals yet.";
+    const data = await (await fetch(API_URL + "/api/stats")).json();
+    if(!data.success) return;
+    document.getElementById("ogCount").textContent = (data.og||0) + " / " + (data.ogLimit||1000);
+    document.getElementById("joinedCount").textContent = String(data.joined||0);
+    const rows = data.leaderboard||[];
+    document.getElementById("board").innerHTML = rows.length ? rows.map((r,i)=>(i+1)+". "+r.referral_code+" · "+(r.referred_count||0)+" refs").join("<br>") : "No referrals yet.";
   }catch(e){}
 }
 loadStats();
