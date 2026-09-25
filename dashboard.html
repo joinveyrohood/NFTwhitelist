@@ -13,11 +13,11 @@ body{background:radial-gradient(circle at 20% 0,#163226 0%,transparent 36%),var(
 a{color:inherit;text-decoration:none}
 .wrap{width:min(980px,calc(100% - 32px));margin:auto}
 nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px;line-height:1.7}
+.logo{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px}
 .links{display:flex;gap:14px;flex-wrap:wrap}
 .links a.active,.links a:hover{color:var(--green)}
 .hero{padding:36px 0 10px;text-align:center}
-.eyebrow{color:var(--cyan);letter-spacing:2px}
+.eyebrow{color:var(--cyan)}
 h1,h2{font-family:"Press Start 2P",monospace;color:var(--green);line-height:1.7}
 h1{font-size:clamp(18px,4vw,26px);margin:12px 0}
 h2{font-size:12px;margin-bottom:12px}
@@ -26,10 +26,10 @@ h2{font-size:12px;margin-bottom:12px}
 .card{border:1px solid var(--line);padding:14px}
 .card b{display:block;color:var(--green);font-size:28px}
 button{min-height:48px;padding:0 14px;border:0;background:var(--green);color:#10150a;font-family:"Press Start 2P",monospace;font-size:10px;cursor:pointer}
-button:disabled{opacity:.4;cursor:not-allowed}
-.muted{color:var(--muted)}
-.status{margin-top:12px}
-code{color:var(--cyan);word-break:break-all}
+button:disabled{opacity:.4}
+.pick{display:none;margin-top:12px}
+.pick button{width:100%;margin-top:6px;background:#0b1116;color:var(--cyan);font-family:VT323,monospace;font-size:18px}
+.muted{color:var(--muted)}code{color:var(--cyan);word-break:break-all}
 @media(max-width:700px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -47,12 +47,13 @@ code{color:var(--cyan);word-break:break-all}
 <section class="hero">
   <div class="eyebrow">EARN YOUR PLACE. MINT YOUR HOOD.</div>
   <h1>YOUR HOOD STATUS</h1>
-  <p class="muted">OG #1-1000 mint guaranteed. Other 9,000 = WL / random. Referrals pay $0.06. Claim from $2.</p>
+  <p class="muted">Any EVM wallet. OG #1-1000 mint guaranteed. Other 9,000 = WL / random.</p>
 </section>
 <section class="panel">
   <button id="connectBtn" type="button">CONNECT WALLET</button>
+  <div id="walletPick" class="pick"></div>
   <p id="walletLine" class="muted"></p>
-  <p id="statusLine" class="status muted">Connect the same wallet you verified with.</p>
+  <p id="statusLine" class="muted">Connect the same wallet you verified with. Phone users: open this page in the wallet browser.</p>
 </section>
 <section class="panel">
   <h2>STATUS</h2>
@@ -66,7 +67,7 @@ code{color:var(--cyan);word-break:break-all}
 </section>
 <section class="panel">
   <h2>CLAIM</h2>
-  <p class="muted">Minimum $2. If you earned $2 or $100, one application holds the full available balance.</p>
+  <p class="muted">Minimum $2. $2 or $100 — one application holds the full available balance.</p>
   <button id="claimBtn" type="button" disabled>APPLY TO CLAIM</button>
 </section>
 <section class="panel">
@@ -82,20 +83,37 @@ code{color:var(--cyan);word-break:break-all}
 const API_URL="https://veyrohood-api-v2.mdb885941.workers.dev";
 let wallet=null;
 function money(v){return "$"+Number(v||0).toFixed(2)}
-document.getElementById("connectBtn").onclick=async()=>{
-  if(!window.ethereum) return document.getElementById("statusLine").textContent="Open in MetaMask, Rabby, or OKX.";
-  const accounts=await window.ethereum.request({method:"eth_requestAccounts"});
+function discoverProviders(){
+  const found=new Map();
+  window.addEventListener("eip6963:announceProvider",event=>{const d=event.detail;if(d&&d.info&&d.provider)found.set(d.info.uuid||d.info.name,d)});
+  window.dispatchEvent(new Event("eip6963:requestProvider"));
+  const fallbacks=[[window.ethereum,"Browser EVM"],[window.okxwallet,"OKX Wallet"],[window.rabby,"Rabby"],[window.bitkeep&&window.bitkeep.ethereum,"Bitget"],[window.coinbaseWalletExtension,"Coinbase"],[window.tokenpocket,"TokenPocket"],[window.trustwallet,"Trust Wallet"],[window.phantom&&window.phantom.ethereum,"Phantom EVM"]];
+  fallbacks.forEach(([p,name])=>{if(p&&p.request)found.set(name,{info:{name,uuid:name},provider:p})});
+  if(window.ethereum&&window.ethereum.providers){window.ethereum.providers.forEach((p,i)=>found.set("injected-"+i,{info:{name:p.isMetaMask?"MetaMask":p.isRabby?"Rabby":"EVM Wallet "+(i+1),uuid:"inj-"+i},provider:p}))}
+  return [...found.values()];
+}
+async function connectWith(selected){
+  const accounts=await selected.provider.request({method:"eth_requestAccounts"});
   wallet=accounts[0];
-  document.getElementById("walletLine").textContent=wallet;
+  document.getElementById("walletLine").textContent=wallet+" · "+selected.info.name;
   document.getElementById("connectBtn").textContent="WALLET CONNECTED";
+  document.getElementById("walletPick").style.display="none";
   loadMe(); loadClaims();
+}
+document.getElementById("connectBtn").onclick=async()=>{
+  const list=discoverProviders();
+  if(!list.length){document.getElementById("statusLine").textContent="No EVM wallet found. Use a wallet browser or extension.";return;}
+  if(list.length===1) return connectWith(list[0]).catch(e=>document.getElementById("statusLine").textContent=e.message);
+  const box=document.getElementById("walletPick");
+  box.style.display="block";
+  box.innerHTML=list.map((w,i)=>"<button type='button' data-i='"+i+"'>"+w.info.name+"</button>").join("");
+  box.querySelectorAll("button").forEach(btn=>btn.onclick=()=>connectWith(list[Number(btn.dataset.i)]).catch(e=>document.getElementById("statusLine").textContent=e.message));
 };
 async function loadMe(){
   const res=await fetch(API_URL+"/api/me?wallet="+wallet);
   const data=await res.json();
   if(!data.success){document.getElementById("statusLine").textContent=data.error||"Not found";return;}
-  const tier=data.ogNumber?("OG #"+data.ogNumber):(data.paymentVerified?"VERIFIED / WL POOL":"NOT VERIFIED");
-  document.getElementById("tier").textContent=tier;
+  document.getElementById("tier").textContent=data.ogNumber?("OG #"+data.ogNumber):(data.paymentVerified?"VERIFIED / WL POOL":"NOT VERIFIED");
   document.getElementById("refs").textContent=String(data.referredCount||0);
   document.getElementById("avail").textContent=money(data.availableBalance);
   document.getElementById("earned").textContent=money(data.totalEarned);
