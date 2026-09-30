@@ -71,11 +71,11 @@
 <script src="wallet.js"></script>
 <script>
 function money(v){return "$"+Number(v||0).toFixed(2)}
-function short(w){if(!w) return "-"; return w.slice(0,6)+“…”+w.slice(-4)}
+function short(w){if(!w) return "-"; return w.slice(0,6)+"..."+w.slice(-4)}
 function mask(code){if(!code) return "member"; return String(code).slice(0,4)+"****"}
 let lastLink="";
 document.getElementById("connectBtn").onclick=()=>connectFlow("walletPick",(wallet,name)=>{
-  document.getElementById("walletLine").textContent=short(wallet)+" · "+name;
+  document.getElementById("walletLine").textContent=short(wallet)+" \u00b7 "+name;
   document.getElementById("connectBtn").textContent="WALLET LOCKED";
   loadMe(); loadClaims();
 },msg=>document.getElementById("statusLine").textContent=msg);
@@ -99,14 +99,14 @@ async function loadBoard(){
   const rows=data.leaderboard||[];
   document.getElementById("board").innerHTML=rows.length?rows.map((r,i)=>{
     const earned=Number(r.total_earned||((r.referred_count||0)*0.06)).toFixed(2);
-    return (i+1)+". "+mask(r.referral_code)+" · "+(r.referred_count||0)+" refs · $"+earned;
+    return (i+1)+". "+mask(r.referral_code)+" \u00b7 "+(r.referred_count||0)+" refs \u00b7 $"+earned;
   }).join("<br>"):"No referrals yet.";
 }
 async function loadClaims(){
   if(!window.VH.wallet) return;
   const data=await (await fetch(API_URL+"/api/claims?wallet="+window.VH.wallet)).json();
   const rows=data.claims||[];
-  document.getElementById("claims").innerHTML=rows.length?rows.map(c=>"#"+c.id+" · "+money(c.amount)+" · "+c.status).join("<br>"):"No claims yet.";
+  document.getElementById("claims").innerHTML=rows.length?rows.map(c=>"#"+c.id+" \u00b7 "+money(c.amount)+" \u00b7 "+c.status).join("<br>"):"No claims yet.";
 }
 document.getElementById("copyBtn").onclick=async()=>{
   if(!lastLink) return;
