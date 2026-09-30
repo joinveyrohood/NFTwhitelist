@@ -37,6 +37,7 @@ h2{font-family:"Press Start 2P",monospace;color:var(--green);font-size:13px;line
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
 .muted{color:var(--muted)}
 .rule{color:#c9d4cc;font-size:22px}
+.copy-row{color:var(--cyan);font-size:22px;word-break:break-all;user-select:all;-webkit-user-select:all}
 footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted)}
 label{display:block;margin:14px 0 6px;color:#d5ddd8}
 input,select{width:100%;min-height:50px;border:1px solid var(--line);background:#070b0e;color:#fff;padding:0 12px;font:inherit}

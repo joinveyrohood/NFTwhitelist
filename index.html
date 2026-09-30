@@ -37,10 +37,21 @@
   <div class="portrait"><img src="character.jpg" alt="VeyroHood character"></div>
 </section>
 <section class="stats">
-  <div class="card stat">Supply<b>10,000</b></div>
-  <div class="card stat">OG seats<b>1,000</b></div>
-  <div class="card stat">Whitelist<b>9,000</b></div>
+  <div class="card stat">Verified<b id="liveJoined">—</b></div>
+  <div class="card stat">OG left<b id="liveOgLeft">—</b></div>
+  <div class="card stat">WL pool<b id="liveWl">—</b></div>
   <div class="card stat">Entry fee<b>$0.30</b></div>
+</section>
+<section class="grid2">
+  <div class="card">
+    <h2>LIVE BOARD</h2>
+    <p class="muted">Top referrers. Code masked. Earn = 20% of $0.30.</p>
+    <div id="liveBoard" class="rule" style="margin-top:12px">Loading...</div>
+  </div>
+  <div class="card">
+    <h2>MINT RULE</h2>
+    <p class="rule">Only wallets that pay $0.30 USDG can mint later.<br>First 1,000 verified = OG, 100% mint.<br>Next 9,000 = random + admin pick from paid wallets only.</p>
+  </div>
 </section>
 <section class="grid3">
   <div class="card"><h2>01 HOME</h2><p class="rule">Start here. Missions stay closed until you press Start Mission.</p></div>
@@ -50,8 +61,30 @@
 <footer><span>VeyroHood</span><span>Start Mission is the only way in</span></footer>
 </div>
 <script src="gate.js"></script>
+<script src="wallet.js"></script>
 <script>
 document.getElementById("startMission").onclick=function(){vhGoMissions()};
+function mask(code){if(!code) return "member"; return String(code).slice(0,4)+"****"}
+async function loadLive(){
+  try{
+    const data=await (await fetch(API_URL+"/api/stats")).json();
+    const ogLimit=Number(data.ogLimit||1000);
+    const og=Number(data.og||0);
+    const joined=Number(data.joined||0);
+    document.getElementById("liveJoined").textContent=String(joined);
+    document.getElementById("liveOgLeft").textContent=String(Math.max(0,ogLimit-og));
+    document.getElementById("liveWl").textContent=String(Math.max(0,joined-og));
+    const rows=data.leaderboard||[];
+    document.getElementById("liveBoard").innerHTML=rows.length?rows.map((r,i)=>{
+      const earned=Number(r.total_earned||((r.referred_count||0)*0.06)).toFixed(2);
+      return (i+1)+". "+mask(r.referral_code)+" · "+(r.referred_count||0)+" refs · $"+earned;
+    }).join("<br>"):"No referrals yet.";
+  }catch(e){
+    document.getElementById("liveBoard").textContent="Live board unavailable.";
+  }
+}
+loadLive();
+setInterval(loadLive,15000);
 </script>
 </body>
 </html>
