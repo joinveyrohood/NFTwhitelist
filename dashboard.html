@@ -51,14 +51,15 @@
 </section>
 <section class="panel">
   <h2>CLAIM</h2>
-  <p class="muted">Available from $2. Claim goes to admin payout queue. Treasury key is never in the site.</p>
+  <p class="muted" id="claimHelp">Verified $0.30 wallets only. Claim from $0.30 referral balance. Auto-pays USDG if payout key is set.</p>
   <label>Payout network</label>
   <select id="claimChain">
     <option value="4663">Robinhood Chain</option>
     <option value="1">Ethereum</option>
   </select>
   <div class="actions" style="margin-top:14px">
-    <button class="btn" id="claimBtn" type="button" disabled>CLAIM ALL</button>
+    <button class="btn" id="claimBtn" type="button" disabled>CLAIM USDG</button>
+    <p id="payoutNote" class="muted" style="margin-top:10px"></p>
   </div>
 </section>
 <section class="grid2">
@@ -93,6 +94,11 @@ async function loadMe(){
   document.getElementById("copyBtn").disabled=!lastLink;
   document.getElementById("statusLine").textContent=data.message||"";
   document.getElementById("claimBtn").disabled=!data.canClaim;
+  const note=[];
+  if(!data.paymentVerified) note.push("Verify with $0.30 USDG first.");
+  else if(!data.canClaim) note.push("Need $0.30 available from paid referrals.");
+  note.push(data.autoPayoutReady?"Auto payout ON.":"Auto payout OFF until PAYOUT_PRIVATE_KEY is set.");
+  document.getElementById("payoutNote").textContent=note.join(" ");
 }
 async function loadBoard(){
   const data=await (await fetch(API_URL+"/api/stats")).json();
