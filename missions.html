@@ -29,12 +29,12 @@
   <div>
     <div class="kicker">PHASE 02 · MANDATORY</div>
     <h1>COMPLETE EVERY <i>MISSION.</i></h1>
-    <p class="lead">Complete Mission is mandatory. Start with Follow X. After all four missions, pay $0.30 USDG to verify. No skip.</p>
+    <p class="lead">Opening a link is not enough. Do the action, then press Complete. Follow X first. Then pay $0.30 USDG to verify.</p>
   </div>
 </section>
 <section class="panel">
   <h2>RULE</h2>
-  <p class="rule">1. Follow @VeyroHood on X first.<br>2. Finish Discord, Quote, Reply.<br>3. Only then Verify with $0.30 USDG.</p>
+  <p class="rule">Open the task. Actually complete it. Press Complete. Verify stays locked until all four are completed.</p>
 </section>
 <section class="panel">
   <h2>PROGRESS</h2>
@@ -44,77 +44,104 @@
 <section class="panel">
   <h2>MISSIONS · REQUIRED</h2>
   <div class="mission" id="row-follow">
-    <div><strong>01 / FOLLOW X · REQUIRED</strong><p class="muted">Follow @VeyroHood on X. This mission is mandatory.</p></div>
-    <a class="btn ghost mission-open" data-mission="follow" href="https://x.com/VeyroHood" target="_blank" rel="noopener">FOLLOW X</a>
+    <div><strong>01 / FOLLOW X · REQUIRED</strong><p class="muted">Follow @VeyroHood on X, then press Complete.</p></div>
+    <div class="actions">
+      <a class="btn ghost mission-open" data-mission="follow" href="https://x.com/VeyroHood" target="_blank" rel="noopener">OPEN X</a>
+      <button class="btn mission-complete" type="button" data-mission="follow" disabled>COMPLETE</button>
+    </div>
   </div>
   <div class="mission" id="row-discord">
-    <div><strong>02 / DISCORD · REQUIRED</strong><p class="muted">Join the community Discord</p></div>
-    <a class="btn ghost mission-open" data-mission="discord" href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">JOIN</a>
+    <div><strong>02 / DISCORD · REQUIRED</strong><p class="muted">Join Discord, then press Complete.</p></div>
+    <div class="actions">
+      <a class="btn ghost mission-open" data-mission="discord" href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">OPEN DISCORD</a>
+      <button class="btn mission-complete" type="button" data-mission="discord" disabled>COMPLETE</button>
+    </div>
   </div>
   <div class="mission" id="row-quote">
-    <div><strong>03 / QUOTE · REQUIRED</strong><p class="muted">Quote the pinned post</p></div>
-    <a class="btn ghost mission-open" data-mission="quote" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">QUOTE</a>
+    <div><strong>03 / QUOTE · REQUIRED</strong><p class="muted">Quote the pinned post, then press Complete.</p></div>
+    <div class="actions">
+      <a class="btn ghost mission-open" data-mission="quote" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">OPEN QUOTE</a>
+      <button class="btn mission-complete" type="button" data-mission="quote" disabled>COMPLETE</button>
+    </div>
   </div>
   <div class="mission" id="row-reply">
-    <div><strong>04 / REPLY · REQUIRED</strong><p class="muted">Reply on the same pinned post</p></div>
-    <a class="btn ghost mission-open" data-mission="reply" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">REPLY</a>
+    <div><strong>04 / REPLY · REQUIRED</strong><p class="muted">Reply on the pinned post, then press Complete.</p></div>
+    <div class="actions">
+      <a class="btn ghost mission-open" data-mission="reply" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">OPEN REPLY</a>
+      <button class="btn mission-complete" type="button" data-mission="reply" disabled>COMPLETE</button>
+    </div>
   </div>
 </section>
 <section class="panel">
-  <p class="warn" id="lockNote">Complete all missions first. Follow X is required. Then verify with $0.30 USDG.</p>
+  <p class="warn" id="lockNote">Complete all missions. Opening a tab does not count.</p>
   <div class="actions" style="margin-top:18px">
     <a class="btn" id="goVerify" href="#">VERIFY $0.30 LOCKED</a>
   </div>
 </section>
-<footer><span>VeyroHood</span><span>Complete Mission is mandatory</span></footer>
+<footer><span>VeyroHood</span><span>Complete is mandatory</span></footer>
 </div>
-<script src="gate.js"></script>
+<script src="gate.js?v=2"></script>
 <script>
 const go=document.getElementById("goVerify");
 const phase3=document.getElementById("phase3");
 const note=document.getElementById("lockNote");
 function render(){
   const c=vhClicks();
+  const o=vhOpened();
   const n=["follow","discord","quote","reply"].filter(k=>c[k]).length;
   document.getElementById("progressText").textContent=n+" / 4";
   document.getElementById("progressFill").style.width=(n/4*100)+"%";
   ["follow","discord","quote","reply"].forEach(function(k){
     const row=document.getElementById("row-"+k);
-    if(c[k]) row.style.borderColor="var(--green)";
+    const doneBtn=row.querySelector(".mission-complete");
+    const openBtn=row.querySelector(".mission-open");
+    if(o[k] && !c[k]) doneBtn.disabled=false;
+    if(c[k]){
+      row.style.borderColor="var(--green)";
+      doneBtn.disabled=true;
+      doneBtn.textContent="COMPLETED";
+      openBtn.textContent="OPENED";
+    }
   });
   if(n===4){
     go.href="verify.html";
     go.textContent="VERIFY $0.30 USDG";
     phase3.className="phase done";
     phase3.innerHTML="<b>PHASE 03</b><span>Verify $0.30 unlocked</span>";
-    note.textContent="All missions complete. Pay $0.30 USDG on the next page.";
+    note.textContent="All missions completed. Pay $0.30 USDG next.";
     note.style.color="var(--green)";
   }else{
     go.href="#";
     go.textContent="VERIFY $0.30 LOCKED";
     phase3.className="phase";
     phase3.innerHTML="<b>PHASE 03</b><span>Verify $0.30 locked</span>";
-    if(!c.follow){
-      note.textContent="Complete Mission is mandatory. Follow @VeyroHood on X first.";
-    }else{
-      note.textContent="Finish the remaining required missions. Then verify with $0.30 USDG.";
-    }
+    note.textContent=c.follow?"Finish remaining missions. Press Complete on each one.":"Follow X, then press Complete. Opening the profile is not enough.";
     note.style.color="var(--danger)";
   }
   vhBindNav();
 }
 document.querySelectorAll(".mission-open").forEach(function(a){
   a.addEventListener("click", function(){
-    vhMarkClick(a.getAttribute("data-mission"));
-    a.textContent="DONE";
+    vhMarkOpened(a.getAttribute("data-mission"));
+    render();
+  });
+});
+document.querySelectorAll(".mission-complete").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    const name=btn.getAttribute("data-mission");
+    if(!vhOpened()[name]){
+      note.textContent="Open the task first, complete it, then press Complete.";
+      note.style.color="var(--danger)";
+      return;
+    }
+    vhMarkClick(name);
     render();
   });
 });
 go.addEventListener("click",function(e){
   if(!vhMissionsDone()){
     e.preventDefault();
-    const c=vhClicks();
-    note.textContent=c.follow?"Complete every required mission first.":"Follow X is mandatory before Verify $0.30.";
+    note.textContent="Complete every mission. Open alone does not unlock Verify.";
     note.style.color="var(--danger)";
   }
 });

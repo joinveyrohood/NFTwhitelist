@@ -1,14 +1,20 @@
 const VH_GATE = {
   started: "veyrohood_started_v1",
-  missions: "veyrohood_mission_clicks_v1",
+  missions: "veyrohood_mission_complete_v2",
+  opened: "veyrohood_mission_opened_v2",
   verified: "veyrohood_verified_v1"
 };
-function vhClicks() {
+function vhRead(key) {
   try {
-    const saved = JSON.parse(localStorage.getItem(VH_GATE.missions) || "{}");
+    const saved = JSON.parse(localStorage.getItem(key) || "{}");
     return saved && typeof saved === "object" ? saved : {};
   } catch (e) { return {}; }
 }
+function vhWrite(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+}
+function vhClicks() { return vhRead(VH_GATE.missions); }
+function vhOpened() { return vhRead(VH_GATE.opened); }
 function vhStarted() {
   try { return localStorage.getItem(VH_GATE.started) === "1"; } catch (e) { return false; }
 }
@@ -22,10 +28,16 @@ function vhVerified() {
 function vhMarkStarted() {
   try { localStorage.setItem(VH_GATE.started, "1"); } catch (e) {}
 }
+function vhMarkOpened(name) {
+  const o = vhOpened();
+  o[name] = 1;
+  vhWrite(VH_GATE.opened, o);
+  return o;
+}
 function vhMarkClick(name) {
   const c = vhClicks();
   c[name] = 1;
-  try { localStorage.setItem(VH_GATE.missions, JSON.stringify(c)); } catch (e) {}
+  vhWrite(VH_GATE.missions, c);
   return c;
 }
 function vhMarkVerified() {
