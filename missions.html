@@ -6,7 +6,7 @@
 <title>VeyroHood — Missions</title>
 <meta name="theme-color" content="#07080c">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body data-page="missions">
 <div class="wrap">
@@ -22,127 +22,112 @@
 </nav>
 <div class="phases">
   <a class="phase done" href="index.html"><b>PHASE 01</b><span>Home</span></a>
-  <div class="phase now"><b>PHASE 02</b><span>Missions</span></div>
+  <div class="phase now"><b>PHASE 02</b><span>One at a time</span></div>
   <div class="phase" id="phase3"><b>PHASE 03</b><span>Verify $0.30 locked</span></div>
 </div>
 <section class="hero" style="grid-template-columns:1fr">
   <div>
-    <div class="kicker">PHASE 02 · MANDATORY</div>
-    <h1>COMPLETE EVERY <i>MISSION.</i></h1>
-    <p class="lead">Opening a link is not enough. Do the action, then press Complete. Follow X first. Then pay $0.30 USDG to verify.</p>
+    <div class="kicker">PHASE 02 · ONE BY ONE</div>
+    <h1>FINISH ONE.<br><i>NEXT UNLOCKS.</i></h1>
+    <p class="lead">Only the current mission is open. Complete it, then the next one appears. Last step is $0.30 USDG verify.</p>
   </div>
-</section>
-<section class="panel">
-  <h2>RULE</h2>
-  <p class="rule">Open the task. Actually complete it. Press Complete. Verify stays locked until all four are completed.</p>
 </section>
 <section class="panel">
   <h2>PROGRESS</h2>
   <div style="display:flex;justify-content:space-between" class="muted"><span>Completed</span><span id="progressText">0 / 4</span></div>
   <div class="bar"><div class="fill" id="progressFill"></div></div>
 </section>
-<section class="panel">
-  <h2>MISSIONS · REQUIRED</h2>
-  <div class="mission" id="row-follow">
-    <div><strong>01 / FOLLOW X · REQUIRED</strong><p class="muted">Follow @VeyroHood on X, then press Complete.</p></div>
-    <div class="actions">
-      <a class="btn ghost mission-open" data-mission="follow" href="https://x.com/VeyroHood" target="_blank" rel="noopener">OPEN X</a>
-      <button class="btn mission-complete" type="button" data-mission="follow" disabled>COMPLETE</button>
-    </div>
-  </div>
-  <div class="mission" id="row-discord">
-    <div><strong>02 / DISCORD · REQUIRED</strong><p class="muted">Join Discord, then press Complete.</p></div>
-    <div class="actions">
-      <a class="btn ghost mission-open" data-mission="discord" href="https://discord.gg/6CYd3ewU5" target="_blank" rel="noopener">OPEN DISCORD</a>
-      <button class="btn mission-complete" type="button" data-mission="discord" disabled>COMPLETE</button>
-    </div>
-  </div>
-  <div class="mission" id="row-quote">
-    <div><strong>03 / QUOTE · REQUIRED</strong><p class="muted">Quote the pinned post, then press Complete.</p></div>
-    <div class="actions">
-      <a class="btn ghost mission-open" data-mission="quote" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">OPEN QUOTE</a>
-      <button class="btn mission-complete" type="button" data-mission="quote" disabled>COMPLETE</button>
-    </div>
-  </div>
-  <div class="mission" id="row-reply">
-    <div><strong>04 / REPLY · REQUIRED</strong><p class="muted">Reply on the pinned post, then press Complete.</p></div>
-    <div class="actions">
-      <a class="btn ghost mission-open" data-mission="reply" href="https://x.com/VeyroHood/status/2095434542094115048" target="_blank" rel="noopener">OPEN REPLY</a>
-      <button class="btn mission-complete" type="button" data-mission="reply" disabled>COMPLETE</button>
-    </div>
+<section class="panel" id="stepBox">
+  <h2 id="stepTitle">01 / FOLLOW X</h2>
+  <p class="rule" id="stepText">Follow @VeyroHood on X. Opening the page is not enough. Do the follow, then press Complete.</p>
+  <div class="actions" style="margin-top:16px">
+    <a class="btn ghost" id="openTask" href="https://x.com/VeyroHood" target="_blank" rel="noopener">OPEN X</a>
+    <button class="btn" id="completeTask" type="button" disabled>COMPLETE</button>
   </div>
 </section>
 <section class="panel">
-  <p class="warn" id="lockNote">Complete all missions. Opening a tab does not count.</p>
+  <p class="warn" id="lockNote">Complete the current mission to unlock the next one.</p>
   <div class="actions" style="margin-top:18px">
     <a class="btn" id="goVerify" href="#">VERIFY $0.30 LOCKED</a>
   </div>
 </section>
-<footer><span>VeyroHood</span><span>Complete is mandatory</span></footer>
+<footer><span>VeyroHood</span><span>One mission at a time</span></footer>
 </div>
-<script src="gate.js?v=2"></script>
+<script src="gate.js?v=3"></script>
 <script>
-const go=document.getElementById("goVerify");
-const phase3=document.getElementById("phase3");
-const note=document.getElementById("lockNote");
-function render(){
-  const c=vhClicks();
-  const o=vhOpened();
-  const n=["follow","discord","quote","reply"].filter(k=>c[k]).length;
-  document.getElementById("progressText").textContent=n+" / 4";
-  document.getElementById("progressFill").style.width=(n/4*100)+"%";
-  ["follow","discord","quote","reply"].forEach(function(k){
-    const row=document.getElementById("row-"+k);
-    const doneBtn=row.querySelector(".mission-complete");
-    const openBtn=row.querySelector(".mission-open");
-    if(o[k] && !c[k]) doneBtn.disabled=false;
-    if(c[k]){
-      row.style.borderColor="var(--green)";
-      doneBtn.disabled=true;
-      doneBtn.textContent="COMPLETED";
-      openBtn.textContent="OPENED";
-    }
-  });
-  if(n===4){
-    go.href="verify.html";
-    go.textContent="VERIFY $0.30 USDG";
-    phase3.className="phase done";
-    phase3.innerHTML="<b>PHASE 03</b><span>Verify $0.30 unlocked</span>";
-    note.textContent="All missions completed. Pay $0.30 USDG next.";
-    note.style.color="var(--green)";
-  }else{
-    go.href="#";
-    go.textContent="VERIFY $0.30 LOCKED";
-    phase3.className="phase";
-    phase3.innerHTML="<b>PHASE 03</b><span>Verify $0.30 locked</span>";
-    note.textContent=c.follow?"Finish remaining missions. Press Complete on each one.":"Follow X, then press Complete. Opening the profile is not enough.";
-    note.style.color="var(--danger)";
+const STEPS = [
+  { key: "follow", title: "01 / FOLLOW X", text: "Follow @VeyroHood on X. Then press Complete.", open: "OPEN X", href: "https://x.com/VeyroHood" },
+  { key: "discord", title: "02 / DISCORD", text: "Join the Discord. Then press Complete.", open: "OPEN DISCORD", href: "https://discord.gg/6CYd3ewU5" },
+  { key: "quote", title: "03 / QUOTE", text: "Quote the pinned post. Then press Complete.", open: "OPEN QUOTE", href: "https://x.com/VeyroHood/status/2095434542094115048" },
+  { key: "reply", title: "04 / REPLY", text: "Reply on the pinned post. Then press Complete.", open: "OPEN REPLY", href: "https://x.com/VeyroHood/status/2095434542094115048" }
+];
+const go = document.getElementById("goVerify");
+const note = document.getElementById("lockNote");
+const phase3 = document.getElementById("phase3");
+const openTask = document.getElementById("openTask");
+const completeTask = document.getElementById("completeTask");
+function current() {
+  const c = vhClicks();
+  return STEPS.find(s => !c[s.key]) || null;
+}
+function render() {
+  const c = vhClicks();
+  const o = vhOpened();
+  const n = STEPS.filter(s => c[s.key]).length;
+  document.getElementById("progressText").textContent = n + " / 4";
+  document.getElementById("progressFill").style.width = (n / 4 * 100) + "%";
+  const step = current();
+  if (!step) {
+    document.getElementById("stepTitle").textContent = "ALL COMPLETE";
+    document.getElementById("stepText").textContent = "Missions done. Pay $0.30 USDG to lock your seat.";
+    openTask.style.display = "none";
+    completeTask.style.display = "none";
+    go.href = "verify.html";
+    go.textContent = "PAY $0.30 USDG";
+    phase3.className = "phase done";
+    phase3.innerHTML = "<b>PHASE 03</b><span>Verify $0.30 unlocked</span>";
+    note.textContent = "Next step: verify with $0.30 USDG.";
+    note.style.color = "var(--green)";
+  } else {
+    document.getElementById("stepTitle").textContent = step.title;
+    document.getElementById("stepText").textContent = step.text;
+    openTask.style.display = "";
+    completeTask.style.display = "";
+    openTask.href = step.href;
+    openTask.textContent = o[step.key] ? "OPENED" : step.open;
+    openTask.dataset.mission = step.key;
+    completeTask.dataset.mission = step.key;
+    completeTask.disabled = !o[step.key];
+    completeTask.textContent = "COMPLETE";
+    go.href = "#";
+    go.textContent = "VERIFY $0.30 LOCKED";
+    phase3.className = "phase";
+    phase3.innerHTML = "<b>PHASE 03</b><span>Verify $0.30 locked</span>";
+    note.textContent = "Finish " + step.title + ". The next mission stays hidden until you press Complete.";
+    note.style.color = "var(--danger)";
   }
   vhBindNav();
 }
-document.querySelectorAll(".mission-open").forEach(function(a){
-  a.addEventListener("click", function(){
-    vhMarkOpened(a.getAttribute("data-mission"));
-    render();
-  });
+openTask.addEventListener("click", function () {
+  const step = current();
+  if (!step) return;
+  vhMarkOpened(step.key);
+  render();
 });
-document.querySelectorAll(".mission-complete").forEach(function(btn){
-  btn.addEventListener("click", function(){
-    const name=btn.getAttribute("data-mission");
-    if(!vhOpened()[name]){
-      note.textContent="Open the task first, complete it, then press Complete.";
-      note.style.color="var(--danger)";
-      return;
-    }
-    vhMarkClick(name);
-    render();
-  });
+completeTask.addEventListener("click", function () {
+  const step = current();
+  if (!step) return;
+  if (!vhOpened()[step.key]) {
+    note.textContent = "Open the task, do it, then press Complete.";
+    return;
+  }
+  vhMarkClick(step.key);
+  render();
 });
-go.addEventListener("click",function(e){
-  if(!vhMissionsDone()){
+go.addEventListener("click", function (e) {
+  if (!vhMissionsDone()) {
     e.preventDefault();
-    note.textContent="Complete every mission. Open alone does not unlock Verify.";
-    note.style.color="var(--danger)";
+    note.textContent = "Complete the current mission first. Next ones stay locked.";
   }
 });
 render();

@@ -43,9 +43,9 @@
   <div class="card"><h2>EARNED</h2><p class="rule">Lifetime <span id="earned">$0.00</span><br>Withdrawn <span id="withdrawn">$0.00</span><br>Each paid ref = $0.06 (20%)</p></div>
   <div class="card">
     <h2>YOUR LINK</h2>
-    <p class="copy-row" id="refLink">Hidden until loaded.</p>
+    <input id="refLink" class="copy-row" readonly value="Connect wallet to load link">
     <div class="actions" style="margin-top:12px">
-      <button class="btn ghost" id="copyBtn" type="button" disabled>COPY LINK</button>
+      <button class="btn" id="copyBtn" type="button" disabled>COPY LINK</button>
     </div>
   </div>
 </section>
@@ -68,8 +68,8 @@
 </section>
 <footer><span>VeyroHood</span><span>Verified members only</span></footer>
 </div>
-<script src="gate.js"></script>
-<script src="wallet.js"></script>
+<script src="gate.js?v=3"></script>
+<script src="wallet.js?v=3"></script>
 <script>
 function money(v){return "$"+Number(v||0).toFixed(2)}
 function short(w){if(!w) return "-"; return w.slice(0,6)+"..."+w.slice(-4)}
@@ -90,7 +90,7 @@ async function loadMe(){
   document.getElementById("earned").textContent=money(data.totalEarned);
   document.getElementById("withdrawn").textContent=money(data.totalWithdrawn);
   lastLink=data.referralLink||"";
-  document.getElementById("refLink").textContent=lastLink||"No link yet.";
+  document.getElementById("refLink").value=lastLink||"No link yet.";
   document.getElementById("copyBtn").disabled=!lastLink;
   document.getElementById("statusLine").textContent=data.message||"";
   document.getElementById("claimBtn").disabled=!data.canClaim;
@@ -115,18 +115,19 @@ async function loadClaims(){
   document.getElementById("claims").innerHTML=rows.length?rows.map(c=>"#"+c.id+" \u00b7 "+money(c.amount)+" \u00b7 "+c.status).join("<br>"):"No claims yet.";
 }
 document.getElementById("copyBtn").onclick=async()=>{
-  if(!lastLink) return;
-  try{
-    await navigator.clipboard.writeText(lastLink);
-    document.getElementById("statusLine").textContent="Referral link copied.";
-  }catch(_e){
-    const range=document.createRange();
-    range.selectNodeContents(document.getElementById("refLink"));
-    const sel=window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    document.getElementById("statusLine").textContent="Select the link and copy.";
-  }
+  const box=document.getElementById("refLink");
+  const value=(lastLink||box.value||"").trim();
+  if(!value || value.indexOf("http")!==0) return;
+  box.value=value;
+  box.focus();
+  box.select();
+  box.setSelectionRange(0, value.length);
+  let ok=false;
+  try{ await navigator.clipboard.writeText(value); ok=true; }catch(_e){}
+  if(!ok){ try{ ok=document.execCommand("copy"); }catch(_e){} }
+  document.getElementById("statusLine").textContent=ok?"Referral link copied.":"Link selected. Press Ctrl+C or long-press copy.";
+  document.getElementById("copyBtn").textContent=ok?"COPIED":"SELECT + COPY";
+  setTimeout(()=>document.getElementById("copyBtn").textContent="COPY LINK", 1600);
 };
 document.getElementById("claimBtn").onclick=async()=>{
   const chainId=Number(document.getElementById("claimChain").value);
