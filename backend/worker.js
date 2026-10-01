@@ -300,7 +300,7 @@ async function handleVerifyPayment(request, env, origin) {
       ogNumber,
       allocationType: ogNumber ? "OG" : "WL_POOL",
       referralCode: ownCode,
-      referralLink: "https://joinveyrohood.github.io/NFTwhitelist/verify.html?ref=" + ownCode
+      referralLink: "https://joinveyrohood.github.io/NFTwhitelist/?ref=" + ownCode
     }, 200, origin);
   } catch (error) {
     return json({ error: error.message || "Payment verification failed" }, 400, origin);
@@ -353,7 +353,7 @@ async function handleMe(request, env, origin) {
     wlPool: paymentVerified && !ogNumber,
     status: verification ? verification.status : "none",
     referralCode: code,
-    referralLink: code ? "https://joinveyrohood.github.io/NFTwhitelist/verify.html?ref=" + code : null,
+    referralLink: code ? "https://joinveyrohood.github.io/NFTwhitelist/?ref=" + code : null,
     availableBalance: available,
     totalEarned: money(ref && ref.total_earned),
     totalWithdrawn: money(ref && ref.total_withdrawn),

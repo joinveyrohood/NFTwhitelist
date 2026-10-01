@@ -2,8 +2,19 @@ const VH_GATE = {
   started: "veyrohood_started_v1",
   missions: "veyrohood_mission_complete_v2",
   opened: "veyrohood_mission_opened_v2",
-  verified: "veyrohood_verified_v1"
+  verified: "veyrohood_verified_v1",
+  ref: "veyrohood_ref_v1"
 };
+function vhSaveRefFromUrl() {
+  try {
+    const ref = new URLSearchParams(location.search).get("ref");
+    if (ref) localStorage.setItem(VH_GATE.ref, ref.replace(/^@+/, "").slice(0, 64));
+  } catch (e) {}
+}
+function vhSavedRef() {
+  try { return localStorage.getItem(VH_GATE.ref) || ""; } catch (e) { return ""; }
+}
+vhSaveRefFromUrl();
 function vhRead(key) {
   try {
     const saved = JSON.parse(localStorage.getItem(key) || "{}");
